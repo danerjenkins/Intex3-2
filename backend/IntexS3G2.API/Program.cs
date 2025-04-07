@@ -74,6 +74,11 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
 app.MapGet("/deployed-test", () => "This is the latest deployed version!");
+app.MapGet("/env-check", (IConfiguration config) =>
+{
+    var conn = config.GetConnectionString("IdentityConnection");
+    return Results.Ok(new { conn });
+});
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
