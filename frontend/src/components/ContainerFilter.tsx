@@ -9,13 +9,12 @@ function ContainerFilter({
   setSelectedContainers: (containers: string[]) => void;
 }) {
   const [containers, setContainers] = useState<string[]>([]);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchContainers = async () => {
       try {
-        const response = await fetch(
-          'https://localhost:5000/Competition/GetContainerTypes'
-        );
+        const response = await fetch(`${apiUrl}/Competition/GetContainerTypes`);
 
         const data = await response.json();
         setContainers(data);

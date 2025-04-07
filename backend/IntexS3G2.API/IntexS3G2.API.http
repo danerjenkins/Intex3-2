@@ -1,0 +1,6 @@
+@IntexS3G2_HostAddress = http://localhost:5181
+
+GET {{IntexS3G2.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

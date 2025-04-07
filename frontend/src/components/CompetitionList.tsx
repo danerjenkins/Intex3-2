@@ -13,6 +13,7 @@ function CompetitionList({
   const [totalItems, setTotalItems] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchCompetition = async () => {
@@ -21,7 +22,7 @@ function CompetitionList({
         .join('&');
 
       const response = await fetch(
-        `https://localhost:5000/Competition/GetRootbeers?pageSize=${pageSize}&pageNum=${pageNum}${selectedContainers.length ? `&${containerParams}` : ''}`
+        `${apiUrl}/Competition/GetRootbeers?pageSize=${pageSize}&pageNum=${pageNum}${selectedContainers.length ? `&${containerParams}` : ''}`
       );
 
       const data = await response.json();
