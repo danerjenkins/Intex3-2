@@ -10,7 +10,7 @@ function Logout(props: { children: React.ReactNode }) {
     try {
       const response = await fetch(`${apiUrl}/logout`, {
         method: 'POST',
-        credentials: 'include', // Ensure cookies are sent
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -27,7 +27,7 @@ function Logout(props: { children: React.ReactNode }) {
   };
 
   return (
-    <a className="logout" href="#" onClick={handleLogout}>
+    <a className="btn btn-outline-danger" href="#" onClick={handleLogout}>
       {props.children}
     </a>
   );

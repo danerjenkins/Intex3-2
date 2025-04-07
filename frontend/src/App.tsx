@@ -1,31 +1,28 @@
 import './App.css';
-import CompetitionPage from './pages/CompetitionPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ProductPage from './pages/ProductPage';
-import CartPage from './pages/CartPage';
-import { CartProvider } from './context/CartContext';
+
+// New CineNiche pages
+import { HomePage } from './pages/HomePage';
+import { MoviesPage } from './pages/MoviesPage';
+import { PolicyPage } from './pages/PolicyPage';
+import { ProfilePage } from './pages/ProfilePage';
+
+// Existing login/register pages
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
-    <>
-      <CartProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<CompetitionPage />} />
-            <Route path="/competition" element={<CompetitionPage />} />
-            <Route
-              path="/product/:rootbeerName/:rootbeerId/:currentRetailPrice"
-              element={<ProductPage />}
-            />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-          </Routes>
-        </Router>
-      </CartProvider>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/movies" element={<MoviesPage />} />
+        <Route path="/privacy" element={<PolicyPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/Profile" element={<ProfilePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+    </Router>
   );
 }
 

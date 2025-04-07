@@ -1,10 +1,9 @@
-import ContainerFilter from '../components/ContainerFilter';
-import CompetitionList from '../components/CompetitionList';
-import Header from '../components/Header';
+import ContainerFilter from './ContainerFilter';
+import CompetitionList from './CompetitionList';
 import { useState } from 'react';
-import CartSummary from '../components/CartSummary';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import { Header } from '../components/Header';
 
 function CompetitionPage() {
   const [selectedContainers, setSelectedContainers] = useState<string[]>([]);
@@ -15,9 +14,8 @@ function CompetitionPage() {
           Logout <AuthorizedUser value="email" />
         </Logout>
       </span>
+      <Header />
       <div className="Container mt-4">
-        <CartSummary />
-        <Header />
         <div className="row">
           <div className="col-md-3">
             <ContainerFilter
