@@ -7,6 +7,7 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // state variable for error messages
   const [error, setError] = useState('');
@@ -37,7 +38,7 @@ function Register() {
       // clear error message
       setError('');
       // post data to the /register api
-      fetch('https://localhost:5000/register', {
+      fetch(`${apiUrl}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,6 +46,7 @@ function Register() {
         body: JSON.stringify({
           email: email,
           password: password,
+          confirmPassword:confirmPassword
         }),
       })
         //.then((response) => response.json())

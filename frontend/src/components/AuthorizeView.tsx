@@ -11,6 +11,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
   const [authorized, setAuthorized] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true); // add a loading state
   //const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
   let emptyuser: User = { email: '' };
 
   const [user, setUser] = useState(emptyuser);
@@ -43,7 +44,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
       }
     }
 
-    fetchWithRetry('https://localhost:5000/pingauth', {
+    fetchWithRetry(`${apiUrl}/pingauth`, {
       method: 'GET',
       credentials: 'include',
     });

@@ -8,7 +8,7 @@ function LoginPage() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [rememberme, setRememberme] = useState<boolean>(false);
-
+  const apiUrl = import.meta.env.VITE_API_URL;
   // state variable for error messages
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
@@ -40,8 +40,8 @@ function LoginPage() {
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true'
-      : 'https://localhost:5000/login?useSessionCookies=true';
+      ? `${apiUrl}/login?useCookies=true`
+      : `${apiUrl}/login?useSessionCookies=true`;
 
     try {
       const response = await fetch(loginUrl, {
