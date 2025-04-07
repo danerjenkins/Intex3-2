@@ -72,3 +72,5 @@ export function AuthorizedUser(props: { value: string }) {
 }
 
 export default AuthorizeView;
+
+export const UserCont = createContext<User | null>(null);

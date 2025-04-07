@@ -3,9 +3,13 @@ using IntexS3G2.API.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IntexS3G2.API.Services;
+
+DotNetEnv.Env.Load(); // loads from .env by default
+
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
 var builder = WebApplication.CreateBuilder(args);
+ 
 
 // Add services to the container.
 
@@ -19,8 +23,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompetitionDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
 
+// Get the password from environment
+var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
+
+// Get the raw connection string from appsettings
+var rawConnString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Replace the placeholder with the actual password
+var finalConnString = rawConnString.Replace("__DB_PASSWORD__", dbPassword ?? "");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    options.UseSqlServer(finalConnString));
 
 builder.Services.AddAuthorization();
 
