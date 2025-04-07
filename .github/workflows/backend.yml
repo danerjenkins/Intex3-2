@@ -20,17 +20,17 @@ jobs:
           dotnet-version: "9.0.101" # Use your version
 
       - name: Restore
-        run: dotnet restore ./backend
+        run: dotnet restore ./backend/IntexS3G2.API
 
       - name: Build
-        run: dotnet build ./backend --configuration Release
+        run: dotnet build ./backend/IntexS3G2.API --configuration Release
 
       - name: Publish
-        run: dotnet publish ./backend --configuration Release --output ./publish
+        run: dotnet publish ./backend/IntexS3G2.API --configuration Release --output ./backend/IntexS3G2.API/publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: "my-backend-api"
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
-          package: ./publish
+          package: ./backend/IntexS3G2.API/publish
