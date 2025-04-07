@@ -14,7 +14,13 @@ function ContainerFilter({
   useEffect(() => {
     const fetchContainers = async () => {
       try {
-        const response = await fetch(`${apiUrl}/Competition/GetContainerTypes`);
+        const response = await fetch(
+          `${apiUrl}/Competition/GetContainerTypes`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
 
         const data = await response.json();
         setContainers(data);

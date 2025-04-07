@@ -22,7 +22,11 @@ function CompetitionList({
         .join('&');
 
       const response = await fetch(
-        `${apiUrl}/Competition/GetRootbeers?pageSize=${pageSize}&pageNum=${pageNum}${selectedContainers.length ? `&${containerParams}` : ''}`
+        `${apiUrl}/Competition/GetRootbeers?pageSize=${pageSize}&pageNum=${pageNum}${selectedContainers.length ? `&${containerParams}` : ''}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        }
       );
 
       const data = await response.json();
