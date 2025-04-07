@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
+import CookieConsent from 'react-cookie-consent';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           </Routes>
         </Router>
       </CartProvider>
+      <CookieConsent />
     </>
   );
 }

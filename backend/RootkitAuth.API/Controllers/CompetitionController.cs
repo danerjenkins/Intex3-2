@@ -18,6 +18,20 @@ namespace RootkitAuth.API.Controllers
         [HttpGet("GetRootbeers")]
         public IActionResult GetRootbeers(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? containers = null)
         {
+            
+            string? userId = Request.Cookies["userId"]; // this takes out the cookie in the request
+            
+            
+            
+            HttpContext.Response.Cookies.Append("userId", "1234567890", 
+                new CookieOptions
+                {
+                    HttpOnly = true, // only seen on server
+                    Secure = true, // can only be transmitted over Https
+                    SameSite = SameSiteMode.Strict, // limit cookies from other domain names... keeps it secure may have issues with CORS
+                    Expires = DateTime.Now.AddMinutes(30),
+                } );
+                
             var query = _competitionDbContext.Rootbeers.AsQueryable();
 
             if (containers != null && containers.Any())
