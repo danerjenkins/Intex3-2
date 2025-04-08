@@ -128,6 +128,27 @@ app.MapGet("/db-check", async (ApplicationDbContext db) =>
         return Results.Problem($"❌ DB check failed: {ex.Message}");
     }
 });
+app.MapGet("/movies-db-check", async (MovieDbContext db) =>
+{
+    try
+    {
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var movieCount = await db.Titles.CountAsync(cts.Token); // or any known DbSet
+        return Results.Ok(new
+        {
+            message = "✅ Movies DB connected",
+            movieCount
+        });
+    }
+    catch (OperationCanceledException)
+    {
+        return Results.Problem("❌ Movies DB check timed out.");
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"❌ Movies DB check failed: {ex.Message}");
+    }
+});
 app.MapGet("/env-check", () =>
 {
     var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
