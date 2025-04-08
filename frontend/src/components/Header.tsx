@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserCont } from './AuthorizeView'; // adjust the import path as needed
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
+  const user = useContext(UserCont);
 
   return (
     <header className="bg-dark text-white border-bottom border-secondary py-3 px-4">
@@ -26,15 +28,17 @@ export const Header: React.FC = () => {
           />
         </div>
 
-        {/* Right: Profile Icon */}
-        <div>
-          <img
-            src="/user-icon.webp"
-            alt="User"
-            style={{ width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer' }}
-            onClick={() => navigate('/profile')}
-          />
-        </div>
+        {/* Right: Profile Icon (only if user is logged in) */}
+        {user && (
+          <div>
+            <img
+              src="/user-icon.webp"
+              alt="User"
+              style={{ width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer' }}
+              onClick={() => navigate('/profile')}
+            />
+          </div>
+        )}
       </div>
     </header>
   );

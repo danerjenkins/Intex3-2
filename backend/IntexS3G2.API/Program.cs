@@ -3,9 +3,13 @@ using IntexS3G2.API.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IntexS3G2.API.Services;
+
+DotNetEnv.Env.Load(); // loads from .env by default
+
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
 var builder = WebApplication.CreateBuilder(args);
+ 
 
 // Add services to the container.
 
@@ -19,8 +23,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompetitionDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
 
+// Get the password from environment
+var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
+
+// Get the raw connection string from appsettings
+var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
+
+// Replace the placeholder with the actual password
+var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword ?? "");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
+    options.UseSqlServer(finalConnString));
 
 builder.Services.AddAuthorization();
 
@@ -78,6 +90,18 @@ app.MapGet("/env-check", (IConfiguration config) =>
 {
     var conn = config.GetConnectionString("IdentityConnection");
     return Results.Ok(new { conn });
+});
+app.MapGet("/db-check", async (ApplicationDbContext db) =>
+{
+    try
+    {
+        var userCount = await db.Users.CountAsync(); // or another small query
+        return Results.Ok(new { message = "✅ DB connected!", users = userCount });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"❌ DB check failed: {ex.Message}");
+    }
 });
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
