@@ -28,7 +28,7 @@ jobs:
       - name: Publish
         run: dotnet publish ./backend/IntexS3G2.API --configuration Release --output ./backend/IntexS3G2.API/publish
 
-      - name: Debug: echo password length
+      - name: Debug echo password length
         run: echo "Password length is ${#AUTH_DB_PASSWORD}"
         env:
           AUTH_DB_PASSWORD: ${{ secrets.AUTH_DB_PASSWORD }}
