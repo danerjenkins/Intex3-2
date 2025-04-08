@@ -6,9 +6,34 @@ using IntexS3G2.API.Services;
 
 DotNetEnv.Env.Load(); // loads from .env by default
 
+var builder = WebApplication.CreateBuilder(args);
+
+var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
+var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
+
+Console.WriteLine($"[DEBUG] AUTH_DB_PASSWORD set: {!string.IsNullOrWhiteSpace(dbPassword)}");
+Console.WriteLine($"[DEBUG] Raw IdentityConnection: {rawConnString}");
+
+if (string.IsNullOrWhiteSpace(dbPassword))
+{
+    Console.WriteLine("❌ ENV: AUTH_DB_PASSWORD is missing!");
+}
+
+if (string.IsNullOrWhiteSpace(rawConnString))
+{
+    Console.WriteLine("❌ CONFIG: IdentityConnection string is missing!");
+}
+
+if (string.IsNullOrWhiteSpace(dbPassword) || string.IsNullOrWhiteSpace(rawConnString))
+{
+    throw new Exception("Startup failed: missing DB credentials.");
+}
+
+var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword);
+
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
-var builder = WebApplication.CreateBuilder(args);
+
  
 
 // Add services to the container.
@@ -23,19 +48,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompetitionDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
 
-var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
-var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
-
-// Debug log to test values (safe for now)
-Console.WriteLine($"[DEBUG] DB password present: {(!string.IsNullOrWhiteSpace(dbPassword))}");
-Console.WriteLine($"[DEBUG] Raw connection string: {rawConnString}");
-
-if (string.IsNullOrWhiteSpace(dbPassword) || string.IsNullOrWhiteSpace(rawConnString))
-{
-    throw new InvalidOperationException("Missing AUTH_DB_PASSWORD or IdentityConnection string");
-}
-
-var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword);builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(finalConnString));
 
 builder.Services.AddAuthorization();
@@ -90,11 +103,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
 app.MapGet("/deployed-test", () => "This is the latest deployed version!");
-app.MapGet("/env-check", (IConfiguration config) =>
-{
-    var conn = config.GetConnectionString("IdentityConnection");
-    return Results.Ok(new { conn });
-});
 app.MapGet("/db-check", async (ApplicationDbContext db) =>
 {
     try
