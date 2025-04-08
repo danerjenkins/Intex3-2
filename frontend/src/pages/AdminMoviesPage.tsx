@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie'; // Adjust path and interface name
-import { deleteMovie, fetchMovies } from '../api/MoviesAPI'; // Replace with your actual API file
+import { deleteMovie, fetchMovies } from '../api/MoviesApi'; // Replace with your actual API file
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
@@ -18,7 +18,7 @@ const AdminMoviesPage = () => {
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const data = await fetchMovies(pageSize, pageNum, 'asc', []);
+        const data = await fetchMovies(pageNum, [], []); // Pass correct parameters
         setMovies(data.movies);
         setTotalPages(Math.ceil(data.totalNumMovies / pageSize));
       } catch (err) {
@@ -30,14 +30,14 @@ const AdminMoviesPage = () => {
     loadMovies();
   }, [pageSize, pageNum]);
 
-  const handleDelete = async (movieId: number) => {
+  const handleDelete = async (id: number) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this movie?"
     );
     if (!confirmDelete) return;
     try {
-      await deleteMovie(movieId);
-      setMovies(movies.filter((m) => m.show_id !== movieId));
+      await deleteMovie(id);
+      setMovies(movies.filter((m) => m.show_id !== id)); // Use correct property
     } catch (error) {
       alert(`Failed to delete the movie. Please try again.\n${error}`);
     }
@@ -60,9 +60,7 @@ const AdminMoviesPage = () => {
         <NewMovieForm
           onSuccess={() => {
             setShowForm(false);
-            fetchMovies(pageSize, pageNum, 'asc', []).then((data) =>
-              setMovies(data.movies)
-            );
+            fetchMovies(pageNum, [], []).then((data) => setMovies(data.movies));
           }}
           onCancel={() => setShowForm(false)}
         />
@@ -73,9 +71,7 @@ const AdminMoviesPage = () => {
           movie={editingMovie}
           onSuccess={() => {
             setEditingMovie(null);
-            fetchMovies(pageSize, pageNum, 'asc', []).then((data) =>
-              setMovies(data.movies)
-            );
+            fetchMovies(pageNum, [], []).then((data) => setMovies(data.movies)); // Pass correct parameters
           }}
           onCancel={() => setEditingMovie(null)}
         />
@@ -84,26 +80,24 @@ const AdminMoviesPage = () => {
       <table className="table table-bordered table-striped">
         <thead className="table-dark">
           <tr>
-            <th>ID</th>
+            <th>Type</th>
             <th>Title</th>
             <th>Director</th>
-            <th>Type</th>
-            <th>Year</th>
+            <th>Release Year</th> {/* Fixed typo */}
             <th>Rating</th>
-            <th>Country</th>
+            <th>Genres</th> {/* Fixed typo */}
             <th></th>
           </tr>
         </thead>
         <tbody>
           {movies.map((m) => (
-            <tr key={m.id}>
-              <td>{m.id}</td>
+            <tr key={m.show_id}>
+              <td>{m.type}</td>
               <td>{m.title}</td>
               <td>{m.director}</td>
-              <td>{m.type}</td>
               <td>{m.release_year}</td>
               <td>{m.rating}</td>
-              <td>{m.country}</td>
+              <td>{m.genres}</td> {/* Fixed typo */}
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"
@@ -113,7 +107,7 @@ const AdminMoviesPage = () => {
                 </button>
                 <button
                   className="btn btn-danger btn-sm w-100"
-                  onClick={() => handleDelete(m.id)}
+                  onClick={() => handleDelete(m.show_id)}
                 >
                   Delete
                 </button>

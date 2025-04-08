@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { Movie } from '../types/Movie'; // Import Movie interface (you can create this)
 import { updateMovie } from '../api/MoviesAPI'; // Assuming you have an updateMovie function in your API
 
+const genresList = [
+  "Action", "Adventure", "Anime Series International TV Show", "British TV Shows Docuseries International TV Show", 
+  "Children", "Comedy", "Comedy Drama International", "Docuseries", "Comedy Romance", "Crime TV Show Docuseries", "Documentary", 
+  "Documentary International", "Drama", "Drama International", "Drama Romance", "Family", "Fantasy", "Horror", 
+  "International Thriller", "International TV Show Romantic TV Show", "Kids TV Show", "Language TV Show", "Musical", 
+  "Nature TV Show", "Reality TV Show", "Spirituality", "TV Show Action", "TV Show Comedy", "Talk Shows TV Comedy", "Thriller"
+];
+
 interface EditMovieFormProps {
   movie: Movie; // Use the Movie interface
   onSuccess: () => void;
@@ -17,6 +25,13 @@ const EditMovieForm = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleGenreChange = (genre: string) => {
+    const updatedGenres = formData.genres.includes(genre)
+      ? formData.genres.filter((g) => g !== genre) // Uncheck
+      : [...formData.genres, genre]; // Check
+    setFormData({ ...formData, genres: updatedGenres });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -108,6 +123,20 @@ const EditMovieForm = ({
           onChange={handleChange}
         />
       </label>
+
+      <h3>Select Genres:</h3>
+      {genresList.map((genre) => (
+        <div key={genre}>
+          <input
+            type="checkbox"
+            id={genre}
+            checked={formData.genres.includes(genre)}
+            onChange={() => handleGenreChange(genre)}
+          />
+          <label htmlFor={genre}>{genre}</label>
+        </div>
+      ))}
+
       <button type="submit">Update Movie</button>
       <button type="button" onClick={onCancel}>
         Cancel
