@@ -1,5 +1,6 @@
 // MoviesPage.tsx
 import React, { useState } from 'react';
+import '../App.css';
 import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -57,7 +58,7 @@ export const MoviesPage: React.FC = () => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100 bg-dark text-white">
+    <div className="d-flex flex-column min-vh-100">
       <Header />
 
       <div className="container py-4">
