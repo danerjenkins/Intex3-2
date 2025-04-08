@@ -4,31 +4,53 @@ import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
+import { Movie } from '../types/Movie';
 
-const allMovies = [
+const dummyDataMovies: Movie[] = [
   {
-    id: '1',
-    title: 'Movie One',
-    posterUrl: '/images/movie1.jpg',
-    genres: ['Action', 'Comedy'],
+    id: 's5983',
+    title: '100 Days Of Solitude',
+    posterUrl: '100 Days Of Solitude.jpg',
   },
   {
-    id: '2',
-    title: 'Movie Two',
-    posterUrl: '/images/movie2.jpg',
-    genres: ['Drama'],
+    id: 's1434',
+    title: '100 Halal',
+    posterUrl: '100 Halal.jpg',
   },
-  // Add more dummy data
+  {
+    id: 's5985',
+    title: '100 Hotter',
+    posterUrl: '100 Hotter.jpg',
+  },
+  {
+    id: 's5578',
+    title: '100 Meters',
+    posterUrl: '100 Meters.jpg',
+  },
+  {
+    id: 's3315',
+    title: '100 Things to do Before High School',
+    posterUrl: '100 Things to do Before High School.jpg',
+  },
+  {
+    id: 's5984',
+    title: '100 Years One Womans Fight for Justice',
+    posterUrl: '100 Years One Womans Fight for Justice.jpg',
+  },
+  {
+    id: 's2444',
+    title: '122',
+    posterUrl: '122.jpg',
+  },
+  {
+    id: 's5961',
+    title: '187',
+    posterUrl: '187.jpg',
+  },
 ];
 
 export const MoviesPage: React.FC = () => {
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-
-  const filteredMovies = selectedGenres.length
-    ? allMovies.filter((movie) =>
-        movie.genres.some((genre) => selectedGenres.includes(genre))
-      )
-    : allMovies;
 
   const handleMovieClick = (id: string) => {
     console.log(`Navigate to movie detail with ID: ${id}`);
@@ -44,7 +66,7 @@ export const MoviesPage: React.FC = () => {
           selectedGenres={selectedGenres}
           onGenreChange={setSelectedGenres}
         />
-        <MovieList movies={filteredMovies} onMovieClick={handleMovieClick} />
+        <MovieList movies={dummyDataMovies} onMovieClick={handleMovieClick} />
       </div>
 
       <Footer />

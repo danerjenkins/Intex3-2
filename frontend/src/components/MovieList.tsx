@@ -1,11 +1,6 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
-
-interface Movie {
-  id: string;
-  title: string;
-  posterUrl: string;
-}
+import { Movie } from '../types/Movie';
 
 interface MovieListProps {
   movies: Movie[];
@@ -23,6 +18,7 @@ export const MovieList: React.FC<MovieListProps> = ({
     {movies.map((movie) => (
       <div key={movie.id} style={{ display: 'inline-block' }}>
         <MovieCard
+          id={movie.id}
           title={movie.title}
           posterUrl={movie.posterUrl}
           onClick={() => onMovieClick(movie.id)}
