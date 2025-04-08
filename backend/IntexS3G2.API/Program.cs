@@ -14,27 +14,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Set up connection string for Identity Database
 var isDev = builder.Environment.IsDevelopment();
-var connectionString = isDev 
-                ? builder.Configuration["IdentityConnection"]
-                : Environment.GetEnvironmentVariable("IdentityConnection");
-//Set up Identity Database
+var identityConnection = isDev
+    ? builder.Configuration["IdentityConnection"]
+    : Environment.GetEnvironmentVariable("IdentityConnection");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
+    options.UseSqlServer(identityConnection, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure();
     }));
 
+var movieConnection = isDev
+    ? builder.Configuration["MovieConnection"]
+    : Environment.GetEnvironmentVariable("MovieConnection");
 
-// Set up connection string for Movies Database
-connectionString = isDev
-                ? builder.Configuration["MovieConnection"]
-                : Environment.GetEnvironmentVariable("MovieConnection");
-//Set up Movies Database
 builder.Services.AddDbContext<MovieDbContext>(options =>
-    options.UseSqlServer(connectionString, sqlOptions =>
+    options.UseSqlServer(movieConnection, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure();
     }));
+
+    Console.WriteLine($"[Startup] IdentityConnection: {identityConnection}");
+Console.WriteLine($"[Startup] MovieConnection: {movieConnection}");
+
 
 
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
