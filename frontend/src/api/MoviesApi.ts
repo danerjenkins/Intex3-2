@@ -66,7 +66,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
 
 // This function is for updating a movie in the API
 export const updateMovie = async (
-  show_id: number, // The ID of the movie we want to update
+  show_id: string, // The ID of the movie we want to update
   updatedMovie: Movie // The updated movie data
 ): Promise<Movie> => {
   try {
@@ -91,7 +91,7 @@ export const updateMovie = async (
 };
 
 // This function is for deleting a movie from the API
-export const deleteMovie = async (show_id: number): Promise<void> => {
+export const deleteMovie = async (show_id: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${show_id}`, {
       method: 'DELETE',

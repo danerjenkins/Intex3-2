@@ -30,7 +30,7 @@ const AdminMoviesPage = () => {
     loadMovies();
   }, [pageSize, pageNum]);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this movie?"
     );
@@ -97,7 +97,7 @@ const AdminMoviesPage = () => {
               <td>{m.director}</td>
               <td>{m.release_year}</td>
               <td>{m.rating}</td>
-              <td>{m.genres}</td> {/* Fixed typo */}
+              <td>{m.genre}</td>
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"

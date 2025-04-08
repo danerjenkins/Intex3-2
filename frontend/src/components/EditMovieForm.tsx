@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Movie } from '../types/Movie'; // Import Movie interface (you can create this)
-import { updateMovie } from '../api/MoviesAPI'; // Assuming you have an updateMovie function in your API
+import { updateMovie } from '../api/MoviesApi'; // Assuming you have an updateMovie function in your API
 
 const genresList = [
   "Action", "Adventure", "Anime Series International TV Show", "British TV Shows Docuseries International TV Show", 
@@ -28,11 +28,14 @@ const EditMovieForm = ({
   };
 
   const handleGenreChange = (genre: string) => {
-    const updatedGenres = formData.genres.includes(genre)
-      ? formData.genres.filter((g) => g !== genre) // Uncheck
-      : [...formData.genres, genre]; // Check
-    setFormData({ ...formData, genres: updatedGenres });
+    const currentGenres = formData.genre.split(',').map(g => g.trim()).filter(Boolean);
+    const updatedGenres = currentGenres.includes(genre)
+      ? currentGenres.filter(g => g !== genre)
+      : [...currentGenres, genre];
+  
+    setFormData({ ...formData, genre: updatedGenres.join(', ') });
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +120,8 @@ const EditMovieForm = ({
       </label>
       <label>
         Description:
-        <textarea
+        <input
+          type="text"
           name="description"
           value={formData.description}
           onChange={handleChange}
@@ -130,7 +134,7 @@ const EditMovieForm = ({
           <input
             type="checkbox"
             id={genre}
-            checked={formData.genres.includes(genre)}
+            checked={formData.genre.split(',').map(g => g.trim()).includes(genre)}
             onChange={() => handleGenreChange(genre)}
           />
           <label htmlFor={genre}>{genre}</label>
