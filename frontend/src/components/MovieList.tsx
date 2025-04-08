@@ -1,6 +1,6 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
-import { DummyMovie } from '../types/dummyMovie';
+import { DummyMovie } from '../types/DummyMovie';
 import '../index.css';
 
 interface MovieListProps {
