@@ -12,57 +12,48 @@ Console.WriteLine("=== Starting Intex Backend ===");
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configConn = builder.Configuration["IdentityConnection"];
-var envConn = Environment.GetEnvironmentVariable("IdentityConnection");
-
-
-Console.WriteLine($"[Startup] Config.IdentityConnection exists: {configConn is not null}");
-Console.WriteLine($"[Startup] ENV.IdentityConnection exists: {envConn is not null}");
-
+// Set up connection string for Identity Database
 var isDev = builder.Environment.IsDevelopment();
 var connectionString = isDev 
                 ? builder.Configuration["IdentityConnection"]
                 : Environment.GetEnvironmentVariable("IdentityConnection");
-
-if (string.IsNullOrWhiteSpace(connectionString))
-{
-    throw new Exception("❌ IdentityConnection not found in config or environment.");
-}
-
+//Set up Identity Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure();
     }));
 
+
+// Set up connection string for Movies Database
+connectionString = isDev
+                ? builder.Configuration["MovieConnection"]
+                : Environment.GetEnvironmentVariable("MovieConnection");
+//Set up Movies Database
+builder.Services.AddDbContext<MovieDbContext>(options =>
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure();
+    }));
+
+
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
 
- 
-
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
-
-builder.Services.AddDbContext<CompetitionDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
-
 builder.Services.AddAuthorization();
-
+// Add authentication
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email; // Ensure email is stored in claims
 });
-
+// Add Identity services
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
 
 builder.Services.ConfigureApplicationCookie(options =>
@@ -74,6 +65,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login"; // Set the login path
 });
 
+
+// Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -113,6 +106,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapIdentityApi<IdentityUser>();
+
+// Add custom endpoints for health checks and other functionalities
 app.MapGet("/deployed-test", () => "This is the latest deployed version!");
 app.MapGet("/db-check", async (ApplicationDbContext db) =>
 {
@@ -141,6 +136,8 @@ app.MapGet("/env-check", () =>
     });
 });
 app.MapGet("/", () => Results.Ok("✅ Backend is alive"));
+
+// Add login endpoint
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
@@ -156,7 +153,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-
+// Add ping endpoint for authentication check
 app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 {
     if (!user.Identity?.IsAuthenticated ?? false)

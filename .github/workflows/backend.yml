@@ -33,6 +33,9 @@ jobs:
 
       - name: Inject connection string for Identity
         run: echo "IdentityConnection=${{ secrets.IDENTITY_CONNECTION }}" >> $GITHUB_ENV
+
+      - name: Inject connection string for Movie
+        run: echo "MovieConnection=${{ secrets.MOVIE_CONNECTION }}" >> $GITHUB_ENV
         
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
