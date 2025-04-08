@@ -8,12 +8,13 @@ interface NewMovieFormProps {
 }
 
 // Updated genres list based on your provided data
-const genresList = [ 'Action', 'Adventure', 'Anime Series International TV Shows', 'British TV Shows Docuseries International TV Shows', 
-  'Children', 'Comedies', 'Comedies Dramas International Movies', 'Comedies International Movies', 'Comedies Romantic Movies', 
-  'Crime TV Shows Docuseries', 'Documentaries', 'Documentaries International Movies', 'Docuseries', 'Dramas', 'Dramas International Movies', 
-  'Dramas Romantic Movies', 'Family Movies', 'Fantasy', 'Horror Movies', 'International Movies Thrillers', 'International TV Shows Romantic TV Shows TV Dramas',
-   'Kids TV', 'Language TV Shows', 'Musicals', 'Nature TV', 'Reality TV', 'Spirituality', 'TV Action', 'TV Comedies', 'TV Dramas', 'Talk Shows TV Comedies', 'Thrillers'
-];
+const genresList = [
+    "Action", "Adventure", "Anime Series International TV Show", "British TV Shows Docuseries International TV Show", 
+    "Children", "Comedy", "Comedy Drama International", "Docuseries", "Comedy Romance", "Crime TV Show Docuseries", "Documentary", 
+    "Documentary International", "Drama", "Drama International", "Drama Romance", "Family", "Fantasy", "Horror", 
+    "International Thriller", "International TV Show Romantic TV Show", "Kids TV Show", "Language TV Show", "Musical", 
+    "Nature TV Show", "Reality TV Show", "Spirituality", "TV Show Action", "TV Show Comedy", "Talk Shows TV Comedy", "Thriller"
+  ];
 
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({
