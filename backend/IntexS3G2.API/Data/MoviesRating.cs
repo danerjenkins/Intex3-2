@@ -3,8 +3,8 @@
     public class MoviesRating
     {
         
-        public int UserId { get; set; }
-        public int ShowId { get; set; }
-        public int Rating { get; set; }
+        public byte user_id { get; set; }
+        public string show_id { get; set; }
+        public byte rating { get; set; }
     }
 }

@@ -4,19 +4,19 @@ namespace IntexS3G2.API.Data
     public class User
     {
         [Key]
-        public byte UserId { get; set; }  // assuming tinyint maps to byte
+        public byte user_id { get; set; }  // assuming tinyint maps to byte
 
-        public string? Name { get; set; }
+        public string? name { get; set; }
 
         [Phone]
-        public string? Phone { get; set; }
+        public string? phone { get; set; }
 
         [EmailAddress]
-        public string? Email { get; set; }
+        public string? email { get; set; }
 
-        public int? Age { get; set; }
+        public byte? age { get; set; }
 
-        public string? Gender { get; set; }
+        public string? gender { get; set; }
 
         // Streaming service subscriptions
         public bool Netflix { get; set; }
@@ -29,8 +29,8 @@ namespace IntexS3G2.API.Data
         public bool Peacock { get; set; }
 
         // Location
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? Zip { get; set; }
+        public string? city { get; set; }
+        public string? state { get; set; }
+        public int? zip { get; set; }
     }
 }

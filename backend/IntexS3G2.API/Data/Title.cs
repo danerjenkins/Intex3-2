@@ -4,17 +4,17 @@ namespace IntexS3G2.API.Data
     public class Title
     {
         [Key]
-        public string ShowId { get; set; } = string.Empty;
+        public string show_id { get; set; } = string.Empty;
 
-        public string? Type { get; set; }
-        public string? TitleName { get; set; }
-        public string? Director { get; set; }
-        public string? Cast { get; set; }
-        public string? Country { get; set; }
-        public int? ReleaseYear { get; set; }
-        public string? Rating { get; set; }
-        public string? Duration { get; set; }
-        public string? Description { get; set; }
+        public string? type { get; set; }
+        public string? title { get; set; }
+        public string? director { get; set; }
+        public string? cast { get; set; }
+        public string? country { get; set; }
+        public short? release_year { get; set; }
+        public string? rating { get; set; }
+        public string? duration { get; set; }
+        public string? description { get; set; }
 
         // Genre/Category Booleans
         public bool Action { get; set; }
