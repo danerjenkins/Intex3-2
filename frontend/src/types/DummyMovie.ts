@@ -1,5 +1,5 @@
 export interface DummyMovie {
-  show_id: string;
+  id: string;
   title: string;
   posterUrl: string;
 }
