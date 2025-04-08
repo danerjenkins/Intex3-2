@@ -2,7 +2,7 @@
 import React from 'react';
 
 export const PolicyPage: React.FC = () => (
-  <div className="bg-dark text-white min-vh-100 p-4 p-md-5">
+  <div className="min-vh-100 p-4 p-md-5">
     <h1 className="h2 fw-bold mb-4">Privacy Policy</h1>
     <p>
       At CineNiche ("we," "us," "our"), we are committed to protecting your
