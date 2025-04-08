@@ -7,10 +7,18 @@ using IntexS3G2.API.Services;
 #if DEBUG
 DotNetEnv.Env.Load(); // loads from .env by default
 #endif
-Console.WriteLine("=== STARTING UP BACKEND ===");
-Console.WriteLine($"[ENV] IdentityConnection: {(Environment.GetEnvironmentVariable("IdentityConnection") is string envConn && !string.IsNullOrWhiteSpace(envConn) ? "✅ Found" : "❌ Missing")}");
+Console.WriteLine("=== Starting Intex Backend ===");
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+var configConn = builder.Configuration["IdentityConnection"];
+var envConn = Environment.GetEnvironmentVariable("IdentityConnection");
+
+
+Console.WriteLine($"[Startup] Config.IdentityConnection exists: {configConn is not null}");
+Console.WriteLine($"[Startup] ENV.IdentityConnection exists: {envConn is not null}");
+
 var isDev = builder.Environment.IsDevelopment();
 var connectionString = isDev 
                 ? builder.Configuration["IdentityConnection"]
@@ -132,6 +140,7 @@ app.MapGet("/env-check", () =>
         length = dbPassword?.Length
     });
 });
+app.MapGet("/", () => Results.Ok("✅ Backend is alive"));
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();

@@ -31,14 +31,9 @@ jobs:
       - name: Publish
         run: dotnet publish ./backend/IntexS3G2.API/IntexS3G2.csproj --configuration Release --output ./publish
 
-      - name: Debug echo password length
-        run: echo "Password length is ${#AUTH_DB_PASSWORD}"
-        env:
-          AUTH_DB_PASSWORD: ${{ secrets.AUTH_DB_PASSWORD }}
-
-      - name: Inject DB password into env
-        run: echo "AUTH_DB_PASSWORD=${{ secrets.AUTH_DB_PASSWORD }}" >> $GITHUB_ENV
-
+      - name: Inject connection string for Identity
+        run: echo "IdentityConnection=${{ secrets.IDENTITY_CONNECTION }}" >> $GITHUB_ENV
+        
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
