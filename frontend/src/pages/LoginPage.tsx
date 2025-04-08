@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginStyles.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 function LoginPage() {

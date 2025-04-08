@@ -1,29 +1,36 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
-import { Movie } from '../types/Movie';
+import { DummyMovie } from '../types/dummyMovie';
+import '../index.css';
 
 interface MovieListProps {
-  movies: Movie[];
+  recommender: string;
+  movies: DummyMovie[];
   onMovieClick: (id: string) => void;
 }
 
 export const MovieList: React.FC<MovieListProps> = ({
+  recommender,
   movies,
   onMovieClick,
 }) => (
-  <div
-    className="d-flex flex-row overflow-auto px-3 py-4 gap-3"
-    style={{ whiteSpace: 'nowrap' }}
-  >
-    {movies.map((movie) => (
-      <div key={movie.id} style={{ display: 'inline-block' }}>
-        <MovieCard
-          id={movie.id}
-          title={movie.title}
-          posterUrl={movie.posterUrl}
-          onClick={() => onMovieClick(movie.id)}
-        />
-      </div>
-    ))}
-  </div>
+  <>
+    <h5>{recommender}</h5>
+    <div
+      className="d-flex flex-row overflow-auto px-3 py-4 gap-3"
+      style={{ whiteSpace: 'nowrap' }}
+    >
+      <br />
+      {movies.map((movie) => (
+        <div key={movie.id} style={{ display: 'inline-block' }}>
+          <MovieCard
+            id={movie.id}
+            title={movie.title}
+            posterUrl={movie.posterUrl}
+            onClick={() => onMovieClick(movie.id)}
+          />
+        </div>
+      ))}
+    </div>
+  </>
 );

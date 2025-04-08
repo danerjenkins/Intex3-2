@@ -4,48 +4,49 @@ import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
-import { Movie } from '../types/Movie';
+import { DummyMovie } from '../types/dummyMovie';
 
-const dummyDataMovies: Movie[] = [
+const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
+const dummyDataMovies: DummyMovie[] = [
   {
     id: 's5983',
     title: '100 Days Of Solitude',
-    posterUrl: '100 Days Of Solitude.jpg',
+    posterUrl: `${imgUrl}100%20Days%20Of%20Solitude.jpg`,
   },
   {
     id: 's1434',
     title: '100 Halal',
-    posterUrl: '100 Halal.jpg',
+    posterUrl: `${imgUrl}100%20Halal.jpg`,
   },
   {
     id: 's5985',
     title: '100 Hotter',
-    posterUrl: '100 Hotter.jpg',
+    posterUrl: `${imgUrl}100%20Hotter.jpg`,
   },
   {
     id: 's5578',
     title: '100 Meters',
-    posterUrl: '100 Meters.jpg',
+    posterUrl: `${imgUrl}100%20Meters.jpg`,
   },
   {
     id: 's3315',
     title: '100 Things to do Before High School',
-    posterUrl: '100 Things to do Before High School.jpg',
+    posterUrl: `${imgUrl}100%20Things%20to%20do%20Before%20High%20School.jpg`,
   },
   {
     id: 's5984',
     title: '100 Years One Womans Fight for Justice',
-    posterUrl: '100 Years One Womans Fight for Justice.jpg',
+    posterUrl: `${imgUrl}100%20Years%20One%20Womans%20Fight%20for%20Justice.jpg`,
   },
   {
     id: 's2444',
     title: '122',
-    posterUrl: '122.jpg',
+    posterUrl: `${imgUrl}122.jpg`,
   },
   {
     id: 's5961',
     title: '187',
-    posterUrl: '187.jpg',
+    posterUrl: `${imgUrl}187.jpg`,
   },
 ];
 
@@ -57,16 +58,30 @@ export const MoviesPage: React.FC = () => {
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100 bg-dark text-white">
+    <div className="d-flex flex-column min-vh-100">
       <Header />
 
-      <div className="container py-4">
-        <h1 className="h4 fw-bold mb-4">Browse Movies</h1>
+      <div className="container">
+        <h3>Browse Movies</h3>
         <GenreFilter
           selectedGenres={selectedGenres}
           onGenreChange={setSelectedGenres}
         />
-        <MovieList movies={dummyDataMovies} onMovieClick={handleMovieClick} />
+        <MovieList
+          recommender="Dummy Movies"
+          movies={dummyDataMovies}
+          onMovieClick={handleMovieClick}
+        />
+        <MovieList
+          recommender="More Dummy Movies"
+          movies={dummyDataMovies}
+          onMovieClick={handleMovieClick}
+        />
+        <MovieList
+          recommender="Some More Dummy Movies"
+          movies={dummyDataMovies}
+          onMovieClick={handleMovieClick}
+        />
       </div>
 
       <Footer />
