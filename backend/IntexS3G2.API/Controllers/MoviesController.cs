@@ -14,18 +14,18 @@ namespace IntexS3G2.API.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private MovieDbContext _moviesContext;
+        private MovieDbContext _movieContext;
 
         public MoviesController(MovieDbContext temp)
         {
-            _moviesContext = temp;
+            _movieContext = temp;
         }
 
         [HttpGet("GetAdminMovieData")]
         public IActionResult GetMovieTitles(int pageNumber = 1, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             int pageSize = 10;
-            var query = _moviesContext.MoviesTitles.AsQueryable();
+            var query = _movieContext.Titles.AsQueryable();
 
             if (ratings != null && ratings.Any())
             {
@@ -60,7 +60,7 @@ namespace IntexS3G2.API.Controllers
         [HttpGet("GetMovieFromId")]
         public IActionResult GetMovieInfo(string showId)
         {
-            var query = _moviesContext.MoviesTitles.AsQueryable();
+            var query = _movieContext.Titles.AsQueryable();
 
             query = query.Where(m => m.ShowId == showId);
             
