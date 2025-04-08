@@ -4,7 +4,6 @@ import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
-import { Movie } from '../types/Movie';
 import { DummyMovie } from '../types/dummyMovie';
 
 const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
