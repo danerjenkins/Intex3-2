@@ -41,13 +41,27 @@ namespace IntexS3G2.API.Controllers
                     )
                 );
             }
-
-            var totalNumberItems = query.Count();
+            
             var results = query
+                .Select(m => new
+                {
+                    m.show_id,
+                    m.type,
+                    m.title,
+                    m.director,
+                    m.cast,
+                    m.country,
+                    m.release_year,
+                    m.rating,
+                    m.duration,
+                    m.description,
+                    m.Genre
+                })
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-
+            var totalNumberItems = query.Count();
+            
             var returnTitles = new
             {
                 movies = results,
@@ -60,11 +74,28 @@ namespace IntexS3G2.API.Controllers
         [HttpGet("GetMovieFromId")]
         public IActionResult GetMovieFromId(string showId)
         {
-            var query = _movieContext.Titles.AsQueryable();
-
-            query = query.Where(m => m.show_id == showId);
+            var movie = _movieContext.Titles
+                .Where(m => m.show_id == showId)
+                .Select(m => new
+                {
+                    m.show_id,
+                    m.type,
+                    m.title,
+                    m.director,
+                    m.cast,
+                    m.country,
+                    m.release_year,
+                    m.rating,
+                    m.duration,
+                    m.description,
+                    m.Genre
+                })
+                .FirstOrDefault();
             
-            return Ok(query);
+            if (movie == null)
+                return NotFound();
+            
+            return Ok(movie);
         }
 
         [HttpPut("UpdateMovie/{showId}")]
@@ -102,7 +133,7 @@ namespace IntexS3G2.API.Controllers
         }
         
         [HttpDelete("/DeleteMovie/{showId}")]
-        public IActionResult DeleteMovie(int showId)
+        public IActionResult DeleteMovie(string showId)
         {
             var movie = _movieContext.Titles.Find(showId);
 
@@ -116,6 +147,17 @@ namespace IntexS3G2.API.Controllers
         
             return NoContent();
         }
-        
+
+        [HttpGet("/GetUserRatedMovies")]
+        public IActionResult GetUserRatedMovies(int userId)
+        {
+            var query = _movieContext.Ratings
+                .Where(m => m.user_id == userId)
+                .OrderByDescending(m => m.rating)
+                .Take(20)
+                .ToList();
+            
+            return Ok(query);
+        }
     }
 }

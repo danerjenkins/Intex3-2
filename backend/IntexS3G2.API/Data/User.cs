@@ -4,7 +4,7 @@ namespace IntexS3G2.API.Data
     public class User
     {
         [Key]
-        public byte user_id { get; set; }  // assuming tinyint maps to byte
+        public int user_id { get; set; } 
 
         public string? name { get; set; }
 
@@ -14,7 +14,7 @@ namespace IntexS3G2.API.Data
         [EmailAddress]
         public string? email { get; set; }
 
-        public byte? age { get; set; }
+        public int? age { get; set; }
 
         public string? gender { get; set; }
 
