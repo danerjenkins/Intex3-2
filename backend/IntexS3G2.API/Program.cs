@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IntexS3G2.API.Services;
 
+#if DEBUG
 DotNetEnv.Env.Load(); // loads from .env by default
+#endif
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder.Configuration["IdentityConnection"]
-                     ?? Environment.GetEnvironmentVariable("IdentityConnection");
+var isDev = builder.Environment.IsDevelopment();
+var connectionString = isDev 
+                ? builder.Configuration["IdentityConnection"]
+                : Environment.GetEnvironmentVariable("IdentityConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
@@ -17,7 +20,10 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFaliure();
+    }));
 
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
