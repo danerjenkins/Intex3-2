@@ -20,16 +20,16 @@ jobs:
           dotnet-version: "9.0.101" # Use your version
 
       - name: Restore
-        run: dotnet restore ./backend/IntexS3G2.API
+        run: dotnet restore ./backend/IntexS3G2.API/IntexS3G2.csproj
 
       - name: Clean
-        run: dotnet clean ./backend/IntexS3G2.API/IntexS3G2.API.csproj
+        run: dotnet clean ./backend/IntexS3G2.API/IntexS3G2.csproj
 
       - name: Build
-        run: dotnet build ./backend/IntexS3G2.API --configuration Release
+        run: dotnet build ./backend/IntexS3G2.API/IntexS3G2.csproj --configuration Release
 
       - name: Publish
-        run: dotnet publish ./backend/IntexS3G2.API/IntexS3G2.API.csproj --configuration Release --output ./publish
+        run: dotnet publish ./backend/IntexS3G2.API/IntexS3G2.csproj --configuration Release --output ./publish
 
       - name: Debug echo password length
         run: echo "Password length is ${#AUTH_DB_PASSWORD}"
