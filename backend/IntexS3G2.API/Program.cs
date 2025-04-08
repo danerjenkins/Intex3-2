@@ -8,28 +8,16 @@ DotNetEnv.Env.Load(); // loads from .env by default
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
-var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
+var connectionString = builder.Configuration["IdentityConnection"]
+                     ?? Environment.GetEnvironmentVariable("IdentityConnection");
 
-Console.WriteLine($"[DEBUG] AUTH_DB_PASSWORD set: {!string.IsNullOrWhiteSpace(dbPassword)}");
-Console.WriteLine($"[DEBUG] Raw IdentityConnection: {rawConnString}");
-
-if (string.IsNullOrWhiteSpace(dbPassword))
+if (string.IsNullOrWhiteSpace(connectionString))
 {
-    Console.WriteLine("❌ ENV: AUTH_DB_PASSWORD is missing!");
+    throw new Exception("❌ IdentityConnection not found in config or environment.");
 }
 
-if (string.IsNullOrWhiteSpace(rawConnString))
-{
-    Console.WriteLine("❌ CONFIG: IdentityConnection string is missing!");
-}
-
-if (string.IsNullOrWhiteSpace(dbPassword) || string.IsNullOrWhiteSpace(rawConnString))
-{
-    throw new Exception("Startup failed: missing DB credentials.");
-}
-
-var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword);
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
 
@@ -47,9 +35,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CompetitionDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
-
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(finalConnString));
 
 builder.Services.AddAuthorization();
 
