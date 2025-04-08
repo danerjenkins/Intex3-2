@@ -34,7 +34,12 @@ export const Header: React.FC = () => {
             <img
               src="/user-icon.webp"
               alt="User"
-              style={{ width: '45px', height: '45px', borderRadius: '50%', cursor: 'pointer' }}
+              style={{
+                width: '45px',
+                height: '45px',
+                borderRadius: '50%',
+                cursor: 'pointer',
+              }}
               onClick={() => navigate('/profile')}
             />
           </div>
