@@ -1,6 +1,10 @@
 body {
-  background: #007bff;
-  background: linear-gradient(to right, #0062e6, #33aeff);
+  background: linear-gradient(to right, #34223a, rgb(62, 2, 2));
+  color: #c0c0c0;
+}
+
+.h4 {
+  color: #c0c0c0;
 }
 
 .btn-login {
@@ -21,6 +25,7 @@ body {
 
 .card-body {
   min-width: 400px;
+  color: #c0c0c0;
 }
 
 .error {
