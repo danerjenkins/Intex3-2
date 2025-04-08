@@ -7,6 +7,8 @@ using IntexS3G2.API.Services;
 #if DEBUG
 DotNetEnv.Env.Load(); // loads from .env by default
 #endif
+Console.WriteLine("=== STARTING UP BACKEND ===");
+Console.WriteLine($"[ENV] IdentityConnection: {(Environment.GetEnvironmentVariable("IdentityConnection") is string envConn && !string.IsNullOrWhiteSpace(envConn) ? "✅ Found" : "❌ Missing")}");
 
 var builder = WebApplication.CreateBuilder(args);
 var isDev = builder.Environment.IsDevelopment();
@@ -75,7 +77,17 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
-var app = builder.Build();
+WebApplication app;
+try
+{
+    app = builder.Build();
+    Console.WriteLine("✅ App built successfully.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Failed to build app: {ex.Message}");
+    throw;
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
