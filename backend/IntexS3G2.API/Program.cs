@@ -27,10 +27,10 @@ builder.Services.AddDbContext<CompetitionDbContext>(options =>
 var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
 
 // Get the raw connection string from appsettings
-var rawConnString = builder.Configuration.GetConnectionString("DefaultConnection");
+var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
 
 // Replace the placeholder with the actual password
-var finalConnString = rawConnString.Replace("__DB_PASSWORD__", dbPassword ?? "");
+var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword ?? "");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(finalConnString));
 
@@ -90,6 +90,18 @@ app.MapGet("/env-check", (IConfiguration config) =>
 {
     var conn = config.GetConnectionString("IdentityConnection");
     return Results.Ok(new { conn });
+});
+app.MapGet("/db-check", async (ApplicationDbContext db) =>
+{
+    try
+    {
+        var userCount = await db.Users.CountAsync(); // or another small query
+        return Results.Ok(new { message = "✅ DB connected!", users = userCount });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem($"❌ DB check failed: {ex.Message}");
+    }
 });
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
