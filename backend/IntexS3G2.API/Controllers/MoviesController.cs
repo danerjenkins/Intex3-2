@@ -22,14 +22,14 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("GetAdminMovieData")]
-        public IActionResult GetMovieTitles(int pageNumber = 1, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
+        public IActionResult GetAdminMovieData(int pageNumber = 1, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             int pageSize = 10;
             var query = _movieContext.Titles.AsQueryable();
 
             if (ratings != null && ratings.Any())
             {
-                query = query.Where(r => ratings.Contains(r.Rating) );
+                query = query.Where(r => ratings.Contains(r.rating));
             }
             
             if (genres != null && genres.Any())
@@ -51,22 +51,71 @@ namespace IntexS3G2.API.Controllers
             var returnTitles = new
             {
                 movies = results,
-                totalNumberItems = totalNumberItems
+                totalNumberItems
             };
 
             return Ok(returnTitles);
         }
 
         [HttpGet("GetMovieFromId")]
-        public IActionResult GetMovieInfo(string showId)
+        public IActionResult GetMovieFromId(string showId)
         {
             var query = _movieContext.Titles.AsQueryable();
 
-            query = query.Where(m => m.ShowId == showId);
+            query = query.Where(m => m.show_id == showId);
             
             return Ok(query);
         }
+
+        [HttpPut("UpdateMovie/{showId}")]
+        public IActionResult UpdateMovie(string showId, [FromBody] Title updatedMovie)
+        {    
+            var existingMovie = _movieContext.Titles.Find(showId);
+            
+            if (existingMovie == null)
+            {
+                return NotFound(new { message = "Book not found." });
+            }
+            
+            existingMovie.title = updatedMovie.title;
+            existingMovie.type = updatedMovie.type;
+            existingMovie.director = updatedMovie.director;
+            existingMovie.cast = updatedMovie.cast;
+            existingMovie.release_year = updatedMovie.release_year;
+            existingMovie.rating = updatedMovie.rating;
+            existingMovie.duration = updatedMovie.duration;
+            existingMovie.description = updatedMovie.description;
+            existingMovie.Genre = updatedMovie.Genre;
         
+            _movieContext.Titles.Update(existingMovie);
+            _movieContext.SaveChanges();
+            
+            return Ok(existingMovie);
+        }
+
+        [HttpPost("CreateMovie")]
+        public IActionResult CreateMovie([FromBody] Title movieToAdd)
+        {
+            _movieContext.Titles.Add(movieToAdd);
+            _movieContext.SaveChanges();
+            return Ok(movieToAdd);
+        }
+        
+        [HttpDelete("/DeleteMovie/{showId}")]
+        public IActionResult DeleteMovie(int showId)
+        {
+            var movie = _movieContext.Titles.Find(showId);
+
+            if (movie == null)
+            {
+                return NotFound(new { message = "Movie not found." });
+            }
+        
+            _movieContext.Titles.Remove(movie);
+            _movieContext.SaveChanges();
+        
+            return NoContent();
+        }
         
     }
 }
