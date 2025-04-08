@@ -23,15 +23,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompetitionDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CompetitionConnection")));
 
-// Get the password from environment
 var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
-
-// Get the raw connection string from appsettings
 var rawConnString = builder.Configuration.GetConnectionString("IdentityConnection");
 
-// Replace the placeholder with the actual password
-var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword ?? "");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+// Debug log to test values (safe for now)
+Console.WriteLine($"[DEBUG] DB password present: {(!string.IsNullOrWhiteSpace(dbPassword))}");
+Console.WriteLine($"[DEBUG] Raw connection string: {rawConnString}");
+
+if (string.IsNullOrWhiteSpace(dbPassword) || string.IsNullOrWhiteSpace(rawConnString))
+{
+    throw new InvalidOperationException("Missing AUTH_DB_PASSWORD or IdentityConnection string");
+}
+
+var finalConnString = rawConnString.Replace("__AUTH_DB_PASSWORD__", dbPassword);builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(finalConnString));
 
 builder.Services.AddAuthorization();
