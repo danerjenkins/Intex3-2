@@ -46,3 +46,5 @@ jobs:
           action: "close"
 env:
   VITE_API_URL: ${{ secrets.VITE_API_URL }}
+  VITE_AZURE_KEY: ${{ secrets.VITE_AZURE_KEY }}
+  VITE_AZURE_URL: ${{ secrets.VITE_AZURE_URL }}

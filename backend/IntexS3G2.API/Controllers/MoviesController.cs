@@ -116,6 +116,17 @@ namespace IntexS3G2.API.Controllers
         
             return NoContent();
         }
-        
+
+        [HttpGet("/GetUserRatedMovies")]
+        public IActionResult GetUserRatedMovies(int userId)
+        {
+            var query = _movieContext.Ratings
+                .Where(m => m.user_id == userId)
+                .OrderByDescending(m => m.rating)
+                .Take(20)
+                .ToList();
+            
+            return Ok(query);
+        }
     }
 }
