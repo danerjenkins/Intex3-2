@@ -28,9 +28,9 @@ jobs:
       - name: Publish
         run: dotnet publish ./backend/IntexS3G2.API --configuration Release --output ./backend/IntexS3G2.API/publish
 
-      - name: Replace DB password in appsettings.json
-        run: |
-          sed -i 's/__AUTH_DB_PASSWORD__/${{ secrets.AUTH_DB_PASSWORD }}/g' ./backend/IntexS3G2.API/appsettings.json
+      - name: Inject DB password into env
+        run: echo "Password length is ${#AUTH_DB_PASSWORD}"
+        run: echo "AUTH_DB_PASSWORD=${{ secrets.AUTH_DB_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2

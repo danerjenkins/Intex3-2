@@ -95,13 +95,27 @@ app.MapGet("/db-check", async (ApplicationDbContext db) =>
 {
     try
     {
-        var userCount = await db.Users.CountAsync(); // or another small query
-        return Results.Ok(new { message = "✅ DB connected!", users = userCount });
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        var userCount = await db.Users.CountAsync(cts.Token);
+        return Results.Ok(new { message = "✅ DB connected", users = userCount });
+    }
+    catch (OperationCanceledException)
+    {
+        return Results.Problem("❌ DB check timed out.");
     }
     catch (Exception ex)
     {
         return Results.Problem($"❌ DB check failed: {ex.Message}");
     }
+});
+app.MapGet("/env-check", () =>
+{
+    var dbPassword = Environment.GetEnvironmentVariable("AUTH_DB_PASSWORD");
+    return Results.Ok(new
+    {
+        hasPassword = !string.IsNullOrWhiteSpace(dbPassword),
+        length = dbPassword?.Length
+    });
 });
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
