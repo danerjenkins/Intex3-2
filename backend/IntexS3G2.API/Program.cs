@@ -22,7 +22,7 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
     {
-        sqlOptions.EnableRetryOnFaliure();
+        sqlOptions.EnableRetryOnFailure();
     }));
 
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
