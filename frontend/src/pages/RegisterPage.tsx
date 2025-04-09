@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
 
 function Register() {
   // state variables for email and passwords
@@ -65,6 +67,8 @@ function Register() {
   };
 
   return (
+    <>
+    <Header />
     <div className="container">
       <div className="row">
         <div className="card border-0 shadow rounded-3 ">
@@ -128,7 +132,10 @@ function Register() {
           </div>
         </div>
       </div>
+      
     </div>
+    <Footer />
+    </>
   );
 }
 

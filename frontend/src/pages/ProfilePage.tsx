@@ -14,11 +14,23 @@ export const ProfilePage: React.FC = () => {
     location: 'Provo, UT',
   };
 
-  const handleLogout = () => {
-    // Clear local storage / token
-    localStorage.removeItem('token');
-    // Redirect to home or login
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include', // Ensure cookies are sent
+      });
+  
+      if (response.ok) {
+        // Optionally: clear user context or force a reload
+        navigate('/login'); // Redirect to login after logout
+      } else {
+        const errorData = await response.json();
+        console.error('Logout failed:', errorData.message || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (

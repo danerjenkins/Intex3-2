@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserCont } from './AuthorizeView'; // adjust the import path as needed
+import { UserContext } from './AuthorizeView';
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
-  const user = useContext(UserCont);
+  const user = useContext(UserContext);
 
   return (
     <header className="bg-dark text-white border-bottom border-secondary py-3 px-4">

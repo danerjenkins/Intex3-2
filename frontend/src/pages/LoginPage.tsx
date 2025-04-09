@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.css';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 function LoginPage() {
   // state variables for email and passwords
@@ -69,6 +71,8 @@ function LoginPage() {
   };
 
   return (
+    <>
+    <Header /> 
     <div className="container">
       <div className="row">
         <div className="card border-0 shadow rounded-3 ">
@@ -155,6 +159,8 @@ function LoginPage() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 
