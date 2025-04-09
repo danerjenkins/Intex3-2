@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchMovies } from '../api/MoviesApi';
+import { fetchAllMovies, fetchMovies } from '../api/MoviesApi';
 import { MovieDataCard } from '../components/MovieDataCard';
 import { Header } from '../components/Header';
 import Pagination from '../components/Pagination';
@@ -45,6 +45,20 @@ const MoviesPage = () => {
     'Talk Shows TV Comedy',
     'Thriller',
   ];
+  const [newMovie, setNewMovie] = useState<Movie>({
+    show_id: '',
+    title: '',
+    type: '',
+    director: '',
+    cast: '',
+    country: '',
+    release_year: new Date().getFullYear(),
+    rating: '',
+    duration: '',
+    description: '',
+    genre: '',
+  });
+  const [isAddingMovie, setIsAddingMovie] = useState(false);
   const [movieBeingEdited, setMovieBeingEdited] = useState<Movie | null>(null);
 
   const loadMovies = async () => {
@@ -84,6 +98,17 @@ const MoviesPage = () => {
   const handleDelete = (id: string) => {
     console.log(`Delete movie with id: ${id}`);
   };
+  const getNextShowId = async (): Promise<string> => {
+    const allMovies = await fetchAllMovies();
+
+    const numericIds = allMovies
+      .map((m) => m.show_id)
+      .filter((id) => /^s\d+$/.test(id)) // match pattern like s123
+      .map((id) => parseInt(id.slice(1)));
+
+    const maxId = Math.max(...numericIds, 0);
+    return `s${maxId + 1}`;
+  };
 
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
 
@@ -93,6 +118,32 @@ const MoviesPage = () => {
       <div className="container mt-4">
         <h2 className="text-center mb-4">Admin Movies</h2>
         <h2>Total Pages: {totalPages}</h2>
+        <div className="d-flex justify-content-end mb-3">
+          <button
+            className="btn btn-success"
+            onClick={async () => {
+              const nextId = await getNextShowId();
+              alert(`The next Show ID will be: ${nextId}`);
+              setIsAddingMovie(true);
+              setNewMovie({
+                show_id: nextId,
+                title: '',
+                type: '',
+                director: '',
+                cast: '',
+                country: '',
+                release_year: new Date().getFullYear(),
+                rating: '',
+                duration: '',
+                description: '',
+                genre: '',
+              });
+            }}
+          >
+            + Add New Movie
+          </button>
+        </div>
+
         <div className="mb-3">
           <label htmlFor="genre-select" className="form-label">
             Select Genres:
@@ -139,6 +190,17 @@ const MoviesPage = () => {
             </div>
 
             <div className="col-md-9">
+              {isAddingMovie && (
+                <EditMovieForm
+                  movie={newMovie}
+                  onSuccess={() => {
+                    setIsAddingMovie(false);
+                    loadMovies();
+                  }}
+                  onCancel={() => setIsAddingMovie(false)}
+                  isNew={true}
+                />
+              )}
               {/* Movie Grid and Pagination Here */}
               {movieBeingEdited && (
                 <EditMovieForm

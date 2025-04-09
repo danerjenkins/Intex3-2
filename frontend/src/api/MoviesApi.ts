@@ -45,10 +45,27 @@ export const fetchMovies = async (
   }
 };
 
+export const fetchAllMovies = async (): Promise<Movie[]> => {
+  let allMovies: Movie[] = [];
+  let currentPage = 1;
+  const pageSize = 8000; // Large enough to minimize requests
+
+  while (true) {
+    const data = await fetchMovies(currentPage, pageSize);
+    allMovies = [...allMovies, ...data.movies];
+
+    const totalPages = Math.ceil(data.totalNumberItems / pageSize);
+    if (currentPage >= totalPages) break;
+
+    currentPage++;
+  }
+
+  return allMovies;
+};
 // This function is for adding a new movie to the API
 export const addMovie = async (newMovie: Movie): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/AddMovie`, {
+    const response = await fetch(`${API_URL}/Movies/CreateMovie`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
