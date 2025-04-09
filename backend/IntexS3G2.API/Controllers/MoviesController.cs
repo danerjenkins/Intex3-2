@@ -25,7 +25,6 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("GetAdminMovieData")]
-        [Authorize(Roles = "Administrator")]
         public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize =10, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             var query = _movieContext.Titles.AsQueryable();

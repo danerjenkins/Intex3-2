@@ -7,9 +7,8 @@ interface MovieDataCardProps {
   title: string;
   director: string;
   info: string;
-  posterUrl: string;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 export const MovieDataCard: React.FC<MovieDataCardProps> = ({
@@ -17,11 +16,11 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
   title,
   director,
   info,
-  posterUrl,
   onEdit,
   onDelete,
 }) => {
-
+  const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
+  const posterUrl=`${imgUrl}${encodeURIComponent(title)}.jpg`;
   const navigate = useNavigate();
 
   const handlePosterClick = () => {

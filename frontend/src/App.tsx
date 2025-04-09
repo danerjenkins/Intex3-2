@@ -9,6 +9,7 @@ import AdminPage from './pages/AdminPage';
 import MovieDescription from './pages/MovieDescription';
 import AuthorizeView from './components/AuthorizeView';
 import ProtectedRoute from './components/ProtectedRoute';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<PolicyPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
+
         {/* Protected Routes */}
         <Route
           path="/movies"
