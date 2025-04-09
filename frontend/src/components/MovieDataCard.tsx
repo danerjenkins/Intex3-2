@@ -20,7 +20,20 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
 }) => {
   return (
     <div className="card h-100">
-      <img src={posterUrl || 'defaultposter.png'} className="card-img-top" alt={title} />
+   <img
+  src={posterUrl}
+  alt={title}
+  onError={(e) => {
+    const target = e.target as HTMLImageElement;
+
+    // Prevent infinite loop if the fallback image also fails
+    if (!target.src.includes('/defaultposter.png')) {
+      target.onerror = null;
+      target.src = '/defaultposter.png';
+    }
+  }}
+/>
+
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
