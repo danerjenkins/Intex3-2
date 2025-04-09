@@ -21,6 +21,7 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+
   const navigate = useNavigate();
 
   const handlePosterClick = () => {

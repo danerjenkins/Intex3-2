@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchAllMovies, fetchMovies } from '../api/MoviesApi';
+import { deleteMovie, fetchAllMovies, fetchMovies } from '../api/MoviesApi';
 import { MovieDataCard } from '../components/MovieDataCard';
 import { Header } from '../components/Header';
 import Pagination from '../components/Pagination';
@@ -95,8 +95,17 @@ const MoviesPage = () => {
     loadMovies(); // refresh updated data
   };
 
-  const handleDelete = (id: string) => {
-    console.log(`Delete movie with id: ${id}`);
+  const handleDelete = async (id: string) => {
+    const confirmed = window.confirm('Are you sure you want to delete this movie?');
+    if (!confirmed) return;
+  
+    try {
+      await deleteMovie(id);
+      await loadMovies(); // refresh the list
+      console.log(`Movie ${id} deleted successfully.`);
+    } catch (error) {
+      alert('Failed to delete movie. See console for details.');
+    }
   };
   const getNextShowId = async (): Promise<string> => {
     const allMovies = await fetchAllMovies();
