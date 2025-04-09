@@ -18,10 +18,12 @@ const MoviesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const allGenres = ["Action", "Comedy", "Drama", "Sci-Fi", "Romance"]; // ideally fetched from backend
 
   const loadMovies = async () => {
     try {
-      const data = await fetchMovies(currentPage, pageSize); // Add genre/rating filtering if needed
+      const data = await fetchMovies(currentPage, pageSize, selectedGenres); // Add genre/rating filtering if needed
       setMovies(data.movies);
       setTotalPages(data.totalNumberItems ? Math.ceil(data.totalNumberItems / pageSize) : 1);
     } catch (error) {
@@ -34,7 +36,7 @@ const MoviesPage = () => {
   useEffect(() => {
     setLoading(true);
     loadMovies();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, selectedGenres]);
 
   const handleEdit = (id: string) => {
     console.log(`Edit movie with id: ${id}`);
@@ -52,6 +54,22 @@ const MoviesPage = () => {
       <div className="container mt-4">
         <h2 className="text-center mb-4">Admin Movies</h2>
 <h2>Total Pages: {totalPages}</h2>
+<select
+  multiple
+  value={selectedGenres}
+  onChange={(e) => {
+    const options = Array.from(e.target.selectedOptions);
+    const values = options.map(option => option.value);
+    setSelectedGenres(values);
+  }}
+  className="form-select mb-4"
+>
+  {allGenres.map((genre) => (
+    <option key={genre} value={genre}>
+      {genre}
+    </option>
+  ))}
+</select>
         {loading ? (
           <div className="text-center">
             <div className="spinner-border text-primary" role="status">

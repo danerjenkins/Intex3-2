@@ -37,12 +37,20 @@ namespace IntexS3G2.API.Controllers
             
             if (genres != null && genres.Any())
             {
-                query = query.Where(m =>
-                    genres.Any(g =>
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Genres: {string.Join(", ", genres)}");
+                Console.ResetColor();
+
+                // Move to memory before Split
+                query = query
+                    .AsEnumerable()
+                    .Where(m =>
                         m.Genre != null &&
-                        m.Genre.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Contains(g)
+                        m.Genre
+                            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Any(g => genres.Contains(g))
                     )
-                );
+                    .AsQueryable(); // convert back if you want to keep chaining
             }
             
             var results = query
