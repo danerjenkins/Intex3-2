@@ -2,17 +2,18 @@ import { Movie } from '../types/Movie';
 
 interface FetchMoviesResponse {
   movies: Movie[]; // An array of movies
-  totalNumMovies: number; // The total number of movies available
+  totalNumberItems: number; // The total number of movies available
 }
 
 // This is the URL of the API (the website that stores the movie data).
-const API_URL = 'https://intexs3g2-backend-f6e9c2gjgbaxguag.eastus-01.azurewebsites.net'; // Replace with your actual movie API URL
-
+const API_URL = import.meta.env.VITE_API_URL;
 // This function fetches movies from the API
 export const fetchMovies = async (
   pageNum: number, // The current page number
+  pageSize: number = 12,
   selectedgenres: string[] = [], // Selected genres for filtering
-  selectedRatings: string[] = [] // Selected ratings for filtering
+  selectedRatings: string[] = [], // Selected ratings for filtering
+  
 ): Promise<FetchMoviesResponse> => {
   try {
     const genresParams = selectedgenres
@@ -24,7 +25,7 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/Movies/GetAdminMovieData?pageNumber=${pageNum}${
+      `${API_URL}/Movies/GetAdminMovieData?pageNumber=${pageNum}&pageSize=${pageSize}${
         selectedgenres.length ? `&${genresParams}` : ''
       }${selectedRatings.length ? `&${ratingsParams}` : ''}`
     );

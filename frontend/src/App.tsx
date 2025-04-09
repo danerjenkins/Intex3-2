@@ -10,6 +10,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
+// import AdminMoviesPage from './pages/AdminMoviesPage';
 
 function App() {
   return (
