@@ -15,10 +15,12 @@ namespace IntexS3G2.API.Controllers
     public class MoviesController : ControllerBase
     {
         private MovieDbContext _movieContext;
+        private ContentDbContext _contentContext;
 
-        public MoviesController(MovieDbContext temp)
+        public MoviesController(MovieDbContext temp, ContentDbContext content)
         {
             _movieContext = temp;
+            _contentContext = content;
         }
 
         [HttpGet("GetAdminMovieData")]
@@ -158,6 +160,42 @@ namespace IntexS3G2.API.Controllers
                 .ToList();
             
             return Ok(query);
+        }
+
+        [HttpPost("RegisterUser")]
+        public IActionResult RegisterUser([FromBody] User userToAdd)
+        {
+            _movieContext.Users.Add(userToAdd);
+            _movieContext.SaveChanges();
+            
+            return Ok(userToAdd);
+        }
+
+        [HttpGet("ContentRecommendations/{showId}")]
+        public IActionResult ContentRecommendations(string showId)
+        {
+            var query = _contentContext.MovieRecs.Find(showId);
+
+            if (query == null || string.IsNullOrWhiteSpace(query.recommended_show_ids))
+            {
+                return NotFound();
+            }
+
+            var showIdList = query.recommended_show_ids
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .ToList();
+            
+            var recommendedMovies = _movieContext.Titles
+                .Where(m => showIdList.Contains(m.show_id))
+                .Select(m => new
+                {
+                    m.show_id,
+                    m.title
+                })
+                .ToList();
+
+            return Ok(recommendedMovies);
+            
         }
     }
 }
