@@ -5,15 +5,15 @@ import { useNavigate } from 'react-router-dom';
 interface MovieSearchCardProps {
   id: string;
   title: string;
-  director: string;
-  info: string;
+  // director: string;
+  // info: string;
 }
 
 export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   id,
   title,
-  director,
-  info,
+  // director,
+  // info,
 }) => {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const posterUrl = `${imgUrl}${encodeURIComponent(title)}.jpg`;
@@ -24,6 +24,7 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   };
   return (
     <div className="card h-100">
+      <p>ID {id}</p>
       <img
         src={posterUrl}
         alt={title}
@@ -41,8 +42,8 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
 
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{title}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
-        <p className="card-text mb-3">{info}</p>
+        {/* <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
+        <p className="card-text mb-3">{info}</p> */}
       </div>
     </div>
   );

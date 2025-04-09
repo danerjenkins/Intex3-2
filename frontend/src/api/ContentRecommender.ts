@@ -1,3 +1,4 @@
+// ContentRecommender.ts
 import { getMovieWithId } from './MoviesApi';
 
 export interface Recommendation {
@@ -11,10 +12,9 @@ export interface Recommendations {
 }
 const API_URL = import.meta.env.VITE_API_URL;
 
-async function getContentRecommendations(
+export async function getContentRecommendations(
   movieId: string
 ): Promise<Recommendations> {
-  const recommendationList: Recommendation[] = [];
   try {
     const title: string = (await getMovieWithId(movieId)).title;
     const response = await fetch(
@@ -29,10 +29,9 @@ async function getContentRecommendations(
     );
     const data = await response.json();
     console.log(data);
-    recommendationList.push(data);
     const recommendations: Recommendations = {
       basedOffOf: title,
-      recommendations: recommendationList,
+      recommendations: data,
     };
 
     if (!response.ok) {
@@ -49,15 +48,14 @@ async function getContentRecommendations(
 export async function loadRecommender(
   movieList: string[]
 ): Promise<Recommendations[]> {
-  const allRecs: Recommendations[] = [];
   try {
-    movieList.map(async (ml) => {
-      const data = getContentRecommendations(ml);
-      allRecs.push(await data);
-    });
+    const allRecs = await Promise.all(
+      movieList.map((ml) => getContentRecommendations(ml))
+    );
     return allRecs;
   } catch (e) {
-    console.log(`error, yo: ${(e as Error).message}`);
+    console.error(`Error loading recommendations: ${(e as Error).message}`);
     throw e;
   }
 }
+

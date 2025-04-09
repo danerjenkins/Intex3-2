@@ -1,3 +1,4 @@
+//MovieCard.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,9 +21,9 @@ export const MovieCard: React.FC<MovieCardProps> = ({
     <div
       key={id}
       className="movie-card-body text-white bg-dark m-2"
-      onClick={handlePosterClick}
     >
       <img
+      className='movie-card-img'
         src={posterUrl}
         alt={title}
         onError={(e) => {
