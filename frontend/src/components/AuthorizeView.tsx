@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 interface User {
   email: string;
+  role: string;
 }
 export const UserContext = createContext<User | null>(null);
 
@@ -11,7 +12,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true); // add a loading state
   //const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-  let emptyuser: User = { email: '' };
+  let emptyuser: User = { email: '' , role: ''};
 
   const [user, setUser] = useState(emptyuser);
 
@@ -30,8 +31,8 @@ function AuthorizeView(props: { children: React.ReactNode }) {
 
         const data = await response.json();
 
-        if (data.email) {
-          setUser({ email: data.email });
+        if (data.email && data.role) {
+          setUser({ email: data.email, role: data.role });
           setAuthorized(true);
         } else {
           throw new Error('Invalid user session');
