@@ -29,7 +29,7 @@ function App() {
           }
         />
         <Route
-          path="/movieDescription"
+          path="/movieDescription/:id"
           element={
             <AuthorizeView>
               <MovieDescription />

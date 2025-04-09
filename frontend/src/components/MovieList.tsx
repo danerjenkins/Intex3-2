@@ -16,7 +16,7 @@ const scrollList = (direction: string, container: HTMLElement) => {
     return;
   }
 
-  const card = list.querySelector('.card-body') as HTMLElement; // Ensure it targets card-body elements
+  const card = list.querySelector('.movie-card-body') as HTMLElement; // Ensure it targets card-body elements
   if (!card) {
     console.error('Card body element not found');
     return;

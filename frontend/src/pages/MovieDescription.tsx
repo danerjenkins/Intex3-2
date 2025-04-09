@@ -3,15 +3,16 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
+import { useParams } from 'react-router-dom';
 
 export default function MovieDescription() {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const { id } = useParams();
   const loadMovie = async () => {
     try {
-      const fetchedMovie = await getMovieWithId('s3');
+      const fetchedMovie = await getMovieWithId(decodeURIComponent(id!));
       setMovie(fetchedMovie);
     } catch (error) {
       console.error('Failed to fetch movie:', error);
@@ -21,9 +22,10 @@ export default function MovieDescription() {
   };
 
   useEffect(() => {
+    if (!id) return; // Don't run if id is missing
     setLoading(true);
     loadMovie();
-  }, []);
+  }, [id]);
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
@@ -46,6 +48,15 @@ export default function MovieDescription() {
                   <img
                     src={imgUrl + encodeURIComponent(movie.title) + '.jpg'}
                     alt={`${movie.title} poster`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+            
+                      // Prevent infinite loop if the fallback image also fails
+                      if (!target.src.includes('/defaultposter.png')) {
+                        target.onerror = null;
+                        target.src = '/defaultposter.png';
+                      }
+                    }}
                     className="img-fluid rounded"
                     style={{ maxHeight: '100%', objectFit: 'cover' }}
                   />
@@ -56,13 +67,27 @@ export default function MovieDescription() {
                   <div className="d-flex flex-row flex-wrap">
                     <div className="me-5">
                       <h3 className="mb-3">{movie.title}</h3>
-                      <p><strong>Director:</strong> {movie.director}</p>
-                      <p><strong>Type:</strong> {movie.type}</p>
-                      <p><strong>Released:</strong> {movie.release_year}</p>
-                      <p><strong>Rating:</strong> {movie.rating}</p>
-                      <p><strong>Duration:</strong> {movie.duration}</p>
-                      <p><strong>Cast:</strong> {movie.cast}</p>
-                      <p><strong>Genres:</strong> {movie.genre}</p>
+                      <p>
+                        <strong>Director:</strong> {movie.director}
+                      </p>
+                      <p>
+                        <strong>Type:</strong> {movie.type}
+                      </p>
+                      <p>
+                        <strong>Released:</strong> {movie.release_year}
+                      </p>
+                      <p>
+                        <strong>Rating:</strong> {movie.rating}
+                      </p>
+                      <p>
+                        <strong>Duration:</strong> {movie.duration}
+                      </p>
+                      <p>
+                        <strong>Cast:</strong> {movie.cast}
+                      </p>
+                      <p>
+                        <strong>Genres:</strong> {movie.genre}
+                      </p>
                     </div>
 
                     <div className="flex-grow-1">

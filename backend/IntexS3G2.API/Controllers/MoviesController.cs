@@ -37,12 +37,20 @@ namespace IntexS3G2.API.Controllers
             
             if (genres != null && genres.Any())
             {
-                query = query.Where(m =>
-                    genres.Any(g =>
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Genres: {string.Join(", ", genres)}");
+                Console.ResetColor();
+
+                // Move to memory before Split
+                query = query
+                    .AsEnumerable()
+                    .Where(m =>
                         m.Genre != null &&
-                        m.Genre.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Contains(g)
+                        m.Genre
+                            .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .Any(g => genres.Contains(g))
                     )
-                );
+                    .AsQueryable(); // convert back if you want to keep chaining
             }
             
             var results = query
@@ -104,14 +112,25 @@ namespace IntexS3G2.API.Controllers
         [HttpPut("UpdateMovie/{showId}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult UpdateMovie(string showId, [FromBody] Title updatedMovie)
-        {    
+        {
+            try
+            {
+            if (updatedMovie == null)
+            {
+                return BadRequest(new { message = "Invalid movie data provided." });
+            }
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
+            Console.ResetColor();
+
             var existingMovie = _movieContext.Titles.Find(showId);
-            
+
             if (existingMovie == null)
             {
-                return NotFound(new { message = "Book not found." });
+                return NotFound(new { message = "Movie not found." });
             }
-            
+
             existingMovie.title = updatedMovie.title;
             existingMovie.type = updatedMovie.type;
             existingMovie.director = updatedMovie.director;
@@ -121,11 +140,26 @@ namespace IntexS3G2.API.Controllers
             existingMovie.duration = updatedMovie.duration;
             existingMovie.description = updatedMovie.description;
             existingMovie.Genre = updatedMovie.Genre;
-        
+
             _movieContext.Titles.Update(existingMovie);
             _movieContext.SaveChanges();
-            
+
             return Ok(existingMovie);
+            }
+            catch (DbUpdateException dbEx)
+            {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Database update error: {dbEx.Message}");
+            Console.ResetColor();
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the movie in the database." });
+            }
+            catch (Exception ex)
+            {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.ResetColor();
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
+            }
         }
 
         [HttpPost("CreateMovie")]
