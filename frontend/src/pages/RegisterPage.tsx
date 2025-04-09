@@ -48,8 +48,7 @@ function Register() {
         body: JSON.stringify({
           email: email,
           password: password,
-          confirmPassword: confirmPassword,
-          role: 'user',
+          confirmPassword: confirmPassword
         }),
       })
         //.then((response) => response.json())
