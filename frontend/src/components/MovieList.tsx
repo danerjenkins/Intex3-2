@@ -1,12 +1,11 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
-import { DummyMovie } from '../types/DummyMovie';
 import '../index.css';
+import { Recommendation } from '../api/ContentRecommender';
 
 interface MovieListProps {
   recommender: string;
-  movies: DummyMovie[];
-  onMovieClick: (id: string) => void;
+  movies: Recommendation[];
 }
 
 const scrollList = (direction: string, container: HTMLElement) => {
@@ -36,7 +35,6 @@ const scrollList = (direction: string, container: HTMLElement) => {
 export const MovieList: React.FC<MovieListProps> = ({
   recommender,
   movies,
-  onMovieClick,
 }) => (
   <>
     <h5 style={{ marginLeft: '6rem' }}>{recommender}</h5>
@@ -54,13 +52,8 @@ export const MovieList: React.FC<MovieListProps> = ({
       </button>
       <div className=" movie-list d-flex flex-row overflow-auto px-3 py-4 gap-3">
         {movies.map((movie) => (
-          <div key={movie.id} style={{ display: 'inline-block' }}>
-            <MovieCard
-              id={movie.id}
-              title={movie.title}
-              posterUrl={movie.posterUrl}
-              onClick={() => onMovieClick(movie.id)}
-            />
+          <div key={movie.show_id} style={{ display: 'inline-block' }}>
+            <MovieCard id={movie.show_id} title={movie.title} />
           </div>
         ))}
       </div>

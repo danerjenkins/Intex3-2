@@ -1,21 +1,16 @@
 import React from 'react';
 
+const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
+
 interface MovieCardProps {
   id: string;
   title: string;
-  posterUrl: string;
-  onClick: () => void;
 }
 
-export const MovieCard: React.FC<MovieCardProps> = ({
-  id,
-  title,
-  posterUrl,
-  onClick,
-}) => (
-  <div key={id} className="card-body text-white bg-dark m-2" onClick={onClick}>
+export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => (
+  <div key={id} className="card-body text-white bg-dark m-2">
     <img
-      src={posterUrl}
+      src={`${imgUrl}${encodeURIComponent(title)}.jpg`}
       alt={title}
       className="card-img-top"
       style={{ height: '15rem', objectFit: 'cover' }}

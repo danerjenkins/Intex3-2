@@ -23,7 +23,9 @@ const MoviesPage = () => {
     try {
       const data = await fetchMovies(currentPage, pageSize); // Add genre/rating filtering if needed
       setMovies(data.movies);
-      setTotalPages(data.totalNumberItems ? Math.ceil(data.totalNumberItems / pageSize) : 1);
+      setTotalPages(
+        data.totalNumberItems ? Math.ceil(data.totalNumberItems / pageSize) : 1
+      );
     } catch (error) {
       console.error('Failed to fetch movies:', error);
     } finally {
@@ -51,7 +53,7 @@ const MoviesPage = () => {
       <Header />
       <div className="container mt-4">
         <h2 className="text-center mb-4">Admin Movies</h2>
-<h2>Total Pages: {totalPages}</h2>
+        <h2>Total Pages: {totalPages}</h2>
         {loading ? (
           <div className="text-center">
             <div className="spinner-border text-primary" role="status">

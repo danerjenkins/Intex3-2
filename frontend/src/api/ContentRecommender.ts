@@ -1,55 +1,22 @@
-import { Movie } from '../types/Movie';
-
-interface FetchRecommendationResponse {
-  movies: Movie[]; // An array of movies
-  totalNumberItems: number; // The total number of movies available
-}
+import { getMovieWithId } from './MoviesApi';
 
 export interface Recommendation {
-  showId: string;
+  show_id: string;
   title: string;
 }
 
-// This is the URL of the API (the website that stores the movie data).
+export interface Recommendations {
+  basedOffOf: string;
+  recommendations: Recommendation[];
+}
 const API_URL = import.meta.env.VITE_API_URL;
-// This function fetches movies from the API
-export const fetchAllMovies = async (
-  pageNum: number, // The current page number
-  pageSize: number = 12,
-  selectedgenres: string[] = [], // Selected genres for filtering
-  selectedRatings: string[] = [] // Selected ratings for filtering
-): Promise<FetchRecommendationResponse> => {
-  try {
-    const genresParams = selectedgenres
-      .map((genre) => `genres=${encodeURIComponent(genre)}`)
-      .join('&');
 
-    const ratingsParams = selectedRatings
-      .map((rating) => `ratings=${encodeURIComponent(rating)}`)
-      .join('&');
-
-    const response = await fetch(
-      `${API_URL}/Movies/GetAdminMovieData?pageNumber=${pageNum}&pageSize=${pageSize}${
-        selectedgenres.length ? `&${genresParams}` : ''
-      }${selectedRatings.length ? `&${ratingsParams}` : ''}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch movies: ${response.statusText}`);
-    }
-
-    const data: FetchRecommendationResponse = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching movies:', error);
-    throw error;
-  }
-};
-
-export async function getContentRecommendation(
+async function getContentRecommendations(
   movieId: string
-): Promise<Recommendation[]> {
+): Promise<Recommendations> {
+  const recommendationList: Recommendation[] = [];
   try {
+    const title: string = (await getMovieWithId(movieId)).title;
     const response = await fetch(
       `${API_URL}/Movies/ContentRecommendations/${movieId}`,
       {
@@ -60,15 +27,37 @@ export async function getContentRecommendation(
         },
       }
     );
-    if (!response.ok) {
-      console.log(response);
-      throw new Error(`Failed to fetch movie: ${response.statusText}`);
-    }
     const data = await response.json();
     console.log(data);
-    return data;
+    recommendationList.push(data);
+    const recommendations: Recommendations = {
+      basedOffOf: title,
+      recommendations: recommendationList,
+    };
+
+    if (!response.ok) {
+      console.log(response);
+      throw new Error(`Failed to fetch dis movie, son: ${response.statusText}`);
+    }
+    return recommendations;
   } catch (e) {
-    console.error(e);
+    console.error(`problem w getContentRecommendations(), homes: ${e}`);
+    throw e;
+  }
+}
+
+export async function loadRecommender(
+  movieList: string[]
+): Promise<Recommendations[]> {
+  const allRecs: Recommendations[] = [];
+  try {
+    movieList.map(async (ml) => {
+      const data = getContentRecommendations(ml);
+      allRecs.push(await data);
+    });
+    return allRecs;
+  } catch (e) {
+    console.log(`error, yo: ${(e as Error).message}`);
     throw e;
   }
 }

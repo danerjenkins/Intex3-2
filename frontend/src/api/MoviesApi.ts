@@ -12,8 +12,7 @@ export const fetchMovies = async (
   pageNum: number, // The current page number
   pageSize: number = 12,
   selectedgenres: string[] = [], // Selected genres for filtering
-  selectedRatings: string[] = [], // Selected ratings for filtering
-  
+  selectedRatings: string[] = [] // Selected ratings for filtering
 ): Promise<FetchMoviesResponse> => {
   try {
     const genresParams = selectedgenres
@@ -27,9 +26,10 @@ export const fetchMovies = async (
     const response = await fetch(
       `${API_URL}/Movies/GetAdminMovieData?pageNumber=${pageNum}&pageSize=${pageSize}${
         selectedgenres.length ? `&${genresParams}` : ''
-      }${selectedRatings.length ? `&${ratingsParams}` : ''}`, {
+      }${selectedRatings.length ? `&${ratingsParams}` : ''}`,
+      {
         method: 'GET',
-        credentials: 'include'
+        credentials: 'include',
       }
     );
 
@@ -120,23 +120,24 @@ export const deleteMovie = async (show_id: string): Promise<void> => {
   }
 };
 
-
-export async function getMovieWithId(movieId: string): Promise<any> {
-  try{
-    const response = await fetch(`${API_URL}/Movies/GetMovieFromId?showId=${movieId}`,{
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+export async function getMovieWithId(movieId: string): Promise<Movie> {
+  try {
+    const response = await fetch(
+      `${API_URL}/Movies/GetMovieFromId?showId=${movieId}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     if (!response.ok) {
       throw new Error(`Failed to fetch movie: ${response.statusText}`);
     }
     const data = await response.json();
     return data;
-  }
-  catch(e) {
+  } catch (e) {
     console.error(e);
     throw e;
   }
