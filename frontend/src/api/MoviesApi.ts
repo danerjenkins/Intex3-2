@@ -113,3 +113,24 @@ export const deleteMovie = async (show_id: string): Promise<void> => {
     throw error;
   }
 };
+
+
+export async function getMovieWithId(movieId: string): Promise<any> {
+  try{
+    const response = await fetch(`${API_URL}/Movies/GetMovieFromId?showId=${movieId}`,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch movie: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  }
+  catch(e) {
+    console.error(e);
+    throw e;
+  }
+}
