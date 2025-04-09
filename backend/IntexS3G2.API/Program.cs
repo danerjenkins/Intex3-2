@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Set up connection string for Identity Database
 var isDev = builder.Environment.IsDevelopment();
+
 var identityConnection = isDev
     ? builder.Configuration["IdentityConnection"]
     : Environment.GetEnvironmentVariable("IdentityConnection");
@@ -33,6 +34,9 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
     {
         sqlOptions.EnableRetryOnFailure();
     }));
+
+builder.Services.AddDbContext<ContentDbContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("ContentConnection")));
 
     Console.WriteLine($"[Startup] IdentityConnection: {identityConnection}");
 Console.WriteLine($"[Startup] MovieConnection: {movieConnection}");
