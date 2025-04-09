@@ -1,25 +1,29 @@
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useContext } from 'react';
+import { UserContext } from './AuthorizeView';
 
-function Logout(props: { children: React.ReactNode }) {
+const LogoutButton = () => {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const user = useContext(UserContext);
 
-  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-
+  const handleLogout = async () => {
     try {
       const response = await fetch(`${apiUrl}/logout`, {
         method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        credentials: 'include', // Ensure cookies are sent to the server
       });
 
       if (response.ok) {
-        navigate('/login');
+        // If the API logout is successful, clear the cookie
+        Cookies.remove('user', {path : "/"}); // Remove the user cookie
+        
+        // Redirect user to login page
+        navigate('/'); // Or navigate('/') for home page
       } else {
-        console.error('Logout failed:', response.status);
+        const errorData = await response.json();
+        console.error('Logout failed:', errorData.message || 'Unknown error');
       }
     } catch (error) {
       console.error('Logout error:', error);
@@ -27,10 +31,8 @@ function Logout(props: { children: React.ReactNode }) {
   };
 
   return (
-    <a className="btn btn-outline-danger" href="#" onClick={handleLogout}>
-      {props.children}
-    </a>
+    <button onClick={handleLogout}>Logout</button>
   );
-}
+};
 
-export default Logout;
+export default LogoutButton;
