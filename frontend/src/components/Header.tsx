@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
             src="/logo.png"
             alt="CineNiche Logo"
             style={{ width: '150px', height: 'auto', cursor: 'pointer' }}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/movies')}
           />
         </div>
 
