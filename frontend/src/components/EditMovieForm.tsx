@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Movie } from '../types/Movie'; // Import Movie interface (you can create this)
-import { updateMovie } from '../api/MoviesApi'; // Assuming you have an updateMovie function in your API
+import { Movie } from '../types/Movie';
+import { updateMovie } from '../api/MoviesApi';
 
 const genresList = [
   "Action", "Adventure", "Anime Series International TV Show", "British TV Shows Docuseries International TV Show", 
@@ -11,141 +11,111 @@ const genresList = [
 ];
 
 interface EditMovieFormProps {
-  movie: Movie; // Use the Movie interface
+  movie: Movie;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-const EditMovieForm = ({
-  movie,
-  onSuccess,
-  onCancel,
-}: EditMovieFormProps) => {
+const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({ ...movie });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+    const val = type === 'number' ? Number(value) : value;
+    setFormData({ ...formData, [name]: val });
   };
 
   const handleGenreChange = (genre: string) => {
-    const currentGenres = formData.genre.split(',').map(g => g.trim()).filter(Boolean);
+    const currentGenres = formData.genre?.split(',').map(g => g.trim()).filter(Boolean) || [];
     const updatedGenres = currentGenres.includes(genre)
       ? currentGenres.filter(g => g !== genre)
       : [...currentGenres, genre];
-  
     setFormData({ ...formData, genre: updatedGenres.join(', ') });
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateMovie(formData.show_id, formData); // Assuming updateMovie API function is available
-    onSuccess();
+    try {
+      const bodyToSend = {
+        ...formData,
+        Genre: formData.genre, // for C# backend compatibility
+      };
+      delete (bodyToSend as any).genre;
+
+      await updateMovie(formData.show_id, bodyToSend);
+      onSuccess();
+    } catch (err) {
+      console.error("Update failed", err);
+      alert("Movie update failed. Check console.");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Edit Movie Information</h2>
-      <label>
-        Title:
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Type:
-        <input
-          type="text"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Director:
-        <input
-          type="text"
-          name="director"
-          value={formData.director}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Cast:
-        <input
-          type="text"
-          name="cast"
-          value={formData.cast}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Country:
-        <input
-          type="text"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Release Year:
-        <input
-          type="number"
-          name="release_year"
-          value={formData.release_year}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Rating:
-        <input
-          type="number"
-          name="rating"
-          value={formData.rating}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Duration (minutes):
-        <input
-          type="number"
-          name="duration"
-          value={formData.duration}
-          onChange={handleChange}
-        />
-      </label>
-      <label>
-        Description:
-        <input
-          type="text"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-        />
-      </label>
+    <div className="card mb-4">
+      <div className="card-body">
+        <h3 className="card-title mb-4">Edit Movie</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            {[
+              { label: "Title", name: "title", type: "text" },
+              { label: "Type", name: "type", type: "text" },
+              { label: "Director", name: "director", type: "text" },
+              { label: "Cast", name: "cast", type: "text" },
+              { label: "Country", name: "country", type: "text" },
+              { label: "Release Year", name: "release_year", type: "number" },
+              { label: "Rating", name: "rating", type: "text" },
+              { label: "Duration (minutes)", name: "duration", type: "text" },
+              { label: "Description", name: "description", type: "text" },
+            ].map((field) => (
+              <div className="col-md-6 mb-3" key={field.name}>
+                <label htmlFor={field.name} className="form-label">
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  className="form-control"
+                  id={field.name}
+                  name={field.name}
+                  value={(formData as any)[field.name] || ''}
+                  onChange={handleChange}
+                />
+              </div>
+            ))}
+          </div>
 
-      <h3>Select Genres:</h3>
-      {genresList.map((genre) => (
-        <div key={genre}>
-          <input
-            type="checkbox"
-            id={genre}
-            checked={formData.genre.split(',').map(g => g.trim()).includes(genre)}
-            onChange={() => handleGenreChange(genre)}
-          />
-          <label htmlFor={genre}>{genre}</label>
-        </div>
-      ))}
+          <div className="mb-3">
+            <label className="form-label">Select Genres:</label>
+            <div className="row">
+              {genresList.map((genre) => (
+                <div className="col-md-4" key={genre}>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id={genre}
+                      checked={formData.genre?.split(',').map(g => g.trim()).includes(genre)}
+                      onChange={() => handleGenreChange(genre)}
+                    />
+                    <label className="form-check-label" htmlFor={genre}>
+                      {genre}
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-      <button type="submit">Update Movie</button>
-      <button type="button" onClick={onCancel}>
-        Cancel
-      </button>
-    </form>
+          <div className="d-flex justify-content-end gap-2">
+            <button type="submit" className="btn btn-primary">
+              Update Movie
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={onCancel}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

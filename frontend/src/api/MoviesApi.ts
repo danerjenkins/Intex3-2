@@ -75,7 +75,7 @@ export const updateMovie = async (
   updatedMovie: Movie // The updated movie data
 ): Promise<Movie> => {
   try {
-    const response = await fetch(`${API_URL}/UpdateMovie/${show_id}`, {
+    const response = await fetch(`${API_URL}/Movies/UpdateMovie/${show_id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
   posterUrl,
   onClick,
 }) => (
-  <div key={id} className="card-body text-white bg-dark m-2" onClick={onClick}>
+  <div key={id} className="movie-card-body text-white bg-dark m-2" onClick={onClick}>
     <img
       src={posterUrl || 'defaultposter.png'}
       alt={title}

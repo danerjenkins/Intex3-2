@@ -3,14 +3,8 @@ import { fetchMovies } from '../api/MoviesApi';
 import { MovieDataCard } from '../components/MovieDataCard';
 import { Header } from '../components/Header';
 import Pagination from '../components/Pagination';
-
-interface Movie {
-  show_id: string;
-  title: string;
-  director: string;
-  description: string;
-  posterUrl?: string;
-}
+import EditMovieForm from '../components/EditMovieForm';
+import { Movie } from '../types/Movie';
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -19,13 +13,22 @@ const MoviesPage = () => {
   const [pageSize, setPageSize] = useState(12);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const allGenres = ["Action", "Comedy", "Drama", "Sci-Fi", "Romance"]; // ideally fetched from backend
+  const allGenres = [
+    "Action", "Adventure", "Anime Series International TV Show", "British TV Shows Docuseries International TV Show", 
+    "Children", "Comedy", "Comedy Drama International", "Docuseries", "Comedy Romance", "Crime TV Show Docuseries", "Documentary", 
+    "Documentary International", "Drama", "Drama International", "Drama Romance", "Family", "Fantasy", "Horror", 
+    "International Thriller", "International TV Show Romantic TV Show", "Kids TV Show", "Language TV Show", "Musical", 
+    "Nature TV Show", "Reality TV Show", "Spirituality", "TV Show Action", "TV Show Comedy", "Talk Shows TV Comedy", "Thriller"
+  ];
+  const [movieBeingEdited, setMovieBeingEdited] = useState<Movie | null>(null);
 
   const loadMovies = async () => {
     try {
       const data = await fetchMovies(currentPage, pageSize, selectedGenres); // Add genre/rating filtering if needed
       setMovies(data.movies);
-      setTotalPages(data.totalNumberItems ? Math.ceil(data.totalNumberItems / pageSize) : 1);
+      setTotalPages(
+        data.totalNumberItems ? Math.ceil(data.totalNumberItems / pageSize) : 1
+      );
     } catch (error) {
       console.error('Failed to fetch movies:', error);
     } finally {
@@ -39,7 +42,18 @@ const MoviesPage = () => {
   }, [currentPage, pageSize, selectedGenres]);
 
   const handleEdit = (id: string) => {
-    console.log(`Edit movie with id: ${id}`);
+    const movie = movies.find((m) => m.show_id === id);
+    if (movie) {
+      setMovieBeingEdited(movie);
+    }
+  };
+  const handleEditCancel = () => {
+    setMovieBeingEdited(null);
+  };
+
+  const handleEditSuccess = () => {
+    setMovieBeingEdited(null);
+    loadMovies(); // refresh updated data
   };
 
   const handleDelete = (id: string) => {
@@ -53,23 +67,31 @@ const MoviesPage = () => {
       <Header />
       <div className="container mt-4">
         <h2 className="text-center mb-4">Admin Movies</h2>
-<h2>Total Pages: {totalPages}</h2>
-<select
-  multiple
-  value={selectedGenres}
-  onChange={(e) => {
-    const options = Array.from(e.target.selectedOptions);
-    const values = options.map(option => option.value);
-    setSelectedGenres(values);
-  }}
-  className="form-select mb-4"
->
-  {allGenres.map((genre) => (
-    <option key={genre} value={genre}>
-      {genre}
-    </option>
-  ))}
-</select>
+        <h2>Total Pages: {totalPages}</h2>
+        <select
+          multiple
+          value={selectedGenres}
+          onChange={(e) => {
+            const options = Array.from(e.target.selectedOptions);
+            const values = options.map((option) => option.value);
+            setSelectedGenres(values);
+          }}
+          className="form-select mb-4"
+        >
+          {allGenres.map((genre) => (
+            <option key={genre} value={genre}>
+              {genre}
+            </option>
+          ))}
+          
+        </select>
+        {movieBeingEdited && (
+            <EditMovieForm
+              movie={movieBeingEdited}
+              onSuccess={handleEditSuccess}
+              onCancel={handleEditCancel}
+            />
+          )}
         {loading ? (
           <div className="text-center">
             <div className="spinner-border text-primary" role="status">
