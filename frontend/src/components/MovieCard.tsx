@@ -13,20 +13,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
   posterUrl,
   onClick,
 }) => (
-  <div
-    key={id}
-    className="card text-white bg-dark m-2"
-    style={{
-      width: '10rem',
-      height: '20rem', // Consistent height for the card
-      cursor: 'pointer',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start', // Space between the image and title
-      alignItems: 'center',
-    }}
-    onClick={onClick}
-  >
+  <div key={id} className="card-body text-white bg-dark m-2" onClick={onClick}>
     <img
       src={posterUrl}
       alt={title}

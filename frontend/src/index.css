@@ -12,6 +12,11 @@ h5 {
   font-weight: bold;
 }
 
+p,
+li {
+  color: #c0c0c0 !important;
+}
+
 .btn-login {
   font-size: 0.9rem;
   letter-spacing: 0.05rem;
@@ -29,8 +34,80 @@ h5 {
 }
 
 .card-body {
-  min-width: 400px;
   color: #c0c0c0;
+  width: 10rem;
+  height: 20rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.position-relative {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 2rem;
+}
+
+.movie-list {
+  white-space: nowrap;
+  display: flex;
+  gap: 1rem;
+  overflow: hidden !important; /* Hide overflow content */
+  width: calc((10rem + 1rem) * 6); /* 6 cards, including the gap between them */
+  scroll-behavior: smooth; /* Smooth transitions */
+  border-left: 1px solid transparent; /* Invisible borders for effect */
+  border-right: 1px solid transparent; /* Invisible borders for effect */
+}
+
+.movie-list::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+
+.movie-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.chevron {
+  flex-shrink: 0;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(
+    192,
+    192,
+    192,
+    0.6
+  ); /* Slightly transparent background */
+  color: #000; /* Chevron color */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor for hover */
+  font-size: 3rem; /* Adjust font size for better balance */
+  z-index: 10;
+  height: 4rem; /* Circular button dimensions */
+  width: 4rem;
+  border-radius: 50%;
+  padding-bottom: 0.7rem;
+}
+
+.chevron.left {
+  margin-right: 0rem; /* Space to the left of the movie list */
+}
+
+.chevron.right {
+  margin-left: 0rem; /* Space to the right of the movie list */
+}
+
+.chevron:hover {
+  background-color: #c0c0c0; /* Bright hover effect */
+  color: black;
+  transform: scale(0.9);
+  box-shadow: #c0c0c0;
 }
 
 .error {
