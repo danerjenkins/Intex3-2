@@ -1,55 +1,80 @@
 import { useEffect, useState } from 'react';
 import { Footer } from '../components/Footer';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
-import { MovieList } from '../components/MovieList';
 import { getMovieWithId } from '../api/MoviesApi';
 
-export default function MovieDescription(show_id: string) {
+export default function MovieDescription() {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const { showId } = useParams();
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadMovie = async () => {
+    try {
+      const fetchedMovie = await getMovieWithId('s3');
+      setMovie(fetchedMovie);
+    } catch (error) {
+      console.error('Failed to fetch movie:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-      getMovieWithId(show_id).then((movie) => {
-         setMovie(movie);
-         });
+    setLoading(true);
+    loadMovie();
   }, []);
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="d-flex flex-column min-vh-100 bg-light">
       <Header />
-      <div className="movieInfo">
-        <div className="movieInfoImage">
-          <img
-            // src={imgUrl + encodeURIComponent(movie.title)}
-            // alt={movie.title + ' poster'}
-          />
-        </div>
-        <div className="movieInfoText">
-          <h2>Title: </h2>
-          {/* <p>{movie.title}</p> */}
-          <h2>Director: </h2>
-          {/* <p>{movie.director}</p> */}
-          <h2>Type: </h2>
-          {/* <p>{movie.type}</p> */}
-          <h2>Released: </h2>
-          {/* <p>{movie.release_year}</p> */}
-          <h2>Rating: </h2>
-          {/* <p>{movie.rating}</p> */}
-          <h2>Duration: </h2>
-          {/* <p>{movie.duration}</p> */}
-          <h2>Cast: </h2>
-          {/* <p>{movie.cast}</p> */}
-          <h2>Description: </h2>
-          {/* <p>{movie.description}</p> */}
-          <h2>Genres: </h2>
-          {/* <p>{movie.genre}</p> */}
-        </div>
-      </div>
-      <div className="d-flex flex-column min-vh-100">
-        {/* <MovieList movie=movieId genre={movie.genre} type={movie.type}/> */}
+
+      <div className="container my-5">
+        {loading ? (
+          <div className="text-center my-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-3 text-dark">Loading movie...</p>
+          </div>
+        ) : (
+          movie && (
+            <div className="card shadow-lg text-dark p-3">
+              <div className="row g-4">
+                {/* Poster */}
+                <div className="col-md-4">
+                  <img
+                    src={imgUrl + encodeURIComponent(movie.title) + '.jpg'}
+                    alt={`${movie.title} poster`}
+                    className="img-fluid rounded"
+                    style={{ maxHeight: '100%', objectFit: 'cover' }}
+                  />
+                </div>
+
+                {/* Info and Description */}
+                <div className="col-md-8 d-flex flex-column justify-content-between">
+                  <div className="d-flex flex-row flex-wrap">
+                    <div className="me-5">
+                      <h3 className="mb-3">{movie.title}</h3>
+                      <p><strong>Director:</strong> {movie.director}</p>
+                      <p><strong>Type:</strong> {movie.type}</p>
+                      <p><strong>Released:</strong> {movie.release_year}</p>
+                      <p><strong>Rating:</strong> {movie.rating}</p>
+                      <p><strong>Duration:</strong> {movie.duration}</p>
+                      <p><strong>Cast:</strong> {movie.cast}</p>
+                      <p><strong>Genres:</strong> {movie.genre}</p>
+                    </div>
+
+                    <div className="flex-grow-1">
+                      <h5 className="mb-2">Description</h5>
+                      <p className="mb-0">{movie.description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        )}
       </div>
 
       <Footer />

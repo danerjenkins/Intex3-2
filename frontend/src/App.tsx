@@ -10,6 +10,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
+import MovieDescription from './pages/MovieDescription';
 // import AdminMoviesPage from './pages/AdminMoviesPage';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/* large security risk!!! take this out after it works */}
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/movieDescription" element={<MovieDescription />} />
       </Routes>
     </Router>
   );
