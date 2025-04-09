@@ -8,6 +8,7 @@ import RegisterPage from './pages/RegisterPage';
 import AdminPage from './pages/AdminPage';
 import MovieDescription from './pages/MovieDescription';
 import AuthorizeView from './components/AuthorizeView';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -48,7 +49,9 @@ function App() {
           path="/admin"
           element={
             <AuthorizeView>
-              <AdminPage />
+              <ProtectedRoute allowedRoles={['Administrator']}>
+                <AdminPage />
+              </ProtectedRoute>
             </AuthorizeView>
           }
         />

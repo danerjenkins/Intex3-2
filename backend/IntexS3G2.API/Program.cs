@@ -186,7 +186,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
 }).RequireAuthorization();
 
 // Add ping endpoint for authentication check
-app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager) =>
 {
     if (!user.Identity?.IsAuthenticated ?? false)
     {
@@ -194,7 +194,10 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
     }
 
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
-    return Results.Json(new { email = email }); // Return as JSON
+    var identityUser = await userManager.FindByEmailAsync(email);
+    var roles = await userManager.GetRolesAsync(identityUser);
+
+    return Results.Json(new { email = email ?? "", role = roles.FirstOrDefault() ?? "" }); // Return as JSON
 }).RequireAuthorization();
 
 app.Run();

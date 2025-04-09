@@ -27,7 +27,10 @@ export const fetchMovies = async (
     const response = await fetch(
       `${API_URL}/Movies/GetAdminMovieData?pageNumber=${pageNum}&pageSize=${pageSize}${
         selectedgenres.length ? `&${genresParams}` : ''
-      }${selectedRatings.length ? `&${ratingsParams}` : ''}`
+      }${selectedRatings.length ? `&${ratingsParams}` : ''}`, {
+        method: 'GET',
+        credentials: 'include'
+      }
     );
 
     if (!response.ok) {
@@ -50,6 +53,7 @@ export const addMovie = async (newMovie: Movie): Promise<Movie> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(newMovie),
     });
 
@@ -76,6 +80,7 @@ export const updateMovie = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify(updatedMovie),
     });
 
@@ -96,6 +101,7 @@ export const deleteMovie = async (show_id: string): Promise<void> => {
   try {
     const response = await fetch(`${API_URL}/DeleteMovie/${show_id}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -119,6 +125,7 @@ export async function getMovieWithId(movieId: string): Promise<any> {
   try{
     const response = await fetch(`${API_URL}/Movies/GetMovieFromId?showId=${movieId}`,{
       method: 'GET',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
