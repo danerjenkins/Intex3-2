@@ -1,3 +1,4 @@
+// MoviesApi.ts
 import { Movie } from '../types/Movie';
 
 interface FetchMoviesResponse {

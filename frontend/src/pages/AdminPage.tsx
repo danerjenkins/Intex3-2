@@ -96,9 +96,11 @@ const MoviesPage = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const confirmed = window.confirm('Are you sure you want to delete this movie?');
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this movie?'
+    );
     if (!confirmed) return;
-  
+
     try {
       await deleteMovie(id);
       await loadMovies(); // refresh the list
@@ -229,13 +231,12 @@ const MoviesPage = () => {
                 <>
                   <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     {movies.map((movie) => (
-                      <div className="col" key={movie.show_id}>
+                      <div className="col d-flex" key={movie.show_id}>
                         <MovieDataCard
                           id={movie.show_id}
                           title={movie.title}
                           director={movie.director}
                           info={movie.description}
-                          posterUrl={`${imgUrl}${encodeURIComponent(movie.title)}.jpg`}
                           onEdit={() => handleEdit(movie.show_id)}
                           onDelete={() => handleDelete(movie.show_id)}
                         />
