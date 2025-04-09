@@ -15,7 +15,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({
 }) => (
   <div key={id} className="card-body text-white bg-dark m-2" onClick={onClick}>
     <img
-      src={posterUrl}
+      src={posterUrl || 'defaultposter.png'}
       alt={title}
       className="card-img-top"
       style={{ height: '15rem', objectFit: 'cover' }}

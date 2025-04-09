@@ -20,7 +20,7 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
 }) => {
   return (
     <div className="card h-100">
-      <img src={posterUrl || 'https://via.placeholder.com/300x180'} className="card-img-top" alt={title} />
+      <img src={posterUrl || 'defaultposter.png'} className="card-img-top" alt={title} />
       <div className="card-body d-flex flex-column">
         <h5 className="card-title">{title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
