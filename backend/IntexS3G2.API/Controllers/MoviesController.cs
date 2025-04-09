@@ -12,6 +12,7 @@ namespace IntexS3G2.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MoviesController : ControllerBase
     {
         private MovieDbContext _movieContext;
@@ -24,6 +25,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("GetAdminMovieData")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize =10, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             var query = _movieContext.Titles.AsQueryable();
@@ -100,6 +102,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpPut("UpdateMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult UpdateMovie(string showId, [FromBody] Title updatedMovie)
         {    
             var existingMovie = _movieContext.Titles.Find(showId);
@@ -126,6 +129,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpPost("CreateMovie")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult CreateMovie([FromBody] Title movieToAdd)
         {
             _movieContext.Titles.Add(movieToAdd);
@@ -134,6 +138,7 @@ namespace IntexS3G2.API.Controllers
         }
         
         [HttpDelete("/DeleteMovie/{showId}")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(string showId)
         {
             var movie = _movieContext.Titles.Find(showId);
