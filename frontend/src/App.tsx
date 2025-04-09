@@ -9,9 +9,15 @@ import AdminPage from './pages/AdminPage';
 import MovieDescription from './pages/MovieDescription';
 import AuthorizeView from './components/AuthorizeView';
 import ProtectedRoute from './components/ProtectedRoute';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+import CookieConsentBanner from './components/CookieConsentBanner';
+import { useState } from 'react';
+
 
 function App() {
   return (
+    <>
+    <CookieConsentBanner /> {/* Show the cookie consent banner */}
     <Router>
       <Routes>
         {/* Public Routes */}
@@ -19,6 +25,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<PolicyPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
         {/* Protected Routes */}
         <Route
           path="/movies"
@@ -57,6 +64,7 @@ function App() {
         />
       </Routes>
     </Router>
+    </>
   );
 }
 

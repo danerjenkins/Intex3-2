@@ -49,6 +49,7 @@ function Register() {
           email: email,
           password: password,
           confirmPassword: confirmPassword,
+          role: 'user',
         }),
       })
         //.then((response) => response.json())

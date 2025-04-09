@@ -1,5 +1,8 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Import js-cookie
+import { createContext } from 'react';
+
 
 interface User {
   email: string;
@@ -12,9 +15,8 @@ function AuthorizeView(props: { children: React.ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true); // add a loading state
   //const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-  let emptyuser: User = { email: '' , role: ''};
 
-  const [user, setUser] = useState(emptyuser);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     async function fetchWithRetry(url: string, options: any) {
@@ -73,4 +75,3 @@ export function AuthorizedUser(props: { value: string }) {
 
 export default AuthorizeView;
 
-export const UserCont = createContext<User | null>(null);
