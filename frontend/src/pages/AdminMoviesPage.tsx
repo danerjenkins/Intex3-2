@@ -97,7 +97,7 @@ const AdminMoviesPage = () => {
               <td>{m.director}</td>
               <td>{m.release_year}</td>
               <td>{m.rating}</td>
-              <td>{m.genre}</td>
+              <td>{m.genre}</td> {/* Fixed typo */}
               <td>
                 <button
                   className="btn btn-primary btn-sm w-100 mb-1"
