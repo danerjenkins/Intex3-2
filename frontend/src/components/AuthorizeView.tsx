@@ -31,8 +31,8 @@ function AuthorizeView(props: { children: React.ReactNode }) {
 
         const data = await response.json();
 
-        if (data.email && data.role) {
-          setUser({ email: data.email, role: data.role });
+        if (data.email) {
+          setUser({ email: data.email, role: data.role || '' });
           setAuthorized(true);
         } else {
           throw new Error('Invalid user session');
