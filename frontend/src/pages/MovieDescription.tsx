@@ -48,6 +48,15 @@ export default function MovieDescription() {
                   <img
                     src={imgUrl + encodeURIComponent(movie.title) + '.jpg'}
                     alt={`${movie.title} poster`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+            
+                      // Prevent infinite loop if the fallback image also fails
+                      if (!target.src.includes('/defaultposter.png')) {
+                        target.onerror = null;
+                        target.src = '/defaultposter.png';
+                      }
+                    }}
                     className="img-fluid rounded"
                     style={{ maxHeight: '100%', objectFit: 'cover' }}
                   />
