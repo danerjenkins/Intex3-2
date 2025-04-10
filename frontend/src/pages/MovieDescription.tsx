@@ -3,13 +3,17 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RatingCard } from '../components/RatingCard';
+import { getContentRecommendations, Recommendation } from '../api/ContentRecommender';
+import { MovieList } from '../components/MovieList';
 
 export default function MovieDescription() {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [contentRecs, setContentRecs] = useState<Recommendation[]>([]); // Adjust type as needed
   const { id } = useParams();
   const loadMovie = async () => {
     try {
@@ -26,12 +30,18 @@ export default function MovieDescription() {
     if (!id) return; // Don't run if id is missing
     setLoading(true);
     loadMovie();
+    getContentRecommendations(id)
+    .then(data => setContentRecs(data.recommendations))
+    .catch(err => console.error(err));
   }, [id]);
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light">
       <Header />
 
+      <button onClick={() => navigate("/movies")} className="btn btn-secondary mb-3 ">
+        ← Back
+      </button>
       <div className="container my-5">
         {loading ? (
           <div className="text-center my-5">
@@ -42,6 +52,7 @@ export default function MovieDescription() {
           </div>
         ) : (
           movie && (
+            <>
             <div className="card shadow-lg text-dark p-3">
               <div className="row g-4">
                 {/* Poster */}
@@ -100,6 +111,13 @@ export default function MovieDescription() {
                 </div>
               </div>
             </div>
+            <div className="d-flex flex-column min-vh-100 mt-5">
+              <MovieList 
+                recommender={`Similar media to ${movie.title}`}
+                movies={contentRecs}
+                />
+            </div>
+            </>
           )
         )}
       </div>

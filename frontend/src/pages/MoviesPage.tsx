@@ -59,6 +59,7 @@ console.log("Azure movie recommendations:", data);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
+      <br/>
       <div className="container">
         <h3>Browse Movies</h3>
         <GenreFilter
@@ -80,6 +81,9 @@ console.log("Azure movie recommendations:", data);
           />
         ))}
       </div>
+      <br/>
+      <br/>
+      <br/>
       <Footer />
     </div>
   );

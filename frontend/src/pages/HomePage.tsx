@@ -1,12 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
-import { UserContext } from '../components/AuthorizeView';
-import { useContext } from 'react';
+import { MovieList } from '../components/MovieList';
+import { fetchTopRatedMovies } from '../api/MoviesApi';
+import { useEffect, useState } from 'react';
+import { Recommendation } from '../api/ContentRecommender';
 
 function HomePage() {
   const navigate = useNavigate();
-  const user = useContext(UserContext);
+  const [topRatedMovies, setTopRatedMovies] = useState<Recommendation[]>([]);
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const movies = await fetchTopRatedMovies();
+        setTopRatedMovies(movies);
+      } catch (error) {
+        console.error('Error fetching top-rated movies:', error);
+      }
+    };
+
+    fetchMovies();
+  });
 
   return (
     <div className="bg-dark text-white min-vh-100 d-flex flex-column align-items-center justify-content-center">
@@ -14,14 +29,6 @@ function HomePage() {
 
       <div className="d-flex flex-column align-items-center mt-5 gap-3">
         <h1 className="display-4 fw-bold text-center">Welcome to CineNiche</h1>
-        {user && (
-          <button
-            className="btn btn-primary px-4"
-            onClick={() => navigate('/movies')}
-          >
-            Explore Movies
-          </button>
-        )}
         <div className="d-flex gap-3">
           <button
             onClick={() => navigate('/login')}
@@ -37,7 +44,17 @@ function HomePage() {
           </button>
         </div>
       </div>
-
+      <div className="d-flex flex-column min-vh-100">
+        <MovieList
+          recommender="Our Most Popular Movies"
+          movies={topRatedMovies}
+        />
+      </div>
+        <br />
+        <br />
+        <br />        <br />
+        <br />
+        <br />
       <Footer />
     </div>
   );
