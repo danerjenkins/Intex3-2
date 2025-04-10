@@ -19,8 +19,8 @@ type MergedRec = CollabRecMerged | ContentRecMerged;
 
 export const MoviesPage: React.FC = () => {
   const [listOfIds, setListOfIds] = useState<string[]>([]);
-  const [azureMovieRecommendations, setAzureMovieRecommendations] = useState<Recommendation[]>([]);
-  const [azureCalled, setAzureCalled] = useState(false);
+  // const [azureMovieRecommendations, setAzureMovieRecommendations] = useState<Recommendation[]>([]);
+  // const [azureCalled, setAzureCalled] = useState(false);
   const userId = 1;
   const [allRecs, setAllRecs] = useState<Recommendations[]>([]);
   const [collabRecs, setCollabRecs] = useState<Recommendations[]>([]);
@@ -46,13 +46,13 @@ export const MoviesPage: React.FC = () => {
   useEffect(() => {
     if (listOfIds.length > 0) {
       // Get Azure recommendations.
-      getAzureRecs(userId)
-        .then((data) => {
-          setAzureMovieRecommendations(data);
-          setAzureCalled(true);
-          console.log('Azure movie recommendations:', data);
-        })
-        .catch((err) => console.error(err));
+      // getAzureRecs(userId)
+      //   .then((data) => {
+      //     setAzureMovieRecommendations(data);
+      //     setAzureCalled(true);
+      //     console.log('Azure movie recommendations:', data);
+      //   })
+      //   .catch((err) => console.error(err));
 
       // Get Content Recommendations.
       // const filteredIdsContent = listOfIds.filter((id) => idsInContent.includes(id));
@@ -170,7 +170,7 @@ export const MoviesPage: React.FC = () => {
           onGenreChange={setSelectedGenres}
         />
 
-        {/* Render Azure recommendations at the top if available */}
+        {/* Render Azure recommendations at the top if available 
         {azureCalled && (
           <MovieList 
             key={`azure-${userId}`}
@@ -178,6 +178,7 @@ export const MoviesPage: React.FC = () => {
             movies={azureMovieRecommendations}
           />
         )}
+          */}
 
         {/* Render merged and randomized recommendations with infinite scroll */}
         {randomizedRecs.slice(0, visibleCount).map((item) => {
