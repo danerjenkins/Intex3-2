@@ -55,8 +55,8 @@ export const MoviesPage: React.FC = () => {
         .catch((err) => console.error(err));
 
       // Get Content Recommendations.
-      const filteredIdsContent = listOfIds.filter((id) => idsInContent.includes(id));
-      Promise.allSettled(filteredIdsContent.map((id) => getContentRecommendations(id)))
+      // const filteredIdsContent = listOfIds.filter((id) => idsInContent.includes(id));
+      Promise.allSettled(listOfIds.map((id) => getContentRecommendations(id)))
         .then((results) => {
           const successResults = results
             .filter(
@@ -70,9 +70,9 @@ export const MoviesPage: React.FC = () => {
         .catch((error) =>
           console.error('Error fetching content recommendations:', error)
         );
-        const filteredIds = listOfIds.filter((id) => idsInCollab.includes(id));
+        // const filteredIds = listOfIds.filter((id) => idsInCollab.includes(id));
       // Get Collaborative Recommendations.
-      Promise.allSettled(filteredIds.map((id) => getCollaborativeRecommendations(id)))
+      Promise.allSettled(listOfIds.map((id) => getCollaborativeRecommendations(id)))
         .then((results) => {
           const successResults = results
             .filter(
