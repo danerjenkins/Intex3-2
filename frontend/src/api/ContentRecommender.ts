@@ -4,6 +4,7 @@ import { getMovieWithId } from './MoviesApi';
 export interface Recommendation {
   show_id: string;
   title: string;
+  genre?:string;
 }
 
 export interface Recommendations {

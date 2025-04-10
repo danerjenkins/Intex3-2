@@ -12,7 +12,10 @@ import {
 import { fetchUserRatedMovies, getAzureRecs, Rating } from '../api/MoviesApi';
 import { AzureRec } from '../types/AzureRec';
 
-type MergedRec = { type: 'collab' | 'content'; rec: Recommendations };
+// Define types for the merged items.
+type CollabRecMerged = { type: 'collab'; rec: Recommendations };
+type ContentRecMerged = { type: 'content'; rec: { genre: string; movies: Recommendation[] } };
+type MergedRec = CollabRecMerged | ContentRecMerged;
 
 export const MoviesPage: React.FC = () => {
   const [listOfIds, setListOfIds] = useState<string[]>([]);
@@ -23,11 +26,11 @@ export const MoviesPage: React.FC = () => {
   const [collabRecs, setCollabRecs] = useState<Recommendations[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
 
-  // State to store the fixed randomized recommendation list.
-  const [randomizedRecs, setRandomizedRecs] = useState<MergedRec[]>([]);
-  // State to control how many rec lists to show.
+  // For infinite scroll on the merged items:
   const [visibleCount, setVisibleCount] = useState<number>(3);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  // Final randomized merged recommendations array.
+  const [randomizedRecs, setRandomizedRecs] = useState<MergedRec[]>([]);
 
   // 1. Fetch user-rated movies.
   useEffect(() => {
@@ -36,15 +39,13 @@ export const MoviesPage: React.FC = () => {
         const showIds = data.map((r: Rating) => r.show_id);
         setListOfIds(showIds);
       })
-      .catch((err) =>
-        console.error('Error fetching user rated movies:', err)
-      );
+      .catch((err) => console.error('Error fetching user rated movies:', err));
   }, [userId]);
 
   // 2. Fetch recommendations when listOfIds is updated.
   useEffect(() => {
     if (listOfIds.length > 0) {
-      // Azure recommendations
+      // Get Azure recommendations.
       getAzureRecs(userId)
         .then((data) => {
           setAzureMovieRecommendations(data);
@@ -53,7 +54,7 @@ export const MoviesPage: React.FC = () => {
         })
         .catch((err) => console.error(err));
 
-      // Content recommendations
+      // Get Content Recommendations.
       Promise.allSettled(listOfIds.map((id) => getContentRecommendations(id)))
         .then((results) => {
           const successResults = results
@@ -69,10 +70,8 @@ export const MoviesPage: React.FC = () => {
           console.error('Error fetching content recommendations:', error)
         );
 
-      // Collaborative recommendations
-      Promise.allSettled(
-        listOfIds.map((id) => getCollaborativeRecommendations(id))
-      )
+      // Get Collaborative Recommendations.
+      Promise.allSettled(listOfIds.map((id) => getCollaborativeRecommendations(id)))
         .then((results) => {
           const successResults = results
             .filter(
@@ -89,23 +88,44 @@ export const MoviesPage: React.FC = () => {
     }
   }, [listOfIds, userId]);
 
-  // 3. Merge, shuffle, and rearrange recommendations, then save to state.
+  // 3. Group the content recommendations by genre.
+  // We assume that each Recommendations object has a property "recommendations"
+  // which is an array of Recommendation objects. Each Recommendation has a 'genre'
+  // property that can be a comma-separated list.
+  const contentMovies: Recommendation[] = allRecs.flatMap((rec) => rec.recommendations);
+
+  const moviesByGenre: { [genre: string]: Recommendation[] } = contentMovies.reduce((acc, movie) => {
+    const rawGenre = movie.genre || 'Other';
+    const genreList = rawGenre.split(',').map((g) => g.trim());
+    genreList.forEach((genre) => {
+      if (!acc[genre]) {
+        acc[genre] = [];
+      }
+      acc[genre].push(movie);
+    });
+    return acc;
+  }, {} as { [genre: string]: Recommendation[] });
+
+  // Convert grouped object into an array of content items.
+  const contentItems: ContentRecMerged[] = Object.entries(moviesByGenre).map(([genre, movies]) => ({
+    type: 'content' as const,
+    rec: { genre, movies },
+  }));
+
+  // Map collaborative recommendations into an array of collab items.
+  const collabItems: CollabRecMerged[] = collabRecs.map((rec) => ({
+    type: 'collab' as const,
+    rec,
+  }));
+
+  // 4. Merge the two arrays, then shuffle and save to state.
   useEffect(() => {
-    // Only merge when we have both collabRecs and allRecs loaded.
-    if (collabRecs.length === 0 && allRecs.length === 0) return;
+    // Only merge if we have data in one or both arrays.
+    if (collabItems.length === 0 && contentItems.length === 0) return;
 
-    const merged: MergedRec[] = [];
-    const maxLength = Math.max(collabRecs.length, allRecs.length);
-    for (let i = 0; i < maxLength; i++) {
-      if (i < collabRecs.length) {
-        merged.push({ type: 'collab', rec: collabRecs[i] });
-      }
-      if (i < allRecs.length) {
-        merged.push({ type: 'content', rec: allRecs[i] });
-      }
-    }
+    const merged: MergedRec[] = [...collabItems, ...contentItems];
 
-    // Helper: Shuffle an array (Fisher-Yates)
+    // Helper: Shuffle an array using Fisher-Yates.
     function shuffleArray<T>(array: T[]): T[] {
       const arr = array.slice();
       for (let i = arr.length - 1; i > 0; i--) {
@@ -115,31 +135,15 @@ export const MoviesPage: React.FC = () => {
       return arr;
     }
 
-    // Helper: Rearrange to avoid adjacent recs with the same basedOffOf value.
-    function rearrangeToAvoidAdjacentDuplicates<T extends { rec: { basedOffOf: string } }>(array: T[]): T[] {
-      for (let i = 1; i < array.length; i++) {
-        if (array[i].rec.basedOffOf === array[i - 1].rec.basedOffOf) {
-          for (let j = i + 1; j < array.length; j++) {
-            if (array[j].rec.basedOffOf !== array[i - 1].rec.basedOffOf) {
-              [array[i], array[j]] = [array[j], array[i]];
-              break;
-            }
-          }
-        }
-      }
-      return array;
-    }
-
-    const shuffled = rearrangeToAvoidAdjacentDuplicates(shuffleArray(merged));
+    const shuffled = shuffleArray(merged);
     setRandomizedRecs(shuffled);
   }, [collabRecs, allRecs]);
 
-  // 4. Infinite scroll: Increase visibleCount when the sentinel is in view.
+  // 5. Infinite scroll: Increase visibleCount when the sentinel is in view.
   useEffect(() => {
     if (!sentinelRef.current) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        // Increase visibleCount only if there are more recs to show.
         if (entries[0].isIntersecting && visibleCount < randomizedRecs.length) {
           setVisibleCount((prev) => prev + 2);
         }
@@ -165,27 +169,36 @@ export const MoviesPage: React.FC = () => {
           onGenreChange={setSelectedGenres}
         />
 
-        {/* Azure recommendations at the top */}
+        {/* Render Azure recommendations at the top if available */}
         {azureCalled && (
           <MovieList 
-            key={userId}
+            key={`azure-${userId}`}
             recommender="Movies For You"
             movies={azureMovieRecommendations}
           />
         )}
 
-        {/* Render randomized recommendations gradually */}
-        {randomizedRecs.slice(0, visibleCount).map(({ type, rec }) => (
-          <MovieList
-            key={`${type}-${rec.basedOffOf}`}
-            recommender={
-              type === 'collab'
-                ? `People who like ${rec.basedOffOf} also like`
-                : `Movies and shows like ${rec.basedOffOf}`
-            }
-            movies={rec.recommendations}
-          />
-        ))}
+        {/* Render merged and randomized recommendations with infinite scroll */}
+        {randomizedRecs.slice(0, visibleCount).map((item) => {
+          if (item.type === 'collab') {
+            return (
+              <MovieList
+                key={`collab-${item.rec.basedOffOf}`}
+                recommender={`People who like ${item.rec.basedOffOf} also like`}
+                movies={item.rec.recommendations}
+              />
+            );
+          } else if (item.type === 'content') {
+            return (
+              <MovieList
+                key={item.rec.genre}
+                recommender={`${item.rec.genre} movies and shows you might like`}
+                movies={item.rec.movies}
+              />
+            );
+          }
+          return null;
+        })}
 
         {/* Sentinel element to trigger infinite scroll */}
         <div ref={sentinelRef} style={{ height: '1px' }}></div>
