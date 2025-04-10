@@ -62,6 +62,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email; // Ensure email is stored in claims
+
+        // 🔐 This makes passwords harder to guess
+    options.Password.RequireDigit = true;           // Must have at least one number (like 1, 2, 3)
+    options.Password.RequireLowercase = true;       // Must have lowercase letters (like a, b, c)
+    options.Password.RequireUppercase = true;       // Must have capital letters (like A, B, C)
+    options.Password.RequireNonAlphanumeric = true; // Must have symbols (like !, @, #)
+    options.Password.RequiredLength = 8;            // Must be at least 8 characters long
+    options.Password.RequiredUniqueChars = 1;       // Must have at least 1 unique character
 });
 // Add Identity services
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
