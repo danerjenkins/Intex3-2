@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { useContext } from 'react';
-import { UserContext } from './AuthorizeView';
+// import { useContext } from 'react';
+// import { UserContext } from './AuthorizeView';
 
 const LogoutButton = () => {
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
-  const user = useContext(UserContext);
+  // const user = useContext(UserContext);
 
   const handleLogout = async () => {
     try {

@@ -161,6 +161,34 @@ export async function getMovieWithId(movieId: string): Promise<any> {
   }
 }
 
+
+// Define the type that represents a rated movie record.
+// Update fields as they are defined in your Ratings table.
+export interface Rating {
+  user_id: number;
+  show_id: string;
+  rating: number;
+  // Add any other fields that are returned from the endpoint.
+}
+
+export const fetchUserRatedMovies = async (userId: number): Promise<Rating[]> => {
+  const url = `${API_URL}/GetUserRatedMovies?userId=${userId}`;
+  
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'include', // Include credentials (cookies, etc.) if needed.
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user rated movies: ${response.statusText}`);
+  }
+  
+  // Parse and return JSON data.
+  return await response.json() as Rating[];
+};
 export async function getAzureRecs(userId: number): Promise<AzureRecs> {
   try {
     const response = await fetch(`${API_URL}/Movies/GetRecommendationFromAzure`, {
