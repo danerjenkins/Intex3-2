@@ -4,7 +4,7 @@ import { getMovieWithId } from './MoviesApi';
 export interface Recommendation {
   show_id: string;
   title: string;
-  genre?:string;
+  genre?: string;
 }
 
 export interface Recommendations {
@@ -28,6 +28,15 @@ export async function getContentRecommendations(
         },
       }
     );
+    // Check response before parsing JSON
+    if (!response.ok) {
+      // Optionally attempt to get any error message from the body.
+      const errorText = await response.text();
+      console.error('ContentRecommendations error response:', errorText);
+      throw new Error(
+        `Failed to fetch movie recommendations: ${response.statusText}`
+      );
+    }
     const data = await response.json();
     console.log(data);
     const recommendations: Recommendations = {
@@ -35,10 +44,6 @@ export async function getContentRecommendations(
       recommendations: data,
     };
 
-    if (!response.ok) {
-      console.log(response);
-      throw new Error(`Failed to fetch dis movie, son: ${response.statusText}`);
-    }
     return recommendations;
   } catch (e) {
     console.error(`problem w getContentRecommendations(), homes: ${e}`);
@@ -61,17 +66,21 @@ export async function getCollaborativeRecommendations(
         },
       }
     );
+    // Check response before parsing JSON
+    if (!response.ok) {
+      // Optionally attempt to get any error message from the body.
+      const errorText = await response.text();
+      console.error('Collaborative Recommendations error response:', errorText);
+      throw new Error(
+        `Failed to fetch movie collab recommendations: ${response.statusText}`
+      );
+    }
     const data = await response.json();
     console.log(data);
     const recommendations: Recommendations = {
       basedOffOf: title,
       recommendations: data,
     };
-
-    if (!response.ok) {
-      console.log(response);
-      throw new Error(`Failed to fetch dis movie, son: ${response.statusText}`);
-    }
     return recommendations;
   } catch (e) {
     console.error(`problem w getCollaborativeRecommendations(), homes: ${e}`);
