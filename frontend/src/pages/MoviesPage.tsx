@@ -203,6 +203,9 @@ export const MoviesPage: React.FC = () => {
         {/* Sentinel element to trigger infinite scroll */}
         <div ref={sentinelRef} style={{ height: '1px' }}></div>
       </div>
+      <br/>
+      <br/>
+      <br/>
       <Footer />
     </div>
   );

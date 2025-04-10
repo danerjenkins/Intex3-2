@@ -262,3 +262,45 @@ p, li {
 .genre-list::-webkit-scrollbar {
   display: none; /* Chrome, Safari, and Opera */
 }
+
+
+
+/* Footer.css */
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: #343a40;
+  color: #6c757d;
+  text-align: center;
+  padding: 0.25rem 0;
+  border-top: 1px solid #6c757d;
+  border-radius: 10px; /* Rounded corners */
+  font-size: 0.75rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
+}
+
+/* Hover effect to enlarge the footer */
+.fixed-footer:hover {
+  transform: scale(1.1); /* Makes the footer slightly larger */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow on hover */
+}
+
+.fixed-footer a,
+.fixed-footer button {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-decoration: underline;
+}
+
+.fixed-footer a:hover,
+.fixed-footer button:hover {
+  color: #f8f9fa;
+}
+
+.fixed-footer .admin-link {
+  margin-top: 0.2rem;
+}
