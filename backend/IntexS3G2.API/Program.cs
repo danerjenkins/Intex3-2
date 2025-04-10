@@ -121,6 +121,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error");
+    // Optionally implement an ErrorController or inline middleware that returns a JSON error response.
+}
+
 
 using (var scope = app.Services.CreateScope())
 {
