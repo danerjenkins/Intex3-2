@@ -72,8 +72,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = true;       // Must have lowercase letters (like a, b, c)
     options.Password.RequireUppercase = true;       // Must have capital letters (like A, B, C)
     options.Password.RequireNonAlphanumeric = true; // Must have symbols (like !, @, #)
-    options.Password.RequiredLength = 8;            // Must be at least 8 characters long
-    options.Password.RequiredUniqueChars = 1;       // Must have at least 1 unique character
+    options.Password.RequiredLength = 12;            // Must be at least 8 characters long
+    options.Password.RequiredUniqueChars = 3;       // Must have at least 1 unique character
 });
 // Add Identity services
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
@@ -85,6 +85,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None; // Set SameSite to None
     options.Cookie.Name = ".AspNetCore.Identity.Application"; // Ensure the cookie name is set correctly
     options.LoginPath = "/login"; // Set the login path
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Logs the user out after 30 minutes of inactivity
 });
 
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();

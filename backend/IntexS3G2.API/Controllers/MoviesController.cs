@@ -382,6 +382,33 @@ namespace IntexS3G2.API.Controllers
             //     // Return the list of recommended movies.
             //     return Ok(recommendedMovies);
             // }
+
+            [HttpGet("GetTopRatedMovies")]
+            [AllowAnonymous] // Will be used on the main page so needs to be anonymous
+            public IActionResult GetTopRatedMovies()
+            {
+                // Join Ratings with Titles on show_id and calculate average ratings
+                var topMovies = _movieContext.Ratings
+                    .GroupBy(r => r.show_id)
+                    .Select(g => new
+                    {
+                        ShowId = g.Key,
+                        AverageRating = g.Average(r => r.rating)
+                    })
+                    .OrderByDescending(m => m.AverageRating)
+                    .Take(10) // top 10 highest-rated
+                    .Join(_movieContext.Titles,
+                        r => r.ShowId,
+                        t => t.show_id,
+                        (r, t) => new
+                        {
+                            t.show_id,
+                            t.title
+                        })
+                    .ToList();
+
+                return Ok(topMovies);
+            }
         }
     }
 
