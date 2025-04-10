@@ -10,7 +10,6 @@ import {
   Recommendations,
 } from '../api/ContentRecommender';
 import { fetchUserRatedMovies, getAzureRecs, Rating } from '../api/MoviesApi';
-import { AzureRec } from '../types/AzureRec';
 
 // Define types for the merged items.
 type CollabRecMerged = { type: 'collab'; rec: Recommendations };

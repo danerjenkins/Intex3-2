@@ -1,32 +1,32 @@
 import { useState, useEffect } from 'react';
 import { UserRating } from '../types/UserRating';
-const apiUrl = import.meta.env.VITE_API_URL;
+// const apiUrl = import.meta.env.VITE_API_URL;
 
-function submitRating(submission: UserRating) {
-  fetch(`${apiUrl}/Movies/RegisterUser`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      user_id: submission.user_id,
-      show_id: submission.show_id,
-      rating: submission.rating,
-    }),
-  })
-    //.then((response) => response.json())
-    .then((data) => {
-      // handle success or error from the server
-      console.log(data);
-      if (data.ok) console.log('Successful registration. Please log in.');
-      else console.log('Error registering.');
-    })
-    .catch((error) => {
-      // handle network error
-      console.error(error);
-      console.log('Error registering.');
-    });
-}
+// function submitRating(submission: UserRating) {
+//   fetch(`${apiUrl}/Movies/RegisterUser`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       user_id: submission.user_id,
+//       show_id: submission.show_id,
+//       rating: submission.rating,
+//     }),
+//   })
+//     //.then((response) => response.json())
+//     .then((data) => {
+//       // handle success or error from the server
+//       console.log(data);
+//       if (data.ok) console.log('Successful registration. Please log in.');
+//       else console.log('Error registering.');
+//     })
+//     .catch((error) => {
+//       // handle network error
+//       console.error(error);
+//       console.log('Error registering.');
+//     });
+// }
 
 export function RatingCard({ show_id }: { show_id: string }) {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -36,7 +36,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [openRatingSubmission, setOpenRatingSubmission] =
     useState<boolean>(false);
-  const [thankMessage, setThanksMessage] = useState<boolean>(false);
+  // const [thankMessage, setThanksMessage] = useState<boolean>(false);
   const [newRating, setNewRating] = useState<UserRating>({
     user_id: 0,
     show_id: '',
