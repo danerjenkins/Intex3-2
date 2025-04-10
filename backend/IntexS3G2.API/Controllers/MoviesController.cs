@@ -1,4 +1,7 @@
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -17,11 +20,13 @@ namespace IntexS3G2.API.Controllers
     {
         private MovieDbContext _movieContext;
         private ContentDbContext _contentContext;
+        private CollaborativeDbContext _collaborativeContext;
 
-        public MoviesController(MovieDbContext temp, ContentDbContext content)
+        public MoviesController(MovieDbContext temp, ContentDbContext content, CollaborativeDbContext collab)
         {
             _movieContext = temp;
             _contentContext = content;
+            _collaborativeContext = collab;
         }
 
         [HttpGet("GetAdminMovieData")]
@@ -261,6 +266,90 @@ namespace IntexS3G2.API.Controllers
 
             return Ok(recommendedMovies);
             
+        }
+
+        [HttpPost("GetRecommendationFromAzure")]
+        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] int userId)
+        {
+            var data = new
+            {
+                Inputs = new
+                {
+                    WebServiceInput2 = new[]
+                    {
+                        new { user_id = userId }
+                    }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = Environment.GetEnvironmentVariable("AZURE_URL");
+            var apiKey = Environment.GetEnvironmentVariable("AZURE_API_KEY"); // Store in secrets or config ideally
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            try
+            {
+                var response = await client.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadAsStringAsync();
+                return Ok(JsonDocument.Parse(result));
+            }
+            catch (HttpRequestException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Azure ML call failed.", error = ex.Message });
+            }
+
+        [HttpGet("CollaborativeRecommendations/{showId}")]
+        public IActionResult CollaborativeRecommendations(string showId)
+        {
+            // Find the collaborative record based on the show id.
+            var query = _collaborativeContext.CollabRecs
+                .FirstOrDefault(r => r.IfYouWatched == showId);
+
+            // If the query is null or there's no recommended show id in r1, return NotFound.
+            if (query == null || string.IsNullOrWhiteSpace(query.r1))
+            {
+                return NotFound();
+            }
+
+            // Build the list of show IDs from each of the r1 through r15 columns.
+            var showIdList = new List<string>();
+
+            if (!string.IsNullOrWhiteSpace(query.r1)) showIdList.Add(query.r1);
+            if (!string.IsNullOrWhiteSpace(query.r2)) showIdList.Add(query.r2);
+            if (!string.IsNullOrWhiteSpace(query.r3)) showIdList.Add(query.r3);
+            if (!string.IsNullOrWhiteSpace(query.r4)) showIdList.Add(query.r4);
+            if (!string.IsNullOrWhiteSpace(query.r5)) showIdList.Add(query.r5);
+            if (!string.IsNullOrWhiteSpace(query.r6)) showIdList.Add(query.r6);
+            if (!string.IsNullOrWhiteSpace(query.r7)) showIdList.Add(query.r7);
+            if (!string.IsNullOrWhiteSpace(query.r8)) showIdList.Add(query.r8);
+            if (!string.IsNullOrWhiteSpace(query.r9)) showIdList.Add(query.r9);
+            if (!string.IsNullOrWhiteSpace(query.r10)) showIdList.Add(query.r10);
+            if (!string.IsNullOrWhiteSpace(query.r11)) showIdList.Add(query.r11);
+            if (!string.IsNullOrWhiteSpace(query.r12)) showIdList.Add(query.r12);
+            if (!string.IsNullOrWhiteSpace(query.r13)) showIdList.Add(query.r13);
+            if (!string.IsNullOrWhiteSpace(query.r14)) showIdList.Add(query.r14);
+            if (!string.IsNullOrWhiteSpace(query.r15)) showIdList.Add(query.r15);
+
+            // Query the movie titles for records that match the recommended show IDs.
+            var recommendedMovies = _movieContext.Titles
+                .Where(m => showIdList.Contains(m.show_id))
+                .Select(m => new
+                {
+                    m.show_id,
+                    m.title
+                })
+                .ToList();
+
+            // Return the list of recommended movies.
+            return Ok(recommendedMovies);
         }
     }
 }

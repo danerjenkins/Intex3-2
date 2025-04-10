@@ -50,6 +50,6 @@ namespace IntexS3G2.API.Data
         public bool Talk_Shows_TV_Comedies { get; set; }
         public bool Thrillers { get; set; }
 
-        public string Genre { get; set; }
+        public string Genre { get; set; } = string.Empty;
     }
 }

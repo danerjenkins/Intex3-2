@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const CookieConsentBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const user = useContext(UserContext);
-
+  const navigate = useNavigate();
+  
   // Check if the user has already accepted cookies
   useEffect(() => {
     const userConsent = Cookies.get('cookie-consent');
@@ -22,16 +24,19 @@ const CookieConsentBanner: React.FC = () => {
 
   if (!isVisible) return null;
 
+  const goToPrivacyPolicy = () => {
+   navigate('/privacy');
+ };
+
   return (
     <div style={styles.banner}>
       <div style={styles.text}>
         <p>
           We use cookies to improve your experience on our site. By using our
           site, you agree to our use of cookies.
-          <a href="/privacy-policy" style={styles.link}>
-            {' '}
-            Learn more
-          </a>
+          <span onClick={goToPrivacyPolicy} style={styles.link}>
+            {' '}Learn more
+          </span>
           .
         </p>
       </div>

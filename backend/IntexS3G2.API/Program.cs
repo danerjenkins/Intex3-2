@@ -3,6 +3,7 @@ using IntexS3G2.API.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using IntexS3G2.API.Services;
+using Microsoft.Data.Sqlite;
 
 #if DEBUG
 DotNetEnv.Env.Load(); // loads from .env by default
@@ -38,6 +39,9 @@ builder.Services.AddDbContext<MovieDbContext>(options =>
 builder.Services.AddDbContext<ContentDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("ContentConnection")));
 
+builder.Services.AddDbContext<CollaborativeDbContext>(options => 
+    options.UseSqlite(builder.Configuration.GetConnectionString("CollaborativeConnection")));
+
     Console.WriteLine($"[Startup] IdentityConnection: {identityConnection}");
 Console.WriteLine($"[Startup] MovieConnection: {movieConnection}");
 
@@ -62,6 +66,14 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
     options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email; // Ensure email is stored in claims
+
+        // 🔐 This makes passwords harder to guess
+    options.Password.RequireDigit = true;           // Must have at least one number (like 1, 2, 3)
+    options.Password.RequireLowercase = true;       // Must have lowercase letters (like a, b, c)
+    options.Password.RequireUppercase = true;       // Must have capital letters (like A, B, C)
+    options.Password.RequireNonAlphanumeric = true; // Must have symbols (like !, @, #)
+    options.Password.RequiredLength = 8;            // Must be at least 8 characters long
+    options.Password.RequiredUniqueChars = 1;       // Must have at least 1 unique character
 });
 // Add Identity services
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
@@ -109,6 +121,52 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var connectionString = config.GetConnectionString("CollaborativeConnection");
+    
+    using (var connection = new SqliteConnection(connectionString))
+    {
+        connection.Open();
+        // Query to list all tables in the database.
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT name FROM sqlite_master WHERE type='table';";
+        
+        using (var reader = command.ExecuteReader())
+        {
+            Console.WriteLine("Tables in the Collaborative DB:");
+            while (reader.Read())
+            {
+                string tableName = reader.GetString(0);
+                Console.WriteLine($"- {tableName}");
+                // For each table, log its columns.
+                    using (var columnCmd = connection.CreateCommand())
+                    {
+                        // Use PRAGMA table_info() to list the columns
+                        columnCmd.CommandText = $"PRAGMA table_info({tableName});";
+                        using (var columnReader = columnCmd.ExecuteReader())
+                        {
+                            Console.WriteLine("  Columns:");
+                            while (columnReader.Read())
+                            {
+                                // PRAGMA table_info returns:
+                                //  cid, name, type, notnull, dflt_value, pk
+                                int cid = columnReader.GetInt32(0);
+                                string colName = columnReader.GetString(1);
+                                string colType = columnReader.GetString(2);
+                                bool notNull = columnReader.GetBoolean(3);
+                                string defaultValue = columnReader.IsDBNull(4) ? "NULL" : columnReader.GetString(4);
+                                bool isPrimaryKey = columnReader.GetInt32(5) > 0;
+                                
+                                Console.WriteLine($"    - {colName} ({colType}), NotNull: {notNull}, Default: {defaultValue}, PrimaryKey: {isPrimaryKey}");
+                            }
+                        }
+                    }
+            }
+        }
+    }
+}
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
