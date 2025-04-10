@@ -33,6 +33,7 @@ export async function getContentRecommendations(
       // Optionally attempt to get any error message from the body.
       const errorText = await response.text();
       console.error('ContentRecommendations error response:', errorText);
+      console.error(`Status: ${response.status} - ${response.statusText}`);
       throw new Error(
         `Failed to fetch movie recommendations: ${response.statusText}`
       );
@@ -71,6 +72,7 @@ export async function getCollaborativeRecommendations(
       // Optionally attempt to get any error message from the body.
       const errorText = await response.text();
       console.error('Collaborative Recommendations error response:', errorText);
+      console.error(`Status: ${response.status} - ${response.statusText}`);
       throw new Error(
         `Failed to fetch movie collab recommendations: ${response.statusText}`
       );
