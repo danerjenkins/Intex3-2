@@ -304,3 +304,65 @@ p, li {
 .fixed-footer .admin-link {
   margin-top: 0.2rem;
 }
+
+/* General styles for the homepage */
+.homepage {
+  font-family: 'Arial', sans-serif;
+}
+
+/* Brand name styling */
+.brand-name {
+  color: #ffcc00;
+  font-style: italic;
+}
+
+/* Tagline styling */
+.tagline {
+  font-size: 1.5rem;
+  font-family: 'Verdana, sans-serif';
+}
+
+/* Auth buttons */
+.auth-buttons .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Cinema section */
+.cinema-section .cinema-tagline {
+  font-family: 'Tahoma, sans-serif';
+  font-style: italic;
+}
+
+.cinema-section .cinema-description {
+  font-size: 1.2rem;
+}
+
+.cinema-section .cinema-subtext {
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+/* Top-rated section */
+.top-rated-section {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Icon styling */
+.icon {
+  color: #ffcc00;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .tagline, .cinema-description, .cinema-subtext {
+    font-size: 1rem;
+  }
+
+  .auth-buttons .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+}
