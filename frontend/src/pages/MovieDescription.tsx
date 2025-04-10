@@ -3,7 +3,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RatingCard } from '../components/RatingCard';
 import { getContentRecommendations, Recommendation } from '../api/ContentRecommender';
 import { MovieList } from '../components/MovieList';
@@ -36,12 +36,8 @@ export default function MovieDescription() {
   }, [id]);
 
   return (
-    <div className="d-flex flex-column min-vh-100 bg-light">
+    <div className="d-flex flex-column min-vh-100">
       <Header />
-
-      <button onClick={() => navigate("/movies")} className="btn btn-secondary mb-3 ">
-        ← Back
-      </button>
       <div className="container my-5">
         {loading ? (
           <div className="text-center my-5">
@@ -53,7 +49,7 @@ export default function MovieDescription() {
         ) : (
           movie && (
             <>
-            <div className="card shadow-lg text-dark p-3">
+            <div className="descriptionBox shadow-lg p-3">
               <div className="row g-4">
                 {/* Poster */}
                 <div className="col-md-4">
@@ -72,6 +68,8 @@ export default function MovieDescription() {
                     className="img-fluid rounded"
                     style={{ maxHeight: '100%', objectFit: 'cover' }}
                   />
+                  <br /><br /><br /><br />
+                  <Link to="/movies" className='backButton'>Back to Movies</Link>
                 </div>
 
                 {/* Info and Description */}
@@ -111,7 +109,7 @@ export default function MovieDescription() {
                 </div>
               </div>
             </div>
-            <div className="d-flex flex-column min-vh-100 mt-5">
+            <div className="d-flex flex-column mt-5">
               <MovieList 
                 recommender={`Similar media to ${movie.title}`}
                 movies={contentRecs}
@@ -121,7 +119,6 @@ export default function MovieDescription() {
           )
         )}
       </div>
-
       <Footer />
     </div>
   );

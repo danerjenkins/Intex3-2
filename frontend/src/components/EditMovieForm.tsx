@@ -89,80 +89,95 @@ const EditMovieForm = ({
   };
 
   return (
-    <div className="card mb-4">
-      <div className="card-body">
-        <h3 className="card-title mb-4">
-          {isNew ? 'Add Movie' : 'Update Movie'}
-        </h3>
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            {[
-              { label: 'Title', name: 'title', type: 'text' },
-              { label: 'Type', name: 'type', type: 'text' },
-              { label: 'Director', name: 'director', type: 'text' },
-              { label: 'Cast', name: 'cast', type: 'text' },
-              { label: 'Country', name: 'country', type: 'text' },
-              { label: 'Release Year', name: 'release_year', type: 'number' },
-              { label: 'Rating', name: 'rating', type: 'text' },
-              { label: 'Duration (minutes)', name: 'duration', type: 'text' },
-              { label: 'Description', name: 'description', type: 'text' },
-            ].map((field) => (
-              <div className="col-md-6 mb-3" key={field.name}>
-                <label htmlFor={field.name} className="form-label">
-                  {field.label}
-                </label>
-                <input
-                  type={field.type}
-                  className="form-control"
-                  id={field.name}
-                  name={field.name}
-                  value={(formData as any)[field.name] || ''}
-                  onChange={handleChange}
-                />
-              </div>
-            ))}
-          </div>
+    <div className="cardColor mb-4 p-4 rounded">
+  <h3 className="mb-4">
+    {isNew ? 'Add Movie' : 'Update Movie'}
+  </h3>
+  <form onSubmit={handleSubmit}>
+    <div className="row">
+      {[
+        { label: 'Title', name: 'title', type: 'text' },
+        { label: 'Type', name: 'type', type: 'text' },
+        { label: 'Director', name: 'director', type: 'text' },
+        { label: 'Cast', name: 'cast', type: 'text' },
+        { label: 'Country', name: 'country', type: 'text' },
+        { label: 'Release Year', name: 'release_year', type: 'number' },
+        { label: 'Rating', name: 'rating', type: 'text' },
+        { label: 'Duration (minutes)', name: 'duration', type: 'text' },
+        { label: 'Description', name: 'description', type: 'text' },
+      ].map((field) => (
+        <div className="col-md-6 mb-3" key={field.name}>
+          <label htmlFor={field.name} className="form-label" style={{ color: 'var(--text-color)' }}>
+            {field.label}
+          </label>
+          <input
+            type={field.type}
+            id={field.name}
+            name={field.name}
+            value={(formData as any)[field.name] || ''}
+            onChange={handleChange}
+            style={{
+              backgroundColor: 'var(--movie-card-bg)',
+              color: 'var(--text-color)',
+              border: '1px solid var(--btn-genre-border)',
+              borderRadius: '0.25rem',
+              padding: '0.5rem',
+              width: '100%',
+            }}
+          />
+        </div>
+      ))}
+    </div>
 
-          <div className="mb-3">
-            <label className="form-label">Select Genres:</label>
-            <div className="row">
-              {genresList.map((genre) => (
-                <div className="col-md-4" key={genre}>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id={genre}
-                      checked={formData.genre
-                        ?.split(',')
-                        .map((g) => g.trim())
-                        .includes(genre)}
-                      onChange={() => handleGenreChange(genre)}
-                    />
-                    <label className="form-check-label" htmlFor={genre}>
-                      {genre}
-                    </label>
-                  </div>
-                </div>
-              ))}
+    <div className="mb-4">
+      <label className="form-label" style={{ color: 'var(--text-color)' }}>
+        Select Genres:
+      </label>
+      <div className="row">
+        {genresList.map((genre) => (
+          <div className="col-md-4" key={genre}>
+            <div className="form-check mb-2">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id={genre}
+                checked={formData.genre
+                  ?.split(',')
+                  .map((g) => g.trim())
+                  .includes(genre)}
+                onChange={() => handleGenreChange(genre)}
+                style={{
+                  accentColor: 'var(--btn-genre-border)',
+                }}
+              />
+              <label
+                className="form-check-label"
+                htmlFor={genre}
+                style={{ color: 'var(--text-color)', marginLeft: '0.5rem' }}
+              >
+                {genre}
+              </label>
             </div>
           </div>
-
-          <div className="d-flex justify-content-end gap-2">
-            <button type="submit" className="btn btn-primary">
-              {isNew ? 'Add Movie' : 'Update Movie'}
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
+        ))}
       </div>
     </div>
+
+    <div className="d-flex justify-content-end gap-2">
+      <button type="submit" className="btn-genre">
+        {isNew ? 'Add Movie' : 'Update Movie'}
+      </button>
+      <button
+        type="button"
+        className="btn-genre"
+        onClick={onCancel}
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
   );
 };
 

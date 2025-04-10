@@ -86,7 +86,7 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onGenr
   };
 
   return (
-    <div className="genre-filter-container text-white p-3 rounded mb-4 position-relative">
+    <div className="genre-filter-container p-3 rounded mb-4 position-relative">
 
       {/* Left chevron */}
       <button

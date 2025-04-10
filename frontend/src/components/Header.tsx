@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
 
 
   return (
-    <header className="bg-dark text-white border-bottom border-secondary py-3 px-4">
+    <header className="headerBg border-bottom border-secondary py-3 px-4">
       <div className="container-fluid d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center" style={{ gap: '1rem' }}>
           <img
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
           <input
             type="text"
             placeholder="Search..."
-            className="form-control bg-secondary text-white border-0 rounded-pill"
+            className="form-control border-0 rounded-pill"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearch}

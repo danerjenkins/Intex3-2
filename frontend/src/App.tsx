@@ -22,9 +22,17 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/privacy" element={<PolicyPage />} />
-        <Route path="/search" element={<SearchResultsPage />} />
 
         {/* Protected Routes */}
+        <Route
+          path="/search"
+          element={
+            <AuthorizeView>
+              <SearchResultsPage />
+            </AuthorizeView>
+          }
+        />
+        
         <Route
           path="/movies"
           element={

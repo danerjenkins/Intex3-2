@@ -1,26 +1,64 @@
 /* CSS Variables for unified theme */
+/* Dark Theme (Default) */
 :root {
-  /* Global Colors */
-  --bg-gradient-start: #34223a;
-  --bg-gradient-end: rgb(62, 2, 2);
-  --text-color: #c0c0c0;
+  --bg-gradient-start: #29172ffa;
+  --bg-gradient-end: rgb(35, 8, 45);
   --bg-dark: #212529;
   --movie-card-bg: #222;
-  
-  /* Button Colors and Sizes */
-  --btn-login-fs: 0.9rem;
-  --btn-login-padding: 0.75rem 1rem;
-  --btn-google-bg: #ea4335;
-  --btn-facebook-bg: #3b5998;
-  
-  /* Genre & Active Styles */
-  --btn-genre-border: #6c757d;
-  --btn-genre-active-bg: #0d6efd;
-  
-  /* Chevron Styles */
+  --profile-card-bg: #222;
+
+  --text-color: #c0c0c0;
+
+  --btn-genre-border: #adb5bd;
   --chevron-bg: rgba(192, 192, 192, 0.6);
   --chevron-bg-hover: #c0c0c0;
+
+  --ratings-bg: #343a40;
+  --rating-btn-bg: #ffd700;
+  --genre-bg: transparent;
+
+  /* Profile */
+  --profile-btn-bg: #343a40;
+
+  --footer-bg: #343a40;
+  --footer-text: #0c0d0d;
+  --footer-hover: #f8f9fa;
+
+  --edit-btn: #243d62;
+  --delete-btn: #441212;
+  --add-btn: #1c3c1b;
 }
+
+/* Light Theme Override */
+[data-theme="light"] {
+  --bg-gradient-start: #efe7f3;
+  --bg-gradient-end: #edd5f7;
+  --bg-dark: #694468;
+  --movie-card-bg: #d5cae0;
+  --profile-card-bg: #d5cae0;
+
+  --text-color: #212529;
+
+  --btn-genre-border: #6c757d;
+  --chevron-bg: rgba(33, 37, 41, 0.6);
+  --chevron-bg-hover: #212529;
+
+  --ratings-bg: #f8f9fa;
+  --rating-btn-bg: #ffd700;
+  --genre-bg: transparent;
+
+  /* Profile */
+  --profile-btn-bg: #f8f9fa;
+
+  --footer-bg: #dee2e6;
+  --footer-text: #212529;
+  --footer-hover: #000;
+
+  --edit-btn: #cce2f4;
+  --delete-btn: #f1acac;
+  --add-btn: #bef8ec;
+}
+
 
 /* Global Styles */
 body {
@@ -134,7 +172,7 @@ p, li {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  color: #ffffff;
+  color: var(--chevron-bg);
   border: none;
   cursor: pointer;
   font-size: 3rem;
@@ -176,7 +214,7 @@ p, li {
   position: relative;
   align-self: flex-end;
   width: 20%;
-  background: #f8f9fa;
+  background: var(--ratings-bg);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -185,6 +223,7 @@ p, li {
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   font-size: 16px;
+  padding: 0.5rem;
 }
 
 .rating-btn {
@@ -212,7 +251,7 @@ p, li {
 /* Genre Filter Styles */
 .genre-filter-container {
   background-color: transparent;
-  color: #fff;
+  color: var(--text-color);
   border-radius: 0.25rem;
   padding: 1rem;
 }
@@ -221,7 +260,7 @@ p, li {
 .btn-genre {
   background-color: transparent;
   font-size: 1.25rem!important;
-  color: #fff !important;
+  color: var(--btn-genre-border) !important;
   border: 1px solid #adb5bd;
   border-radius: 999px;
   padding: 0.375rem 0.75rem;
@@ -234,7 +273,7 @@ p, li {
 /* Hover and active states with improved contrast */
 .btn-genre:hover {
   background-color: transparent;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--btn-genre-border);
   color: #fff;
   /* Instead of bolding (which might resize the element), use a text-shadow to simulate a bolder look */
   text-shadow: 0px 0px 1px #fff, 0px 0px 1px #fff;
@@ -264,6 +303,35 @@ p, li {
 }
 
 
+/* Profile Page */
+.profileCard{
+  background: var(--profile-card-bg);
+}
+.profileButton {
+  color: var(--text-color);
+  background-color: var(--profile-btn-bg);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+
+
+/* Header Styles */
+.headerBg{
+  background: var(--bg-dark);
+  color: var(--text-color);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-bottom: 1rem;
+}
+
+/* Movie Description */
+.descriptionBox {
+  background: var(--movie-card-bg);
+  border-radius: 10px;
+}
 
 /* Footer.css */
 
@@ -273,11 +341,10 @@ p, li {
   left: 0;
   width: 100%;
   z-index: 999;
-  background-color: #343a40;
-  color: #6c757d;
+  background-color: var(--bg-dark);
+  color: var(--text-color);
   text-align: center;
   padding: 0.25rem 0;
-  border-top: 1px solid #6c757d;
   border-radius: 10px; /* Rounded corners */
   font-size: 0.75rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
@@ -303,8 +370,101 @@ p, li {
 
 .fixed-footer .admin-link {
   margin-top: 0.2rem;
+  color: var(--footer-text);
 }
 
+
+.backButton {
+  color: var(--text-color);
+  text-decoration: underline;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+}
+
+.cardColor {
+  background: var(--profile-card-bg);
+  color: var(--text-color);
+}
+
+/* Pagination */
+/* Pagination Styles */
+.pagination-container {
+  color: var(--text-color);
+}
+
+.pagination-buttons {
+  gap: 0.5rem;
+}
+
+.pagination-btn {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--btn-genre-border);
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.pagination-btn:hover {
+  background-color: var(--btn-genre-border);
+  color: #fff;
+  transform: translateY(-5%);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-select {
+  background-color: var(--bg-dark);
+  color: var(--text-color);
+  border: 1px solid var(--btn-genre-border);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.pagination-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25); /* matches Bootstrap focus style */
+}
+
+.editButton{
+  background: var(--edit-btn);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+.deleteButton {
+  background: var(--delete-btn);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.addButton {
+  background: var(--add-btn);
+  color: var(--text-color);
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.paginationActive{
+  background: var(--edit-btn);
+  color: var(--text-color);
+  border: none;
+}
+
+.paginationNonActive {
+  background: var(--movie-card-bg);
+  color: var(--text-color);
+  border: none;
+}
 /* General styles for the homepage */
 .homepage {
   font-family: 'Arial', sans-serif;
