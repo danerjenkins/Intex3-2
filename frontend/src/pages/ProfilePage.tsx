@@ -2,6 +2,7 @@
 import React from 'react';
 import { Header } from '../components/Header';
 import Logout from '../components/Logout';
+import ToggleThemeButton from '../components/ToggleThemeButton';
 
 export const ProfilePage: React.FC = () => {
   // Simulated user info (replace with context or API call)
@@ -36,6 +37,9 @@ export const ProfilePage: React.FC = () => {
       <p className="text-muted small mb-1">Location</p>
       <p className="fs-5 mb-0">{user.location}</p>
     </div>
+
+    {/* Theme Toggle Button */}
+    <ToggleThemeButton />
 
     <Logout />
     

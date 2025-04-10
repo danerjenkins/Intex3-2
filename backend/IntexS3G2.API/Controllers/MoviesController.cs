@@ -30,7 +30,8 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("GetAdminMovieData")]
-        public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize =10, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
+        public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize = 10,
+            [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             var query = _movieContext.Titles.AsQueryable();
 
@@ -38,7 +39,7 @@ namespace IntexS3G2.API.Controllers
             {
                 query = query.Where(r => ratings.Contains(r.rating));
             }
-            
+
             if (genres != null && genres.Any())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -56,7 +57,7 @@ namespace IntexS3G2.API.Controllers
                     )
                     .AsQueryable(); // convert back if you want to keep chaining
             }
-            
+
             var results = query
                 .Select(m => new
                 {
@@ -76,7 +77,7 @@ namespace IntexS3G2.API.Controllers
                 .Take(pageSize)
                 .ToList();
             var totalNumberItems = query.Count();
-            
+
             var returnTitles = new
             {
                 movies = results,
@@ -106,10 +107,10 @@ namespace IntexS3G2.API.Controllers
                     m.Genre
                 })
                 .FirstOrDefault();
-            
+
             if (movie == null)
                 return NotFound();
-            
+
             return Ok(movie);
         }
 
@@ -119,50 +120,52 @@ namespace IntexS3G2.API.Controllers
         {
             try
             {
-            if (updatedMovie == null)
-            {
-                return BadRequest(new { message = "Invalid movie data provided." });
-            }
+                if (updatedMovie == null)
+                {
+                    return BadRequest(new { message = "Invalid movie data provided." });
+                }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
-            Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
+                Console.ResetColor();
 
-            var existingMovie = _movieContext.Titles.Find(showId);
+                var existingMovie = _movieContext.Titles.Find(showId);
 
-            if (existingMovie == null)
-            {
-                return NotFound(new { message = "Movie not found." });
-            }
+                if (existingMovie == null)
+                {
+                    return NotFound(new { message = "Movie not found." });
+                }
 
-            existingMovie.title = updatedMovie.title;
-            existingMovie.type = updatedMovie.type;
-            existingMovie.director = updatedMovie.director;
-            existingMovie.cast = updatedMovie.cast;
-            existingMovie.release_year = updatedMovie.release_year;
-            existingMovie.rating = updatedMovie.rating;
-            existingMovie.duration = updatedMovie.duration;
-            existingMovie.description = updatedMovie.description;
-            existingMovie.Genre = updatedMovie.Genre;
+                existingMovie.title = updatedMovie.title;
+                existingMovie.type = updatedMovie.type;
+                existingMovie.director = updatedMovie.director;
+                existingMovie.cast = updatedMovie.cast;
+                existingMovie.release_year = updatedMovie.release_year;
+                existingMovie.rating = updatedMovie.rating;
+                existingMovie.duration = updatedMovie.duration;
+                existingMovie.description = updatedMovie.description;
+                existingMovie.Genre = updatedMovie.Genre;
 
-            _movieContext.Titles.Update(existingMovie);
-            _movieContext.SaveChanges();
+                _movieContext.Titles.Update(existingMovie);
+                _movieContext.SaveChanges();
 
-            return Ok(existingMovie);
+                return Ok(existingMovie);
             }
             catch (DbUpdateException dbEx)
             {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Database update error: {dbEx.Message}");
-            Console.ResetColor();
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the movie in the database." });
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Database update error: {dbEx.Message}");
+                Console.ResetColor();
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "An error occurred while updating the movie in the database." });
             }
             catch (Exception ex)
             {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-            Console.ResetColor();
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.ResetColor();
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "An unexpected error occurred." });
             }
         }
 
@@ -174,7 +177,7 @@ namespace IntexS3G2.API.Controllers
             _movieContext.SaveChanges();
             return Ok(movieToAdd);
         }
-        
+
         [HttpDelete("/DeleteMovie/{showId}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(string showId)
@@ -185,22 +188,22 @@ namespace IntexS3G2.API.Controllers
             {
                 return NotFound(new { message = "Movie not found." });
             }
-        
+
             _movieContext.Titles.Remove(movie);
             _movieContext.SaveChanges();
-        
+
             return NoContent();
         }
 
         [HttpGet("/GetUserRatedMovies")]
-        public IActionResult GetUserRatedMovies(int userId)
+        public IActionResult GetUserRatedMovies(string userId)
         {
             var query = _movieContext.Ratings
                 .Where(m => m.user_id == userId)
                 .OrderByDescending(m => m.rating)
                 .Take(20)
                 .ToList();
-            
+
             return Ok(query);
         }
 
@@ -224,7 +227,7 @@ namespace IntexS3G2.API.Controllers
         {
             _movieContext.Users.Add(userToAdd);
             _movieContext.SaveChanges();
-            
+
             return Ok(userToAdd);
         }
 
@@ -241,7 +244,7 @@ namespace IntexS3G2.API.Controllers
             var showIdList = query.recommended_show_ids
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .ToList();
-            
+
             var recommendedMovies = _movieContext.Titles
                 .Where(m => showIdList.Contains(m.show_id))
                 .Select(m => new
@@ -252,19 +255,20 @@ namespace IntexS3G2.API.Controllers
                 .ToList();
 
             return Ok(recommendedMovies);
-            
+
         }
 
         [HttpPost("GetRecommendationFromAzure")]
-        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] int userId)
+        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] string userId)
         {
+            var intId = int.Parse(userId);
             var data = new
             {
                 Inputs = new
                 {
                     WebServiceInput2 = new[]
                     {
-                        new { user_id = userId }
+                        new { user_id = intId }
                     }
                 }
             };
@@ -285,13 +289,44 @@ namespace IntexS3G2.API.Controllers
                 response.EnsureSuccessStatusCode();
 
                 var result = await response.Content.ReadAsStringAsync();
-                return Ok(JsonDocument.Parse(result));
+
+                using var doc = JsonDocument.Parse(result);
+                var innerObject = doc
+                    .RootElement
+                    .GetProperty("Results")
+                    .GetProperty("WebServiceOutput0")[0];
+
+                // Extract show_ids (recommended item values)
+                var showIds = innerObject.EnumerateObject()
+                    .Where(p => p.Name.StartsWith("Recommended Item"))
+                    .Select(p => p.Value.GetString())
+                    .Where(id => !string.IsNullOrWhiteSpace(id))
+                    .ToList();
+
+                // Fetch titles from the database
+                var recommendedMovies = _movieContext.Titles
+                    .Where(t => showIds.Contains(t.show_id))
+                    .Select(t => new
+                    {
+                        t.show_id,
+                        t.title
+                    })
+                    .ToList();
+
+                return Ok(recommendedMovies);
             }
             catch (HttpRequestException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "Azure ML call failed.", error = ex.Message });
             }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Unexpected error occurred.", error = ex.Message });
+            }
+
+        }
 
         [HttpGet("CollaborativeRecommendations/{showId}")]
         public IActionResult CollaborativeRecommendations(string showId)

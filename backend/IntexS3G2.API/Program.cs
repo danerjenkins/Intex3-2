@@ -251,11 +251,22 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
         return Results.Unauthorized();
     }
 
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
+    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
     var identityUser = await userManager.FindByEmailAsync(email);
+
+    if (identityUser == null)
+    {
+        return Results.NotFound(new { message = "User not found." });
+    }
+
     var roles = await userManager.GetRolesAsync(identityUser);
 
-    return Results.Json(new { email = email ?? "", role = roles.FirstOrDefault() ?? "" }); // Return as JSON
+    return Results.Json(new
+    {
+        id = identityUser.Id,
+        email = identityUser.Email ?? "",
+        role = roles.FirstOrDefault() ?? ""
+    });
 }).RequireAuthorization();
 
 app.Run();
