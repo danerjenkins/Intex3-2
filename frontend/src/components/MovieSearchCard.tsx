@@ -16,7 +16,8 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   info,
 }) => {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const posterUrl = `${imgUrl}${encodeURIComponent(title)}.jpg`;
+  const formattedTitle = title.replace(/[:!%.'--()&#’]/g, '');
+  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
   const navigate = useNavigate();
 
   const handlePosterClick = () => {
