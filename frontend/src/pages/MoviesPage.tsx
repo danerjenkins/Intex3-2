@@ -3,7 +3,7 @@ import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
-import { getContentRecommendations, Recommendation, Recommendations } from "../api/ContentRecommender";
+import { getContentRecommendations, Recommendations } from "../api/ContentRecommender";
 
 export const MoviesPage: React.FC = () => {
   // A list of movie IDs for which you want recommendations.
