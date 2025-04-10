@@ -4,6 +4,7 @@ import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
 import { useParams } from 'react-router-dom';
+import { RatingCard } from '../components/RatingCard';
 
 export default function MovieDescription() {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
@@ -50,7 +51,7 @@ export default function MovieDescription() {
                     alt={`${movie.title} poster`}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-            
+
                       // Prevent infinite loop if the fallback image also fails
                       if (!target.src.includes('/defaultposter.png')) {
                         target.onerror = null;
@@ -64,6 +65,7 @@ export default function MovieDescription() {
 
                 {/* Info and Description */}
                 <div className="col-md-8 d-flex flex-column justify-content-between">
+                  <RatingCard show_id={movie.show_id} />
                   <div className="d-flex flex-row flex-wrap">
                     <div className="me-5">
                       <h3 className="mb-3">{movie.title}</h3>
