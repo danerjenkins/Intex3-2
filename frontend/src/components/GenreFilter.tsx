@@ -1,5 +1,6 @@
 import React from 'react';
 import '../index.css';
+import { useNavigate } from 'react-router-dom';
 
 interface GenreFilterProps {
   selectedGenres: string[];
@@ -68,16 +69,20 @@ const scrollGenreList = (direction: string, container: HTMLElement) => {
   }
 };
 
-export const GenreFilter: React.FC<GenreFilterProps> = ({
-  selectedGenres,
-  onGenreChange,
-}) => {
-  const toggleGenre = (genre: string) => {
-    if (selectedGenres.includes(genre)) {
-      onGenreChange(selectedGenres.filter((g) => g !== genre));
-    } else {
-      onGenreChange([...selectedGenres, genre]);
+export const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onGenreChange }) => {
+  const navigate = useNavigate();
+
+  const handleGenreClick = (genre: string) => {
+    // If you have an external onGenreChange callback (for inline filtering), call it:
+    if (onGenreChange) {
+      if (selectedGenres && selectedGenres.includes(genre)) {
+        onGenreChange(selectedGenres.filter((g) => g !== genre));
+      } else {
+        onGenreChange([genre]); // this example uses one genre at a time
+      }
     }
+    // Navigate to /search with the genre as a query parameter.
+    navigate(`/search?genre=${encodeURIComponent(genre)}`);
   };
 
   return (
@@ -99,18 +104,15 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({
 
       {/* Horizontal scrolling container for genres */}
       <div className="genre-list d-flex flex-row overflow-auto px-3 py-2 gap-2">
-        {allGenres.map((genre) => {
-          const isSelected = selectedGenres.includes(genre);
-          return (
-            <button
-              key={genre}
-              onClick={() => toggleGenre(genre)}
-              className={`btn btn-genre ${isSelected ? 'active' : ''}`}
-            >
-              {genre}
-            </button>
-          );
-        })}
+        {allGenres.map((genre) => (
+          <button
+            key={genre}
+            onClick={() => handleGenreClick(genre)}
+            className={`btn btn-genre ${selectedGenres?.includes(genre) ? 'active' : ''}`}
+          >
+            {genre}
+          </button>
+        ))}
       </div>
 
       {/* Right chevron */}
