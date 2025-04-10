@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { UserRating } from '../types/UserRating';
 
 export function RatingCard({ show_id }: { show_id: string }) {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -8,6 +9,11 @@ export function RatingCard({ show_id }: { show_id: string }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [openRatingSubmission, setOpenRatingSubmission] =
     useState<boolean>(false);
+  const [newRating, setNewRating] = useState<UserRating>({
+    user_id: 0,
+    show_id: '',
+    rating: 0,
+  });
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -57,7 +63,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
     fetchRatings();
   }, [show_id]);
 
-  // Helper to render stars
+  /////////// This is to show the stars for average movie rating
   const renderStars = (rating: number) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -87,19 +93,14 @@ export function RatingCard({ show_id }: { show_id: string }) {
     return stars;
   };
 
-  ////////////////////////
+  ////////////////////////This is for the stars that the user submits as a rating
 
-  const SubmitRatingStars = ({
-    onSubmit,
-  }: {
-    onSubmit: (rating: number) => void;
-  }) => {
-    const [userRating, setUserRating] = useState<number>(0); // Stores the user's selected rating
-
+  const SubmitRatingStars = () => {
     // Handle star click
     const handleStarClick = (rating: number) => {
-      setUserRating(rating);
-      console.log('User selected rating:', rating); // For debugging
+      setNewRating({ user_id: 0, show_id: show_id, rating: rating });
+      console.log(`You entered a rating of: ${rating}`);
+      console.log(`You have entered a rating of: ${newRating.rating}`);
     };
 
     // Render interactive stars
@@ -128,13 +129,13 @@ export function RatingCard({ show_id }: { show_id: string }) {
           <p>
             Click To Rate
             <br />
-            {renderInteractiveStars(userRating)}
+            {renderInteractiveStars(newRating.rating)}
             <br />
           </p>
         </div>
         <button
           className="rating-btn"
-          onClick={() => onSubmit(userRating)} // Calls the submit function with the selected rating
+          onClick={() => setOpenRatingSubmission(false)} // Calls the submit function with the selected rating
         >
           Submit Rating
         </button>
@@ -160,11 +161,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
           <strong>Click To Rate</strong>
         </p>
       </div>{' '}
-      {openRatingSubmission ? (
-        <SubmitRatingStars onSubmit={() => setOpenRatingSubmission(false)} />
-      ) : (
-        <></>
-      )}
+      {openRatingSubmission ? <SubmitRatingStars /> : <></>}
     </>
   );
 }
