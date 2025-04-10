@@ -37,7 +37,9 @@ function HomePage() {
           </button>
         </div>
       </div>
-
+        <br />
+        <br />
+        <br />
       <Footer />
     </div>
   );
