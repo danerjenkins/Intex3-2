@@ -4,20 +4,28 @@ import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
 import { getContentRecommendations, Recommendations } from "../api/ContentRecommender";
+import { fetchUserRatedMovies, Rating } from '../api/MoviesApi';
 
 export const MoviesPage: React.FC = () => {
   // A list of movie IDs for which you want recommendations.
   const [listOfIds, setListOfIds] = useState<string[]>(["s2", "s3", "s6","s10"]);
+  const userId = 1
   
   // The state now holds an array of Recommendations objects.
   const [allRecs, setAllRecs] = useState<Recommendations[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  // const [ratings, setRatings] = useState<Rating[]>([]);
+  // const [error, setError] = useState<string | null>(null);
 
-  const handleMovieClick = (id: string) => {
-    console.log(`Navigate to movie detail with ID: ${id}`);
-  };
 
   React.useEffect(() => {
+    fetchUserRatedMovies(userId)
+      .then(data => {
+        // setRatings(data)
+        // Extract just the show_id values
+        const showIds = data.map((r: Rating) => r.show_id);
+        setListOfIds(showIds);})
+      // .catch(err => setError(err.message));
     if (listOfIds.length > 0) {
       Promise.allSettled(listOfIds.map(id => getContentRecommendations(id)))
         .then(results => {
@@ -32,7 +40,7 @@ export const MoviesPage: React.FC = () => {
         })
         .catch((error) => console.error("Error fetching recommendations:", error));
     }
-  }, [listOfIds]);
+  }, [userId]);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
@@ -48,7 +56,6 @@ export const MoviesPage: React.FC = () => {
             key={rec.basedOffOf}
             recommender={`Recommendations based on ${rec.basedOffOf}`}
             movies={rec.recommendations}
-            onMovieClick={handleMovieClick}
           />
         ))}
       </div>

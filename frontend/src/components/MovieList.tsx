@@ -3,12 +3,10 @@ import React from 'react';
 import { MovieCard } from './MovieCard';
 import '../index.css';
 import { Recommendation } from '../api/ContentRecommender';
-import { MovieSearchCard } from './MovieSearchCard';
 
 interface MovieListProps {
   recommender: string;
   movies: Recommendation[]; //just a show id and title
-  onMovieClick: (id: string) => void;
 }
 
 const scrollList = (direction: string, container: HTMLElement) => {

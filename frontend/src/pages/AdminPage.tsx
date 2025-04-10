@@ -121,8 +121,6 @@ const MoviesPage = () => {
     return `s${maxId + 1}`;
   };
 
-  const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-
   return (
     <>
       <Header />

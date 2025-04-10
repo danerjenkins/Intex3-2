@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import Cookies from 'js-cookie'; // Import js-cookie
+// import Cookies from 'js-cookie'; // Import js-cookie
 import { createContext } from 'react';
 
 
