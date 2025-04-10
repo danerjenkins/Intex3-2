@@ -193,7 +193,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("/GetUserRatedMovies")]
-        public IActionResult GetUserRatedMovies(string userId)
+        public IActionResult GetUserRatedMovies(int userId)
         {
             var query = _movieContext.Ratings
                 .Where(m => m.user_id == userId)
@@ -269,16 +269,15 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpPost("GetRecommendationFromAzure")]
-        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] string userId)
+        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] int userId)
         {
-            var intId = int.Parse(userId);
             var data = new
             {
                 Inputs = new
                 {
                     WebServiceInput2 = new[]
                     {
-                        new { user_id = intId }
+                        new { user_id = userId }
                     }
                 }
             };
@@ -385,4 +384,4 @@ namespace IntexS3G2.API.Controllers
             // }
         }
     }
-}
+

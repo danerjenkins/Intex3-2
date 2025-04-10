@@ -4,7 +4,7 @@ namespace IntexS3G2.API.Data
     public class User
     {
         [Key]
-        public string user_id { get; set; } 
+        public int user_id { get; set; } 
 
         public string? name { get; set; }
 
