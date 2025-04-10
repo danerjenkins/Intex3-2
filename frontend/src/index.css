@@ -1,36 +1,60 @@
+/* CSS Variables for unified theme */
+:root {
+  /* Global Colors */
+  --bg-gradient-start: #34223a;
+  --bg-gradient-end: rgb(62, 2, 2);
+  --text-color: #c0c0c0;
+  --bg-dark: #212529;
+  --movie-card-bg: #222;
+  
+  /* Button Colors and Sizes */
+  --btn-login-fs: 0.9rem;
+  --btn-login-padding: 0.75rem 1rem;
+  --btn-google-bg: #ea4335;
+  --btn-facebook-bg: #3b5998;
+  
+  /* Genre & Active Styles */
+  --btn-genre-border: #6c757d;
+  --btn-genre-active-bg: #0d6efd;
+  
+  /* Chevron Styles */
+  --chevron-bg: rgba(192, 192, 192, 0.6);
+  --chevron-bg-hover: #c0c0c0;
+}
+
 /* Global Styles */
 body {
-  background: linear-gradient(to right, #34223a, rgb(62, 2, 2));
-  color: #c0c0c0;
+  background: linear-gradient(to right, var(--bg-gradient-start), var(--bg-gradient-end));
+  color: var(--text-color);
   margin: 0;
   padding: 0;
   font-family: sans-serif;
 }
 
 h1, h2, h3, h4, h5 {
-  color: #c0c0c0 !important;
+  color: var(--text-color) !important;
   font-weight: bold;
 }
 
 p, li {
-  color: #c0c0c0 !important;
+  color: var(--text-color) !important;
 }
 
 /* Button Styles */
 .btn-login {
-  font-size: 0.9rem;
+  font-size: var(--btn-login-fs);
   letter-spacing: 0.05rem;
-  padding: 0.75rem 1rem;
+  padding: var(--btn-login-padding);
 }
 
 .btn-google {
   color: white !important;
-  background-color: #ea4335 !important;
+  background-color: var(--btn-google-bg) !important;
 }
 
 .btn-facebook {
   color: white !important;
-  background-color: #3b5998 !important;
+  background-color: var(--btn-facebook-bg) !important;
 }
 
 /* Movie Card Styles */
@@ -38,7 +62,7 @@ p, li {
   width: 10rem;
   height: 20rem;
   margin: 0.5rem;
-  background: #222; /* gives a slight contrast from the global dark background */
+  background: var(--movie-card-bg);
   border-radius: 0.5rem;
   overflow: hidden;
   cursor: pointer;
@@ -52,14 +76,14 @@ p, li {
   transform: scale(1.03);
 }
 
-/* New class for poster images */
+/* Movie poster image style */
 .movie-card-img {
   width: 100%;
   height: 80%; /* Reserve 80% of the card height for the image */
   object-fit: cover;
 }
 
-/* Title style with padding and optional overlay background */
+/* Movie title style with overlay effect */
 .movie-card-title {
   width: 100%;
   padding: 0.5rem;
@@ -73,7 +97,7 @@ p, li {
   -webkit-box-orient: vertical;
 }
 
-/* Container for the movie list */
+/* Container for the movie list and chevrons */
 .position-relative {
   position: relative;
   display: flex;
@@ -88,7 +112,7 @@ p, li {
   display: flex;
   gap: 1rem;
   overflow: hidden; /* Hide overflow content */
-  width: calc((10rem + 1rem) * 6); /* 6 cards including the gap */
+  width: calc((10rem + 1rem) * 6); /* 6 cards including gap */
   scroll-behavior: smooth;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
@@ -105,12 +129,12 @@ p, li {
 
 /* Chevron button styling */
 .chevron {
+  background:none;
   flex-shrink: 0;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(192, 192, 192, 0.6);
-  color: #000;
+  color: #ffffff;
   border: none;
   cursor: pointer;
   font-size: 3rem;
@@ -118,21 +142,22 @@ p, li {
   height: 4rem;
   width: 4rem;
   border-radius: 50%;
+  transform-origin: center;
   transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .chevron:hover {
-  background-color: #c0c0c0;
-  transform: scale(0.9);
+  /* Scale and maintain centering */
+  transform: translateY(-10%) scale(1.5);
 }
 
-/* Optional: Adding spacing for chevrons */
+/* Chevron left/right positioning */
 .chevron.left {
-  margin-right: 0.5rem;
+  margin-right: 0rem;
 }
 
 .chevron.right {
-  margin-left: 0.5rem;
+  margin-left: 0rem;
 }
 
 /* Error Message Styling */
@@ -141,4 +166,58 @@ p, li {
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
+}
+
+/* Genre Filter Styles */
+.genre-filter-container {
+  background-color: transparent;
+  color: #fff;
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+/* Adjusted Genre Button (Pill) Styles */
+.btn-genre {
+  background-color: transparent;
+  font-size: 1.25rem!important;
+  color: #fff !important;
+  border: 1px solid #adb5bd;
+  border-radius: 999px;
+  padding: 0.375rem 0.75rem;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
+  /* Set a consistent font weight */
+  font-weight: normal;
+}
+
+/* Hover and active states with improved contrast */
+.btn-genre:hover {
+  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  /* Instead of bolding (which might resize the element), use a text-shadow to simulate a bolder look */
+  text-shadow: 0px 0px 1px #fff, 0px 0px 1px #fff;
+  /* Remove font-weight change to avoid reflow */
+  font-weight: normal;
+  transform: translateY(-5%);
+}
+
+.btn-genre.active {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: #fff;
+}
+
+/* For horizontally scrolling genre container */
+.genre-filter-container .overflow-auto {
+  padding-bottom: 0.5rem;
+}
+
+.genre-list {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.genre-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }

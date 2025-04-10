@@ -1,22 +1,72 @@
 import React from 'react';
+import '../index.css';
 
 interface GenreFilterProps {
   selectedGenres: string[];
   onGenreChange: (genres: string[]) => void;
 }
 
+// Use your full list or a simplified version, as needed:
 const allGenres = [
   'Action',
-  'Comedy',
-  'Drama',
-  'Documentary',
-  'Horror',
-  'Romance',
-  'Thriller',
-  'Animation',
   'Adventure',
-  'Sci-Fi',
+  'Anime Series International TV Show',
+  'British TV Shows Docuseries International TV Show',
+  'Children',
+  'Comedy',
+  'Comedy Drama International',
+  'Docuseries',
+  'Comedy Romance',
+  'Crime TV Show Docuseries',
+  'Documentary',
+  'Documentary International',
+  'Drama',
+  'Drama International',
+  'Drama Romance',
+  'Family',
+  'Fantasy',
+  'Horror',
+  'International Thriller',
+  'International TV Show Romantic TV Show',
+  'Kids TV Show',
+  'Language TV Show',
+  'Musical',
+  'Nature TV Show',
+  'Reality TV Show',
+  'Spirituality',
+  'TV Show Action',
+  'TV Show Comedy',
+  'Talk Shows TV Comedy',
+  'Thriller',
 ];
+
+const scrollGenreList = (direction: string, container: HTMLElement) => {
+  // Look for the scrollable genre list element
+  const list = container.querySelector('.genre-list') as HTMLElement;
+  if (!list) {
+    console.error('Genre list element not found');
+    return;
+  }
+
+  // Determine the width of a genre button (including margin/padding)
+  const genreButton = list.querySelector('.btn-genre') as HTMLElement;
+  if (!genreButton) {
+    console.error('Genre button element not found');
+    return;
+  }
+
+  // Calculate the scroll amount based on button width and a factor (e.g. 6 items)
+  const buttonWidth =
+    genreButton.offsetWidth +
+    parseInt(getComputedStyle(list).gap || '0', 10);
+  const scrollAmount = buttonWidth * 6;
+
+  if (direction === 'left') {
+    list.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    list.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+};
 
 export const GenreFilter: React.FC<GenreFilterProps> = ({
   selectedGenres,
@@ -31,26 +81,50 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({
   };
 
   return (
-    <div className="bg-dark text-white p-4 rounded shadow mb-4">
-      <h2 className="h5 fw-semibold mb-3">Filter by Genre</h2>
-      <div className="row">
-        {allGenres.map((genre) => (
-          <div className="col-6 mb-2" key={genre}>
-            <div className="form-check d-flex align-items-center">
-              <input
-                className="form-check-input me-2"
-                type="checkbox"
-                checked={selectedGenres.includes(genre)}
-                onChange={() => toggleGenre(genre)}
-                id={`genre-${genre}`}
-              />
-              <label className="form-check-label" htmlFor={`genre-${genre}`}>
-                {genre}
-              </label>
-            </div>
-          </div>
-        ))}
+    <div className="genre-filter-container text-white p-3 rounded mb-4 position-relative">
+
+      {/* Left chevron */}
+      <button
+        className="chevron left"
+        onClick={(e) => {
+          // Find the closest container with the scrolling functionality
+          const container = (e.target as HTMLElement).closest(
+            '.genre-filter-container'
+          ) as HTMLElement | null;
+          if (container) scrollGenreList('left', container);
+        }}
+      >
+        ‹
+      </button>
+
+      {/* Horizontal scrolling container for genres */}
+      <div className="genre-list d-flex flex-row overflow-auto px-3 py-2 gap-2">
+        {allGenres.map((genre) => {
+          const isSelected = selectedGenres.includes(genre);
+          return (
+            <button
+              key={genre}
+              onClick={() => toggleGenre(genre)}
+              className={`btn btn-genre ${isSelected ? 'active' : ''}`}
+            >
+              {genre}
+            </button>
+          );
+        })}
       </div>
+
+      {/* Right chevron */}
+      <button
+        className="chevron right"
+        onClick={(e) => {
+          const container = (e.target as HTMLElement).closest(
+            '.genre-filter-container'
+          ) as HTMLElement | null;
+          if (container) scrollGenreList('right', container);
+        }}
+      >
+        ›
+      </button>
     </div>
   );
 };

@@ -44,6 +44,7 @@ export const MoviesPage: React.FC = () => {
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
+      <br/>
       <div className="container">
         <h3>Browse Movies</h3>
         <GenreFilter
