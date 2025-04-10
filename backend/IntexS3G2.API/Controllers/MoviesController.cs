@@ -199,6 +199,21 @@ namespace IntexS3G2.API.Controllers
             return Ok(query);
         }
 
+        [HttpGet("/GetAverageMovieRating")]
+        public IActionResult GetAverageMovieRating(string show_id)
+        {
+            int[] sumCount = [];
+            var query = _movieContext.Ratings
+                .Where(m => m.show_id == show_id)
+                .Select(m => m.rating).ToList();
+
+            sumCount = [query.Sum(), query.Count];
+
+            return Ok(sumCount);
+        }
+
+
+
         [HttpPost("RegisterUser")]
         public IActionResult RegisterUser([FromBody] User userToAdd)
         {
