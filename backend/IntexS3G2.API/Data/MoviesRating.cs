@@ -4,7 +4,7 @@
     {
         
         public int user_id { get; set; }
-        public string show_id { get; set; }
+        public string show_id { get; set; } = string.Empty;
         public int rating { get; set; }
     }
 }
