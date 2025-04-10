@@ -48,7 +48,45 @@ function Register() {
         body: JSON.stringify({
           email: email,
           password: password,
-          confirmPassword: confirmPassword
+          confirmPassword: confirmPassword,
+        }),
+      })
+        //.then((response) => response.json())
+        .then((data) => {
+          // handle success or error from the server
+          console.log(data);
+          if (data.ok) setError('Successful registration. Please log in.');
+          else setError('Error registering.');
+        })
+        .catch((error) => {
+          // handle network error
+          console.error(error);
+          setError('Error registering.');
+        });
+      // movie database user submission:
+      fetch(`${apiUrl}/Movies/RegisterUser`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: null,
+          name: null,
+          phone: null,
+          email: email,
+          age: null,
+          gender: null,
+          Netflix: null,
+          Amazon_Prime: null,
+          Disney: null,
+          Paramount: null,
+          Max: null,
+          Hulu: null,
+          Apple_TV: null,
+          Peacock: null,
+          city: null,
+          state: null,
+          zip: null,
         }),
       })
         //.then((response) => response.json())
@@ -68,71 +106,71 @@ function Register() {
 
   return (
     <>
-    <Header />
-    <div className="container">
-      <div className="row">
-        <div className="card border-0 shadow rounded-3 ">
-          <div className="card-body p-4 p-sm-5">
-            <h5 className="card-title text-center mb-5 fw-light fs-5">
-              Register
-            </h5>
-            <form onSubmit={handleSubmit}>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={email}
-                  onChange={handleChange}
-                />
-                <label htmlFor="email">Email address.</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                />
-                <label htmlFor="password">Password</label>
-              </div>
-              <div className="form-floating mb-3">
-                <input
-                  className="form-control"
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={confirmPassword}
-                  onChange={handleChange}
-                />
-                <label htmlFor="confirmPassword">Confirm Password</label>
-              </div>
+      <Header />
+      <div className="container">
+        <div className="row">
+          <div className="card border-0 shadow rounded-3 ">
+            <div className="card-body p-4 p-sm-5">
+              <h5 className="card-title text-center mb-5 fw-light fs-5">
+                Register
+              </h5>
+              <form onSubmit={handleSubmit}>
+                <div className="form-floating mb-3">
+                  <input
+                    className="form-control"
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="email">Email address.</label>
+                </div>
+                <div className="form-floating mb-3">
+                  <input
+                    className="form-control"
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="password">Password</label>
+                </div>
+                <div className="form-floating mb-3">
+                  <input
+                    className="form-control"
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={handleChange}
+                  />
+                  <label htmlFor="confirmPassword">Confirm Password</label>
+                </div>
 
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  type="submit"
-                >
-                  Register
-                </button>
-              </div>
-              <div className="d-grid mb-2">
-                <button
-                  className="btn btn-primary btn-login text-uppercase fw-bold"
-                  onClick={handleLoginClick}
-                >
-                  Go to Login
-                </button>
-              </div>
-            </form>
-            <strong>{error && <p className="error">{error}</p>}</strong>
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    type="submit"
+                  >
+                    Register
+                  </button>
+                </div>
+                <div className="d-grid mb-2">
+                  <button
+                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    onClick={handleLoginClick}
+                  >
+                    Go to Login
+                  </button>
+                </div>
+              </form>
+              <strong>{error && <p className="error">{error}</p>}</strong>
+            </div>
           </div>
         </div>
       </div>
-      
     </div>
     <br/>
     <br/>

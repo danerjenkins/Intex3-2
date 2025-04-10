@@ -230,6 +230,15 @@ namespace IntexS3G2.API.Controllers
             return Ok(query);
         }
 
+        [HttpPost("AddRating")]
+        public IActionResult AddRating([FromBody] MoviesRating ratingToAdd)
+        {
+            _movieContext.Ratings.Add(ratingToAdd);
+            _movieContext.SaveChanges();
+
+            return Ok(ratingToAdd);
+        }
+
 
 
         [HttpPost("RegisterUser")]
