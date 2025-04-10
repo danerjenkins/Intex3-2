@@ -4,6 +4,7 @@ import { getMovieWithId } from './MoviesApi';
 export interface Recommendation {
   show_id: string;
   title: string;
+  genre?: string;
 }
 
 export interface Recommendations {
@@ -27,6 +28,16 @@ export async function getContentRecommendations(
         },
       }
     );
+    // Check response before parsing JSON
+    if (!response.ok) {
+      // Optionally attempt to get any error message from the body.
+      const errorText = await response.text();
+      console.error('ContentRecommendations error response:', errorText);
+      console.error(`Status: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch movie recommendations: ${response.statusText}`
+      );
+    }
     const data = await response.json();
     console.log(data);
     const recommendations: Recommendations = {
@@ -34,10 +45,6 @@ export async function getContentRecommendations(
       recommendations: data,
     };
 
-    if (!response.ok) {
-      console.log(response);
-      throw new Error(`Failed to fetch dis movie, son: ${response.statusText}`);
-    }
     return recommendations;
   } catch (e) {
     console.error(`problem w getContentRecommendations(), homes: ${e}`);
@@ -45,17 +52,40 @@ export async function getContentRecommendations(
   }
 }
 
-export async function loadRecommender(
-  movieList: string[]
-): Promise<Recommendations[]> {
+export async function getCollaborativeRecommendations(
+  movieId: string
+): Promise<Recommendations> {
   try {
-    const allRecs = await Promise.all(
-      movieList.map((ml) => getContentRecommendations(ml))
+    const title: string = (await getMovieWithId(movieId)).title;
+    const response = await fetch(
+      `${API_URL}/Movies/CollaborativeRecommendations/${movieId}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     );
-    return allRecs;
+    // Check response before parsing JSON
+    if (!response.ok) {
+      // Optionally attempt to get any error message from the body.
+      const errorText = await response.text();
+      console.error('Collaborative Recommendations error response:', errorText);
+      console.error(`Status: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch movie collab recommendations: ${response.statusText}`
+      );
+    }
+    const data = await response.json();
+    console.log(data);
+    const recommendations: Recommendations = {
+      basedOffOf: title,
+      recommendations: data,
+    };
+    return recommendations;
   } catch (e) {
-    console.error(`Error loading recommendations: ${(e as Error).message}`);
+    console.error(`problem w getCollaborativeRecommendations(), homes: ${e}`);
     throw e;
   }
 }
-

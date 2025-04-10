@@ -1,4 +1,32 @@
 import { useState, useEffect } from 'react';
+import { UserRating } from '../types/UserRating';
+// const apiUrl = import.meta.env.VITE_API_URL;
+
+// function submitRating(submission: UserRating) {
+//   fetch(`${apiUrl}/Movies/RegisterUser`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       user_id: submission.user_id,
+//       show_id: submission.show_id,
+//       rating: submission.rating,
+//     }),
+//   })
+//     //.then((response) => response.json())
+//     .then((data) => {
+//       // handle success or error from the server
+//       console.log(data);
+//       if (data.ok) console.log('Successful registration. Please log in.');
+//       else console.log('Error registering.');
+//     })
+//     .catch((error) => {
+//       // handle network error
+//       console.error(error);
+//       console.log('Error registering.');
+//     });
+// }
 
 export function RatingCard({ show_id }: { show_id: string }) {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -8,6 +36,12 @@ export function RatingCard({ show_id }: { show_id: string }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [openRatingSubmission, setOpenRatingSubmission] =
     useState<boolean>(false);
+  // const [thankMessage, setThanksMessage] = useState<boolean>(false);
+  const [newRating, setNewRating] = useState<UserRating>({
+    user_id: 0,
+    show_id: '',
+    rating: 0,
+  });
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -21,9 +55,6 @@ export function RatingCard({ show_id }: { show_id: string }) {
               'Content-Type': 'application/json',
             },
           }
-        );
-        console.log(
-          `my url: ${API_URL}/Movies/GetAverageMovieRating/${show_id}`
         );
         const response2 = await fetch(
           `${API_URL}/Movies/GetCountMovieRating/${show_id}`,
@@ -57,7 +88,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
     fetchRatings();
   }, [show_id]);
 
-  // Helper to render stars
+  /////////// This is to show the stars for average movie rating
   const renderStars = (rating: number) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -87,19 +118,14 @@ export function RatingCard({ show_id }: { show_id: string }) {
     return stars;
   };
 
-  ////////////////////////
+  ////////////////////////This is for the stars that the user submits as a rating
 
-  const SubmitRatingStars = ({
-    onSubmit,
-  }: {
-    onSubmit: (rating: number) => void;
-  }) => {
-    const [userRating, setUserRating] = useState<number>(0); // Stores the user's selected rating
-
+  const SubmitRatingStars = () => {
     // Handle star click
     const handleStarClick = (rating: number) => {
-      setUserRating(rating);
-      console.log('User selected rating:', rating); // For debugging
+      setNewRating({ user_id: 4, show_id: show_id, rating: rating });
+      console.log(`You entered a rating of: ${rating}`);
+      console.log(`You have entered a rating of: ${newRating.rating}`);
     };
 
     // Render interactive stars
@@ -128,13 +154,19 @@ export function RatingCard({ show_id }: { show_id: string }) {
           <p>
             Click To Rate
             <br />
-            {renderInteractiveStars(userRating)}
+            {renderInteractiveStars(newRating.rating)}
             <br />
           </p>
         </div>
         <button
           className="rating-btn"
-          onClick={() => onSubmit(userRating)} // Calls the submit function with the selected rating
+          onClick={() => {
+            setOpenRatingSubmission(false);
+            // submitRating(newRating);
+            console.log(
+              `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
+            );
+          }}
         >
           Submit Rating
         </button>
@@ -160,11 +192,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
           <strong>Click To Rate</strong>
         </p>
       </div>{' '}
-      {openRatingSubmission ? (
-        <SubmitRatingStars onSubmit={() => setOpenRatingSubmission(false)} />
-      ) : (
-        <></>
-      )}
+      {openRatingSubmission ? <SubmitRatingStars /> : <></>}
     </>
   );
 }

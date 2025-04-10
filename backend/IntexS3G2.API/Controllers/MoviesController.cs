@@ -230,6 +230,15 @@ namespace IntexS3G2.API.Controllers
             return Ok(query);
         }
 
+        [HttpPost("AddRating")]
+        public IActionResult AddRating([FromBody] MoviesRating ratingToAdd)
+        {
+            _movieContext.Ratings.Add(ratingToAdd);
+            _movieContext.SaveChanges();
+
+            return Ok(ratingToAdd);
+        }
+
 
 
         [HttpPost("RegisterUser")]
@@ -248,28 +257,62 @@ namespace IntexS3G2.API.Controllers
         [HttpGet("ContentRecommendations/{showId}")]
         public IActionResult ContentRecommendations(string showId)
         {
-            var query = _contentContext.MovieRecs.Find(showId);
-
-            if (query == null || string.IsNullOrWhiteSpace(query.recommended_show_ids))
+            try
             {
-                return NotFound();
-            }
-
-            var showIdList = query.recommended_show_ids
-                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .ToList();
-
-            var recommendedMovies = _movieContext.Titles
-                .Where(m => showIdList.Contains(m.show_id))
-                .Select(m => new
+                // Validate input
+                if (string.IsNullOrWhiteSpace(showId))
                 {
-                    m.show_id,
-                    m.title
-                })
-                .ToList();
+                    return BadRequest("Show ID must not be null, empty, or whitespace.");
+                }
 
-            return Ok(recommendedMovies);
+                // Attempt to find recommendation entry
+                var query = _contentContext.MovieRecs.Find(showId);
+                if (query == null)
+                {
+                    return NotFound($"No recommendations found for Show ID '{showId}'.");
+                }
 
+                // Validate recommended IDs
+                if (string.IsNullOrWhiteSpace(query.recommended_show_ids))
+                {
+                    return NotFound($"No recommended show IDs available for Show ID '{showId}'.");
+                }
+
+                // Parse the recommended show IDs
+                var showIdList = query.recommended_show_ids
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .ToList();
+
+                if (!showIdList.Any())
+                {
+                    return NotFound($"Recommended show ID list for '{showId}' is empty after parsing.");
+                }
+
+                // Query movies based on the list of IDs
+                var recommendedMovies = _movieContext.Titles
+                    .Where(m => showIdList.Contains(m.show_id))
+                    .Select(m => new
+                    {
+                        m.show_id,
+                        m.title,
+                        m.Genre
+                    })
+                    .ToList();
+
+                if (recommendedMovies.Count == 0)
+                {
+                    return NotFound($"No matching titles found for recommended show IDs of '{showId}'.");
+                }
+
+                return Ok(recommendedMovies);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if logging is set up
+                // _logger.LogError(ex, "Error retrieving content recommendations for Show ID {showId}", showId);
+                
+                return StatusCode(500, $"An unexpected error occurred while retrieving recommendations for '{showId}': {ex.Message}");
+            }
         }
 
         [HttpPost("GetRecommendationFromAzure")]
@@ -341,51 +384,76 @@ namespace IntexS3G2.API.Controllers
 
         }
 
-            // [HttpGet("CollaborativeRecommendations/{showId}")]
-            // public IActionResult CollaborativeRecommendations(string showId)
-            // {
-            //     // Find the collaborative record based on the show id.
-            //     var query = _collaborativeContext.CollabRecs
-            //         .FirstOrDefault(r => r.IfYouWatched == showId);
+            [HttpGet("CollaborativeRecommendations/{showId}")]
+            public IActionResult CollaborativeRecommendations(string showId)
+            {
+                try
+                {
+                    // Validate input
+                    if (string.IsNullOrWhiteSpace(showId))
+                    {
+                        return BadRequest("Show ID must not be null, empty, or whitespace.");
+                    }
 
-            //     // If the query is null or there's no recommended show id in r1, return NotFound.
-            //     if (query == null || string.IsNullOrWhiteSpace(query.r1))
-            //     {
-            //         return NotFound();
-            //     }
+                    // Attempt to find the collaborative recommendation record
+                    var query = _collaborativeContext.CollabRecs
+                        .FirstOrDefault(r => r.IfYouWatched == showId);
 
-            //     // Build the list of show IDs from each of the r1 through r15 columns.
-            //     var showIdList = new List<string>();
+                    if (query == null)
+                    {
+                        return NotFound($"No collaborative recommendations found for Show ID '{showId}'.");
+                    }
 
-            //     if (!string.IsNullOrWhiteSpace(query.r1)) showIdList.Add(query.r1);
-            //     if (!string.IsNullOrWhiteSpace(query.r2)) showIdList.Add(query.r2);
-            //     if (!string.IsNullOrWhiteSpace(query.r3)) showIdList.Add(query.r3);
-            //     if (!string.IsNullOrWhiteSpace(query.r4)) showIdList.Add(query.r4);
-            //     if (!string.IsNullOrWhiteSpace(query.r5)) showIdList.Add(query.r5);
-            //     if (!string.IsNullOrWhiteSpace(query.r6)) showIdList.Add(query.r6);
-            //     if (!string.IsNullOrWhiteSpace(query.r7)) showIdList.Add(query.r7);
-            //     if (!string.IsNullOrWhiteSpace(query.r8)) showIdList.Add(query.r8);
-            //     if (!string.IsNullOrWhiteSpace(query.r9)) showIdList.Add(query.r9);
-            //     if (!string.IsNullOrWhiteSpace(query.r10)) showIdList.Add(query.r10);
-            //     if (!string.IsNullOrWhiteSpace(query.r11)) showIdList.Add(query.r11);
-            //     if (!string.IsNullOrWhiteSpace(query.r12)) showIdList.Add(query.r12);
-            //     if (!string.IsNullOrWhiteSpace(query.r13)) showIdList.Add(query.r13);
-            //     if (!string.IsNullOrWhiteSpace(query.r14)) showIdList.Add(query.r14);
-            //     if (!string.IsNullOrWhiteSpace(query.r15)) showIdList.Add(query.r15);
+                    // Validate that at least one recommendation exists
+                    if (string.IsNullOrWhiteSpace(query.r1))
+                    {
+                        return NotFound($"No recommended show IDs available for Show ID '{showId}'.");
+                    }
 
-            //     // Query the movie titles for records that match the recommended show IDs.
-            //     var recommendedMovies = _movieContext.Titles
-            //         .Where(m => showIdList.Contains(m.show_id))
-            //         .Select(m => new
-            //         {
-            //             m.show_id,
-            //             m.title
-            //         })
-            //         .ToList();
+                    // Collect all non-null recommendation fields (r1 through r15)
+                    var showIdList = new List<string>();
 
-            //     // Return the list of recommended movies.
-            //     return Ok(recommendedMovies);
-            // }
+                    var recommendations = new[] 
+                    {
+                        query.r1, query.r2, query.r3, query.r4, query.r5,
+                        query.r6, query.r7, query.r8, query.r9, query.r10,
+                        query.r11, query.r12, query.r13, query.r14, query.r15
+                    };
+
+                    showIdList.AddRange(recommendations
+                        .Where(id => !string.IsNullOrWhiteSpace(id))
+                        .Select(id => id.Trim()));
+
+                    if (!showIdList.Any())
+                    {
+                        return NotFound($"All recommendation fields for Show ID '{showId}' are empty.");
+                    }
+
+                    // Query the movie titles that match the recommended show IDs
+                    var recommendedMovies = _movieContext.Titles
+                        .Where(m => showIdList.Contains(m.show_id))
+                        .Select(m => new
+                        {
+                            m.show_id,
+                            m.title
+                        })
+                        .ToList();
+
+                    if (recommendedMovies.Count == 0)
+                    {
+                        return NotFound($"No matching movie titles found for the recommended show IDs of '{showId}'.");
+                    }
+
+                    return Ok(recommendedMovies);
+                }
+                catch (Exception ex)
+                {
+                    // Log exception if needed
+                    // _logger.LogError(ex, "Error retrieving collaborative recommendations for Show ID {showId}", showId);
+
+                    return StatusCode(500, $"An unexpected error occurred while retrieving recommendations for '{showId}': {ex.Message}");
+                }
+            }
 
             [HttpGet("GetTopRatedMovies")]
             [AllowAnonymous] // Will be used on the main page so needs to be anonymous

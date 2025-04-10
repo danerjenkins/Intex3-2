@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace IntexS3G2.API.Data
 {
     public class User
     {
         [Key]
-        public int user_id { get; set; } 
+        [BindNever]
+        [ReadOnly(true)]
+        public int user_id { get; set; }
 
         public string? name { get; set; }
 
