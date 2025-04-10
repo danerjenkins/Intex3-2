@@ -242,11 +242,15 @@ namespace IntexS3G2.API.Controllers
 
 
         [HttpPost("RegisterUser")]
+        [AllowAnonymous]
         public IActionResult RegisterUser([FromBody] User userToAdd)
         {
+            // Safeguard against missing user_id
+            var maxUserId = _movieContext.Users.Any() ? _movieContext.Users.Max(u => u.user_id) : 0;
+            userToAdd.user_id = maxUserId + 1;
+            
             _movieContext.Users.Add(userToAdd);
             _movieContext.SaveChanges();
-
             return Ok(userToAdd);
         }
 

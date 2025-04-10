@@ -15,7 +15,6 @@ namespace IntexS3G2.API.Data
 
         public string? phone { get; set; }
 
-        [EmailAddress]
         public string? email { get; set; }
 
         public int? age { get; set; }
