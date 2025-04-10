@@ -3,12 +3,16 @@ import { MovieList } from '../components/MovieList';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { GenreFilter } from '../components/GenreFilter';
-import { getContentRecommendations, Recommendations } from "../api/ContentRecommender";
-import { fetchUserRatedMovies, Rating } from '../api/MoviesApi';
+import { getContentRecommendations, Recommendation, Recommendations } from "../api/ContentRecommender";
+import { fetchUserRatedMovies, getAzureRecs, getMovieWithId, Rating } from '../api/MoviesApi';
+import { AzureRec } from '../types/AzureRec';
 
 export const MoviesPage: React.FC = () => {
   // A list of movie IDs for which you want recommendations.
   const [listOfIds, setListOfIds] = useState<string[]>(["s2", "s3", "s6","s10"]);
+  const [azureIds, setAzureIds] = useState<string[]>([]);
+  const [azureCalled, setAzureCalled] = useState(false);
+  const [azureMovieRecommendations, setAzureMovieRecommendations] = useState<Recommendation[]>([]);
   const userId = 1
   
   // The state now holds an array of Recommendations objects.
@@ -19,6 +23,17 @@ export const MoviesPage: React.FC = () => {
 
 
   React.useEffect(() => {
+    getAzureRecs(userId)
+      .then(data => {
+      let idList = data.map((r: AzureRec) => r.show_id);
+      setAzureIds(idList);
+      setAzureMovieRecommendations(data);
+      setAzureCalled(true);
+console.log("Azure movie recommendations:", data);
+      })
+      .catch(err => console.error(err));
+  
+
     fetchUserRatedMovies(userId)
       .then(data => {
         // setRatings(data)
@@ -52,6 +67,12 @@ export const MoviesPage: React.FC = () => {
           onGenreChange={setSelectedGenres}
         />
         {/* Map through the recommendations for each movie ID and create a separate MovieList */}
+        {azureCalled && <MovieList 
+          key={userId}
+          recommender={`Movies For You`}
+          movies={azureMovieRecommendations}
+         />}
+
         {allRecs.map((rec) => (
           <MovieList
             key={rec.basedOffOf}

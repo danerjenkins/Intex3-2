@@ -30,7 +30,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("GetAdminMovieData")]
-        public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize =10, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
+        public IActionResult GetAdminMovieData(int pageNumber = 1, int pageSize = 10, [FromQuery] List<string>? genres = null, [FromQuery] List<string>? ratings = null)
         {
             var query = _movieContext.Titles.AsQueryable();
 
@@ -38,7 +38,7 @@ namespace IntexS3G2.API.Controllers
             {
                 query = query.Where(r => ratings.Contains(r.rating));
             }
-            
+
             if (genres != null && genres.Any())
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -56,7 +56,7 @@ namespace IntexS3G2.API.Controllers
                     )
                     .AsQueryable(); // convert back if you want to keep chaining
             }
-            
+
             var results = query
                 .Select(m => new
                 {
@@ -76,7 +76,7 @@ namespace IntexS3G2.API.Controllers
                 .Take(pageSize)
                 .ToList();
             var totalNumberItems = query.Count();
-            
+
             var returnTitles = new
             {
                 movies = results,
@@ -106,10 +106,10 @@ namespace IntexS3G2.API.Controllers
                     m.Genre
                 })
                 .FirstOrDefault();
-            
+
             if (movie == null)
                 return NotFound();
-            
+
             return Ok(movie);
         }
 
@@ -119,50 +119,50 @@ namespace IntexS3G2.API.Controllers
         {
             try
             {
-            if (updatedMovie == null)
-            {
-                return BadRequest(new { message = "Invalid movie data provided." });
-            }
+                if (updatedMovie == null)
+                {
+                    return BadRequest(new { message = "Invalid movie data provided." });
+                }
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
-            Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
+                Console.ResetColor();
 
-            var existingMovie = _movieContext.Titles.Find(showId);
+                var existingMovie = _movieContext.Titles.Find(showId);
 
-            if (existingMovie == null)
-            {
-                return NotFound(new { message = "Movie not found." });
-            }
+                if (existingMovie == null)
+                {
+                    return NotFound(new { message = "Movie not found." });
+                }
 
-            existingMovie.title = updatedMovie.title;
-            existingMovie.type = updatedMovie.type;
-            existingMovie.director = updatedMovie.director;
-            existingMovie.cast = updatedMovie.cast;
-            existingMovie.release_year = updatedMovie.release_year;
-            existingMovie.rating = updatedMovie.rating;
-            existingMovie.duration = updatedMovie.duration;
-            existingMovie.description = updatedMovie.description;
-            existingMovie.Genre = updatedMovie.Genre;
+                existingMovie.title = updatedMovie.title;
+                existingMovie.type = updatedMovie.type;
+                existingMovie.director = updatedMovie.director;
+                existingMovie.cast = updatedMovie.cast;
+                existingMovie.release_year = updatedMovie.release_year;
+                existingMovie.rating = updatedMovie.rating;
+                existingMovie.duration = updatedMovie.duration;
+                existingMovie.description = updatedMovie.description;
+                existingMovie.Genre = updatedMovie.Genre;
 
-            _movieContext.Titles.Update(existingMovie);
-            _movieContext.SaveChanges();
+                _movieContext.Titles.Update(existingMovie);
+                _movieContext.SaveChanges();
 
-            return Ok(existingMovie);
+                return Ok(existingMovie);
             }
             catch (DbUpdateException dbEx)
             {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Database update error: {dbEx.Message}");
-            Console.ResetColor();
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the movie in the database." });
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Database update error: {dbEx.Message}");
+                Console.ResetColor();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the movie in the database." });
             }
             catch (Exception ex)
             {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Unexpected error: {ex.Message}");
-            Console.ResetColor();
-            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+                Console.ResetColor();
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
             }
         }
 
@@ -174,7 +174,7 @@ namespace IntexS3G2.API.Controllers
             _movieContext.SaveChanges();
             return Ok(movieToAdd);
         }
-        
+
         [HttpDelete("/DeleteMovie/{showId}")]
         [Authorize(Roles = "Administrator")]
         public IActionResult DeleteMovie(string showId)
@@ -185,10 +185,10 @@ namespace IntexS3G2.API.Controllers
             {
                 return NotFound(new { message = "Movie not found." });
             }
-        
+
             _movieContext.Titles.Remove(movie);
             _movieContext.SaveChanges();
-        
+
             return NoContent();
         }
 
@@ -200,21 +200,34 @@ namespace IntexS3G2.API.Controllers
                 .OrderByDescending(m => m.rating)
                 .Take(20)
                 .ToList();
-            
+
             return Ok(query);
         }
 
-        [HttpGet("/GetAverageMovieRating")]
+        [HttpGet("GetAverageMovieRating/{show_id}")]
         public IActionResult GetAverageMovieRating(string show_id)
         {
-            int[] sumCount = [];
+            int average = 0;
             var query = _movieContext.Ratings
                 .Where(m => m.show_id == show_id)
                 .Select(m => m.rating).ToList();
+            if (query.Count > 0)
+            {
+                average = (query.Sum() / query.Count);
+            }
 
-            sumCount = [query.Sum(), query.Count];
 
-            return Ok(sumCount);
+            return Ok(average);
+        }
+
+        [HttpGet("GetCountMovieRating/{show_id}")]
+        public IActionResult GetCountMovieRating(string show_id)
+        {
+            var query = _movieContext.Ratings
+                .Where(m => m.show_id == show_id)
+                .Select(m => m.rating).Count();
+
+            return Ok(query);
         }
 
 
@@ -224,7 +237,7 @@ namespace IntexS3G2.API.Controllers
         {
             _movieContext.Users.Add(userToAdd);
             _movieContext.SaveChanges();
-            
+
             return Ok(userToAdd);
         }
 
@@ -241,7 +254,7 @@ namespace IntexS3G2.API.Controllers
             var showIdList = query.recommended_show_ids
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .ToList();
-            
+
             var recommendedMovies = _movieContext.Titles
                 .Where(m => showIdList.Contains(m.show_id))
                 .Select(m => new
@@ -252,7 +265,7 @@ namespace IntexS3G2.API.Controllers
                 .ToList();
 
             return Ok(recommendedMovies);
-            
+
         }
 
         [HttpPost("GetRecommendationFromAzure")]
@@ -285,58 +298,90 @@ namespace IntexS3G2.API.Controllers
                 response.EnsureSuccessStatusCode();
 
                 var result = await response.Content.ReadAsStringAsync();
-                return Ok(JsonDocument.Parse(result));
+
+                using var doc = JsonDocument.Parse(result);
+                var innerObject = doc
+                    .RootElement
+                    .GetProperty("Results")
+                    .GetProperty("WebServiceOutput0")[0];
+
+                // Extract show_ids (recommended item values)
+                var showIds = innerObject.EnumerateObject()
+                    .Where(p => p.Name.StartsWith("Recommended Item"))
+                    .Select(p => p.Value.GetString())
+                    .Where(id => !string.IsNullOrWhiteSpace(id))
+                    .ToList();
+
+                // Fetch titles from the database
+                var recommendedMovies = _movieContext.Titles
+                    .Where(t => showIds.Contains(t.show_id))
+                    .Select(t => new
+                    {
+                        t.show_id,
+                        t.title
+                    })
+                    .ToList();
+
+                return Ok(recommendedMovies);
             }
             catch (HttpRequestException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "Azure ML call failed.", error = ex.Message });
             }
-
-        [HttpGet("CollaborativeRecommendations/{showId}")]
-        public IActionResult CollaborativeRecommendations(string showId)
-        {
-            // Find the collaborative record based on the show id.
-            var query = _collaborativeContext.CollabRecs
-                .FirstOrDefault(r => r.IfYouWatched == showId);
-
-            // If the query is null or there's no recommended show id in r1, return NotFound.
-            if (query == null || string.IsNullOrWhiteSpace(query.r1))
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Unexpected error occurred.", error = ex.Message });
             }
 
-            // Build the list of show IDs from each of the r1 through r15 columns.
-            var showIdList = new List<string>();
+        }
 
-            if (!string.IsNullOrWhiteSpace(query.r1)) showIdList.Add(query.r1);
-            if (!string.IsNullOrWhiteSpace(query.r2)) showIdList.Add(query.r2);
-            if (!string.IsNullOrWhiteSpace(query.r3)) showIdList.Add(query.r3);
-            if (!string.IsNullOrWhiteSpace(query.r4)) showIdList.Add(query.r4);
-            if (!string.IsNullOrWhiteSpace(query.r5)) showIdList.Add(query.r5);
-            if (!string.IsNullOrWhiteSpace(query.r6)) showIdList.Add(query.r6);
-            if (!string.IsNullOrWhiteSpace(query.r7)) showIdList.Add(query.r7);
-            if (!string.IsNullOrWhiteSpace(query.r8)) showIdList.Add(query.r8);
-            if (!string.IsNullOrWhiteSpace(query.r9)) showIdList.Add(query.r9);
-            if (!string.IsNullOrWhiteSpace(query.r10)) showIdList.Add(query.r10);
-            if (!string.IsNullOrWhiteSpace(query.r11)) showIdList.Add(query.r11);
-            if (!string.IsNullOrWhiteSpace(query.r12)) showIdList.Add(query.r12);
-            if (!string.IsNullOrWhiteSpace(query.r13)) showIdList.Add(query.r13);
-            if (!string.IsNullOrWhiteSpace(query.r14)) showIdList.Add(query.r14);
-            if (!string.IsNullOrWhiteSpace(query.r15)) showIdList.Add(query.r15);
+            // [HttpGet("CollaborativeRecommendations/{showId}")]
+            // public IActionResult CollaborativeRecommendations(string showId)
+            // {
+            //     // Find the collaborative record based on the show id.
+            //     var query = _collaborativeContext.CollabRecs
+            //         .FirstOrDefault(r => r.IfYouWatched == showId);
 
-            // Query the movie titles for records that match the recommended show IDs.
-            var recommendedMovies = _movieContext.Titles
-                .Where(m => showIdList.Contains(m.show_id))
-                .Select(m => new
-                {
-                    m.show_id,
-                    m.title
-                })
-                .ToList();
+            //     // If the query is null or there's no recommended show id in r1, return NotFound.
+            //     if (query == null || string.IsNullOrWhiteSpace(query.r1))
+            //     {
+            //         return NotFound();
+            //     }
 
-            // Return the list of recommended movies.
-            return Ok(recommendedMovies);
+            //     // Build the list of show IDs from each of the r1 through r15 columns.
+            //     var showIdList = new List<string>();
+
+            //     if (!string.IsNullOrWhiteSpace(query.r1)) showIdList.Add(query.r1);
+            //     if (!string.IsNullOrWhiteSpace(query.r2)) showIdList.Add(query.r2);
+            //     if (!string.IsNullOrWhiteSpace(query.r3)) showIdList.Add(query.r3);
+            //     if (!string.IsNullOrWhiteSpace(query.r4)) showIdList.Add(query.r4);
+            //     if (!string.IsNullOrWhiteSpace(query.r5)) showIdList.Add(query.r5);
+            //     if (!string.IsNullOrWhiteSpace(query.r6)) showIdList.Add(query.r6);
+            //     if (!string.IsNullOrWhiteSpace(query.r7)) showIdList.Add(query.r7);
+            //     if (!string.IsNullOrWhiteSpace(query.r8)) showIdList.Add(query.r8);
+            //     if (!string.IsNullOrWhiteSpace(query.r9)) showIdList.Add(query.r9);
+            //     if (!string.IsNullOrWhiteSpace(query.r10)) showIdList.Add(query.r10);
+            //     if (!string.IsNullOrWhiteSpace(query.r11)) showIdList.Add(query.r11);
+            //     if (!string.IsNullOrWhiteSpace(query.r12)) showIdList.Add(query.r12);
+            //     if (!string.IsNullOrWhiteSpace(query.r13)) showIdList.Add(query.r13);
+            //     if (!string.IsNullOrWhiteSpace(query.r14)) showIdList.Add(query.r14);
+            //     if (!string.IsNullOrWhiteSpace(query.r15)) showIdList.Add(query.r15);
+
+            //     // Query the movie titles for records that match the recommended show IDs.
+            //     var recommendedMovies = _movieContext.Titles
+            //         .Where(m => showIdList.Contains(m.show_id))
+            //         .Select(m => new
+            //         {
+            //             m.show_id,
+            //             m.title
+            //         })
+            //         .ToList();
+
+            //     // Return the list of recommended movies.
+            //     return Ok(recommendedMovies);
+            // }
         }
     }
-}
+

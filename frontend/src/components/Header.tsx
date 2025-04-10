@@ -5,6 +5,7 @@ interface User {
   role: string;
 }
 
+
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,6 +79,7 @@ export const Header: React.FC = () => {
             />
           </div>
         )}
+    
       </div>
     </header>
   );
