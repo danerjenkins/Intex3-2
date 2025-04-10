@@ -50,7 +50,9 @@ function HomePage() {
           movies={topRatedMovies}
         />
       </div>
-
+        <br />
+        <br />
+        <br />
       <Footer />
     </div>
   );

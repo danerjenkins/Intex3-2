@@ -134,6 +134,9 @@ function Register() {
       </div>
       
     </div>
+    <br />
+    <br />
+    <br />
     <Footer />
     </>
   );
