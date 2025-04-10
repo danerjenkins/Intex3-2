@@ -102,6 +102,8 @@ builder.Services.AddCors(options =>
                 .AllowAnyHeader();
         });
 });
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 WebApplication app;
 try
 {
@@ -124,6 +126,7 @@ if (app.Environment.IsDevelopment())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/error");
+    app.UseHsts();
     // Optionally implement an ErrorController or inline middleware that returns a JSON error response.
 }
 
