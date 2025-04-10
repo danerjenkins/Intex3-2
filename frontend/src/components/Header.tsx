@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './AuthorizeView';
 
+
 export const Header: React.FC = () => {
   const navigate = useNavigate();
   const user = useContext(UserContext);
@@ -55,6 +56,7 @@ export const Header: React.FC = () => {
             />
           </div>
         )}
+    
       </div>
     </header>
   );

@@ -193,7 +193,7 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpGet("/GetUserRatedMovies")]
-        public IActionResult GetUserRatedMovies(int userId)
+        public IActionResult GetUserRatedMovies(string userId)
         {
             var query = _movieContext.Ratings
                 .Where(m => m.user_id == userId)
@@ -269,15 +269,16 @@ namespace IntexS3G2.API.Controllers
         }
 
         [HttpPost("GetRecommendationFromAzure")]
-        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] int userId)
+        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] string userId)
         {
+            var intId = int.Parse(userId);
             var data = new
             {
                 Inputs = new
                 {
                     WebServiceInput2 = new[]
                     {
-                        new { user_id = userId }
+                        new { user_id = intId }
                     }
                 }
             };
@@ -298,13 +299,44 @@ namespace IntexS3G2.API.Controllers
                 response.EnsureSuccessStatusCode();
 
                 var result = await response.Content.ReadAsStringAsync();
-                return Ok(JsonDocument.Parse(result));
+
+                using var doc = JsonDocument.Parse(result);
+                var innerObject = doc
+                    .RootElement
+                    .GetProperty("Results")
+                    .GetProperty("WebServiceOutput0")[0];
+
+                // Extract show_ids (recommended item values)
+                var showIds = innerObject.EnumerateObject()
+                    .Where(p => p.Name.StartsWith("Recommended Item"))
+                    .Select(p => p.Value.GetString())
+                    .Where(id => !string.IsNullOrWhiteSpace(id))
+                    .ToList();
+
+                // Fetch titles from the database
+                var recommendedMovies = _movieContext.Titles
+                    .Where(t => showIds.Contains(t.show_id))
+                    .Select(t => new
+                    {
+                        t.show_id,
+                        t.title
+                    })
+                    .ToList();
+
+                return Ok(recommendedMovies);
             }
             catch (HttpRequestException ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "Azure ML call failed.", error = ex.Message });
             }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Unexpected error occurred.", error = ex.Message });
+            }
+
+        }
 
             // [HttpGet("CollaborativeRecommendations/{showId}")]
             // public IActionResult CollaborativeRecommendations(string showId)
