@@ -27,7 +27,8 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Center: Search Bar */}
-        <div className="flex-grow-1 px-4">
+        {user && (
+          <div className="flex-grow-1 px-4">
           <input
             type="text"
             placeholder="Search..."
@@ -36,7 +37,7 @@ export const Header: React.FC = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearch}
           />
-        </div>
+        </div>)}
 
         {/* Right: Profile Icon */}
         {user && (
