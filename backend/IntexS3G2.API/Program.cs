@@ -254,7 +254,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
 }).RequireAuthorization();
 
 // Add ping endpoint for authentication check
-app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager) =>
+app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager, MovieDbContext _movieContext) =>
 {
     if (!user.Identity?.IsAuthenticated ?? false)
     {
@@ -271,11 +271,19 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
 
     var roles = await userManager.GetRolesAsync(identityUser);
 
+    // 🔍 Look up user in your application DB
+    var appUserId = await _movieContext.Users
+        .Where(u => u.email == email)
+        .Select(u => (int?)u.user_id) // nullable int
+        .FirstOrDefaultAsync(); // returns null if not found
+    
+
     return Results.Json(new
     {
-        id = identityUser.Id,
+        identityId = identityUser.Id,
         email = identityUser.Email ?? "",
-        role = roles.FirstOrDefault() ?? ""
+        role = roles.FirstOrDefault() ?? "",
+        appUserId
     });
 }).RequireAuthorization();
 

@@ -55,46 +55,45 @@ function Register() {
         .then((data) => {
           // handle success or error from the server
           console.log(data);
-          if (data.ok) setError('Successful registration. Please log in.');
-          else setError('Error registering.');
-        })
-        .catch((error) => {
-          // handle network error
-          console.error(error);
-          setError('Error registering.');
-        });
-      // movie database user submission:
-      fetch(`${apiUrl}/Movies/RegisterUser`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: null,
-          name: null,
-          phone: null,
-          email: email,
-          age: null,
-          gender: null,
-          Netflix: null,
-          Amazon_Prime: null,
-          Disney: null,
-          Paramount: null,
-          Max: null,
-          Hulu: null,
-          Apple_TV: null,
-          Peacock: null,
-          city: null,
-          state: null,
-          zip: null,
-        }),
-      })
-        //.then((response) => response.json())
-        .then((data) => {
-          // handle success or error from the server
-          console.log(data);
-          if (data.ok) setError('Successful registration. Please log in.');
-          else setError('Error registering.');
+          if (data.ok) console.log('Successful registration. Please log in.');
+          // get user in the database
+          fetch(`${apiUrl}/Movies/RegisterUser`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: 0,
+              name: '',
+              phone: '',
+              email: email,
+              age: 0,
+              gender: '',
+              netflix: false,
+              amazon_Prime: false,
+              disney: false,
+              paramount: false,
+              max: false,
+              hulu: false,
+              apple_TV: false,
+              peacock: false,
+              city: '',
+              state: '',
+              zip: 0,
+            }),
+          })
+            //.then((response) => response.json())
+            .then((data) => {
+              // handle success or error from the server
+              console.log(data);
+              if (data.ok) console.log('important one works :)');
+              else setError('Error registering in movies database.');
+            })
+            .catch((error) => {
+              // handle network error
+              console.error(error);
+              setError('Error registering.');
+            });
         })
         .catch((error) => {
           // handle network error
