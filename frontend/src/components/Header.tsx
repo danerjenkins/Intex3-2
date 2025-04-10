@@ -1,12 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './AuthorizeView';
+interface User {
+  email: string;
+  role: string;
+}
 
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
-  const user = useContext(UserContext);
   const [searchTerm, setSearchTerm] = useState('');
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
+    const [user, setUser] = useState<User | null>(null);
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim() !== '') {
@@ -14,6 +19,24 @@ export const Header: React.FC = () => {
       setSearchTerm('');
     }
   };
+
+
+  useEffect(() => {
+      async function fetchWithRetry(url: string, options: any) {
+          const response = await fetch(url, options);
+          const data = await response.json();
+          if (data.email) {
+            setUser({ email: data.email, role: data.role || '' });
+          } else {
+            throw new Error('Invalid user session');
+          }
+        }
+      fetchWithRetry(`${apiUrl}/pingauth`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+    }, []);
+
 
   return (
     <header className="bg-dark text-white border-bottom border-secondary py-3 px-4">

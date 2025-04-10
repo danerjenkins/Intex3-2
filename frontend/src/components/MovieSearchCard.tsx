@@ -24,7 +24,6 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   };
   return (
     <div className="card h-100">
-      <p>ID {id}</p>
       <img
         src={posterUrl}
         alt={title}

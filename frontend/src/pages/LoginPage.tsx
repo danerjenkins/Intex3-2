@@ -159,6 +159,9 @@ function LoginPage() {
         </div>
       </div>
     </div>
+    <br />
+    <br />
+    <br />
     <Footer />
     </>
   );

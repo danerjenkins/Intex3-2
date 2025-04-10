@@ -8,29 +8,31 @@ export const Footer: React.FC = () => {
   const user = React.useContext(UserContext);
 
   return (
-    <footer className="bg-dark text-secondary text-center py-4 border-top border-secondary mt-auto">
+    <footer className="fixed-footer">
       <p className="mb-1">
-        &copy; {new Date().getFullYear()} CineNiche. All rights reserved.
+        &copy; {new Date().getFullYear()} CineNiche. All the magic of movies, reserved 🎬🍿.
       </p>
-      <button
-        onClick={() => navigate('/privacy')}
-        className="btn btn-link p-0 text-decoration-underline text-secondary"
-        style={{ fontSize: '0.9rem' }}
-      >
-        Privacy Policy
-      </button>
-    {/* Conditionally render the Admin Dashboard link */}
-    {user?.email === 'admin@admin.com' && (
-            <div className="mt-2">
-              <Link
-                to="/admin"
-                className="text-secondary text-decoration-underline"
-                style={{ fontSize: '0.9rem' }}
-              >
-                Admin Dashboard
-              </Link>
-            </div>
-          )}
+      <div>
+        <button
+          onClick={() => navigate('/privacy')}
+          className="btn btn-link p-0 text-decoration-underline text-secondary"
+          style={{ fontSize: '0.75rem' }}
+        >
+          Privacy Policy
+        </button>
+      </div>
+      {/* Conditionally render the Admin Dashboard link */}
+      {user?.email === 'admin@admin.com' && (
+        <div className="admin-link mt-2">
+          <Link
+            to="/admin"
+            className="text-secondary text-decoration-underline"
+            style={{ fontSize: '0.75rem' }}
+          >
+            Admin Dashboard 🎥
+          </Link>
+        </div>
+      )}
     </footer>
   );
 };
