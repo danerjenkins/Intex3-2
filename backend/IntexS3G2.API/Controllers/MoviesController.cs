@@ -1,4 +1,7 @@
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -233,6 +236,45 @@ namespace IntexS3G2.API.Controllers
 
             return Ok(recommendedMovies);
             
+        }
+
+        [HttpPost("GetRecommendationFromAzure")]
+        public async Task<IActionResult> GetRecommendationFromAzure([FromBody] int userId)
+        {
+            var data = new
+            {
+                Inputs = new
+                {
+                    WebServiceInput2 = new[]
+                    {
+                        new { user_id = userId }
+                    }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(data);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = Environment.GetEnvironmentVariable("AZURE_URL");
+            var apiKey = Environment.GetEnvironmentVariable("AZURE_API_KEY"); // Store in secrets or config ideally
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            try
+            {
+                var response = await client.PostAsync(url, content);
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadAsStringAsync();
+                return Ok(JsonDocument.Parse(result));
+            }
+            catch (HttpRequestException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Azure ML call failed.", error = ex.Message });
+            }
         }
     }
 }

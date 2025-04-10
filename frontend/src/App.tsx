@@ -10,10 +10,12 @@ import MovieDescription from './pages/MovieDescription';
 import AuthorizeView from './components/AuthorizeView';
 import ProtectedRoute from './components/ProtectedRoute';
 import SearchResultsPage from './pages/SearchResultsPage';
+import CookieConsentBanner from './components/CookieConsentBanner';
 
 function App() {
   return (
     <Router>
+      <CookieConsentBanner />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<HomePage />} />

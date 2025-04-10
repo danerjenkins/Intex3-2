@@ -1,5 +1,6 @@
 // MoviesApi.ts
 import { Movie } from '../types/Movie';
+import { AzureRecs } from '../types/AzureRec';
 
 interface FetchMoviesResponse {
   movies: Movie[]; // An array of movies
@@ -158,4 +159,27 @@ export async function getMovieWithId(movieId: string): Promise<any> {
     console.error(e);
     throw e;
   }
+}
+
+export async function getAzureRecs(userId: number): Promise<AzureRecs> {
+  try {
+    const response = await fetch(`${API_URL}/Movies/GetRecommendationFromAzure`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({userId}),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Azure recommendations: ${response.statusText}`);
+    }
+    const data = await response.json();
+    const returnData = data.Results.WebServiceOutput0[0];
+    return returnData;
+  } catch (error) {
+    console.error('Error fetching Azure recommendations:', error);
+    throw error;
+  }
+
 }
