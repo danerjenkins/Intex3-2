@@ -3,8 +3,8 @@ import '../index.css';
 import { useNavigate } from 'react-router-dom';
 
 interface GenreFilterProps {
-  selectedGenres: string[];
-  onGenreChange: (genres: string[]) => void;
+  selectedGenres?: string[];
+  onGenreChange?: (genres: string[]) => void;
 }
 
 // Use your full list or a simplified version, as needed:
