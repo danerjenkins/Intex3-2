@@ -51,7 +51,7 @@
   --brand-name: #212529;
 
   /* Profile */
-  --profile-btn-bg: #f8f9fa;
+  --profile-btn-bg: #b3b9bf;
 
   --footer-bg: #dee2e6;
   --footer-text: #212529;
@@ -522,7 +522,7 @@ p, li {
 
 /* Icon styling */
 .icon {
-  color: #ffcc00;
+  color: var(--brand-name);
 }
 
 /* Responsive design */
@@ -538,8 +538,8 @@ p, li {
 }
 
 .policy-page {
-  background-color: #210234;
-  color: #ecf0f1;
+  background-color: var(--bg-gradient-end);
+  color: var(--text-color);
   font-family: 'Arial', sans-serif;
   padding: 30px;
 }
@@ -575,7 +575,7 @@ p, li {
 }
 
 .policy-page .policy-box {
-  background-color: #3a373ade;
+  background-color: var(--profile-card-bg);
   border-radius: 10px;
   padding: 25px;
   margin-bottom: 30px;
@@ -597,7 +597,7 @@ p, li {
 }
 
 .policy-page button {
-  background-color: #2980b9;
+  background-color: var(--profile-btn-bg);
   color: white;
   border: none;
   padding: 10px 15px;
