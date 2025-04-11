@@ -147,6 +147,13 @@ export const MoviesPage: React.FC = () => {
       {} as { [genre: string]: Recommendation[] }
     );
 
+  // Remove genres with fewer than 5 movies
+  Object.keys(moviesByGenre).forEach((genre) => {
+    if (moviesByGenre[genre].length < 5) {
+      delete moviesByGenre[genre];
+    }
+  });
+
   // Convert grouped object into an array of content items.
   const contentItems: ContentRecMerged[] = Object.entries(moviesByGenre).map(
     ([genre, movies]) => ({
