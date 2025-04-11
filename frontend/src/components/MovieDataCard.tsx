@@ -29,7 +29,7 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };
   return (
-    <div className="card h-100" onClick={handlePosterClick}>
+    <div className="card h-100">
       <img
         src={posterUrl}
         alt={title}
@@ -42,6 +42,7 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
             target.src = '/defaultposter.png';
           }
         }}
+        onClick={handlePosterClick}
       />
 
       <div className="card-body d-flex flex-column cardColor">

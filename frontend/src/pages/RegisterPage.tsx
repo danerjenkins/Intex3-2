@@ -38,7 +38,9 @@ function Register() {
       setError('Please enter a valid email address.');
     } else if (password !== confirmPassword) {
       setError('Passwords do not match.');
-    } else {
+        } else if (password.length < 12 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setError('Password needs to meet the following requirements: at least 12 characters in length, include a capital letter, a lowercase letter, a special character, and a number.');
+        } else {
       // clear error message
       setError('');
       // post data to the /register api
