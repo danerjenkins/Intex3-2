@@ -147,6 +147,7 @@ p, li {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2; /* Show up to two lines */
+  line-clamp: 2; /* Standard property for compatibility */
   -webkit-box-orient: vertical;
 }
 

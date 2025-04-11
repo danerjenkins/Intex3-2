@@ -9,7 +9,7 @@ import {
   Recommendation,
   Recommendations,
 } from '../api/ContentRecommender';
-import { fetchUserRatedMovies, Rating } from '../api/MoviesApi';
+import { fetchTopRatedMovies, fetchUserRatedMovies, Rating } from '../api/MoviesApi';
 import { User, UserContext } from '../components/AuthorizeView';
 
 // Define types for the merged items.
@@ -26,7 +26,7 @@ export const MoviesPage: React.FC = () => {
   // const [azureCalled, setAzureCalled] = useState(false);
   // put back in to try and get azure working
   const user: User = React.useContext(UserContext);
-  const [userId, setUserId] = useState<number>(user.appUserId || 1);
+  const [userId] = useState<number>(user.appUserId || 1);
   const [allRecs, setAllRecs] = useState<Recommendations[]>([]);
   const [collabRecs, setCollabRecs] = useState<Recommendations[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -42,7 +42,7 @@ export const MoviesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   //state for if the user has rated anything
-  const [newUser] = useState(false);
+  const [newUser, setNewUser] = useState(false);
 
   // 1. Fetch user-rated movies.
   useEffect(() => {
@@ -52,7 +52,13 @@ export const MoviesPage: React.FC = () => {
         if (showIds.length > 0) {
           setListOfIds(showIds);
         } else {
-          setUserId(77)
+          fetchTopRatedMovies()
+            .then((data) => {
+              const showIds = data.map((r: Recommendation) => r.show_id);
+              setListOfIds(showIds);
+              setNewUser(true)
+            })
+            .catch((err) => console.error('Error fetching top-rated movies:', err));
         }
       })
       .catch((err) => console.error('Error fetching user rated movies:', err));
