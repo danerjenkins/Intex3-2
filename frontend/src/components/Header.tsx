@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
           <img
             src="/logo.png"
             alt="CineNiche Logo"
-            style={{ width: '150px', height: 'auto', cursor: 'pointer' }}
+            style={{ width: '300px', height: 'auto', cursor: 'pointer' }}
             onClick={() => navigate('/movies')}
           />
         </div>
