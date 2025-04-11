@@ -47,9 +47,10 @@ export function RatingCard({ show_id }: { show_id: string }) {
     rating: 0,
   });
 
-  if (user && user.appUserId) setThisUserId(user.appUserId);
+ 
 
   useEffect(() => {
+     if (user && user.appUserId) setThisUserId(user.appUserId);
     const fetchRatings = async () => {
       try {
         const response1 = await fetch(
@@ -93,7 +94,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
     setRefresh(false);
     awaitingWaitingRating(0);
     fetchRatings();
-  }, [show_id, refresh]);
+  }, [show_id, refresh, user]);
 
   /////////// This is to show the stars for average movie rating
   const renderStars = (rating: number) => {
