@@ -7,22 +7,16 @@ import ToggleThemeButton from '../components/ToggleThemeButton';
 // import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Footer } from '../components/Footer';
+import { User, UserContext } from '../components/AuthorizeView';
 
 export const ProfilePage: React.FC = () => {
   // Simulated user info (replace with context or API call)
-  const user = {
-    name: 'Jane Doe',
-    email: 'jane@example.com',
-    age: 28,
-    location: 'Provo, UT',
-  };
-  // const [theme, setTheme] = useState<string>('dark');
+  const user: User = React.useContext(UserContext);
+  let role: string = user.role;
+  if (user.role == '') {
+    role = 'Proud CineNiche Subscriber';
+  }
 
-  // useEffect(() => {
-  //   const currentTheme = getCookie('theme') || 'dark';
-  //   setTheme(currentTheme);
-  //   document.documentElement.setAttribute('data-theme', currentTheme);
-  // }, []);
   const navigate = useNavigate();
   return (
     <>
@@ -32,23 +26,18 @@ export const ProfilePage: React.FC = () => {
           className="profileCard bg-opacity-25 p-4 rounded shadow w-100"
           style={{ maxWidth: '500px' }}
         >
-
           <h1 className="h3 fw-bold mb-4">Your Profile</h1>
           <div className="mb-3">
-            <p className="text-muted small mb-1">Name</p>
-            <p className="fs-5 mb-0">{user.name}</p>
-          </div>
-          <div className="mb-3">
-            <p className="text-muted small mb-1">Email</p>
+            <p className="small mb-1">
+              <strong>Account:</strong>
+            </p>
             <p className="fs-5 mb-0">{user.email}</p>
           </div>
           <div className="mb-3">
-            <p className="text-muted small mb-1">Age</p>
-            <p className="fs-5 mb-0">{user.age}</p>
-          </div>
-          <div className="mb-4">
-            <p className="text-muted small mb-1">Location</p>
-            <p className="fs-5 mb-0">{user.location}</p>
+            <p className="small mb-1">
+              <strong>Access Level: </strong>
+            </p>
+            <p className="fs-5 mb-0">{role}</p>
           </div>
 
           {/* Theme Toggle Button */}
@@ -56,8 +45,11 @@ export const ProfilePage: React.FC = () => {
           <br />
           <br />
           <Logout />
-          <br /><br />
-          <button className='profileButton' onClick={() => navigate(-1)}>Back</button>
+          <br />
+          <br />
+          <button className="profileButton" onClick={() => navigate(-1)}>
+            Back
+          </button>
         </div>
       </div>
       <Footer />
