@@ -3,15 +3,18 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
-import { Link, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { RatingCard } from '../components/RatingCard';
-import { getContentRecommendations, Recommendation } from '../api/ContentRecommender';
+import {
+  getContentRecommendations,
+  Recommendation,
+} from '../api/ContentRecommender';
 import { MovieList } from '../components/MovieList';
 
 export default function MovieDescription() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [contentRecs, setContentRecs] = useState<Recommendation[]>([]); // Adjust type as needed
   const { id } = useParams();
   const loadMovie = async () => {
@@ -30,8 +33,8 @@ export default function MovieDescription() {
     setLoading(true);
     loadMovie();
     getContentRecommendations(id)
-    .then(data => setContentRecs(data.recommendations))
-    .catch(err => console.error(err));
+      .then((data) => setContentRecs(data.recommendations))
+      .catch((err) => console.error(err));
   }, [id]);
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const formattedTitle = movie ? movie.title.replace(/[:!%.'--()&#’]/g, '') : '';
@@ -50,6 +53,11 @@ export default function MovieDescription() {
         ) : (
           movie && (
             <>
+              <div className="backButtonSearch">
+                <button className="profileButton" onClick={() => navigate("/movies")}>
+                  Back to Movies
+                </button>
+              </div>
             <div className="descriptionBox shadow-lg p-3">
               <div className="row g-4">
                 {/* Poster */}
@@ -60,62 +68,64 @@ export default function MovieDescription() {
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
 
-                      // Prevent infinite loop if the fallback image also fails
-                      if (!target.src.includes('/defaultposter.png')) {
-                        target.onerror = null;
-                        target.src = '/defaultposter.png';
-                      }
-                    }}
-                    className="img-fluid rounded"
-                    style={{ maxHeight: '100%', objectFit: 'cover' }}
-                  />
-                  <br /><br /><br /><br />
-                  <Link to="/movies" className='backButton'>Back to Movies</Link>
-                </div>
+                        // Prevent infinite loop if the fallback image also fails
+                        if (!target.src.includes('/defaultposter.png')) {
+                          target.onerror = null;
+                          target.src = '/defaultposter.png';
+                        }
+                      }}
+                      className="img-fluid rounded"
+                      style={{ maxHeight: '100%', objectFit: 'cover' }}
+                    />
+                  </div>
 
-                {/* Info and Description */}
-                <div className="col-md-8 d-flex flex-column justify-content-between">
+                  {/* Info and Description */}
+                  <div className="col-md-6 d-flex flex-column justify-content-between">
+                    <div className="d-flex flex-row flex-wrap">
+                      <div className="me-5">
+                        <h3 className="mb-3">{movie.title}</h3>
+                        <p>
+                          <strong>Director:</strong> {movie.director}
+                        </p>
+                        <p>
+                          <strong>Type:</strong> {movie.type}
+                        </p>
+                        <p>
+                          <strong>Released:</strong> {movie.release_year}
+                        </p>
+                        <p>
+                          <strong>Rating:</strong> {movie.rating}
+                        </p>
+                        <p>
+                          <strong>Duration:</strong> {movie.duration}
+                        </p>
+                        <p>
+                          <strong>Cast:</strong> {movie.cast}
+                        </p>
+                        <p>
+                          <strong>Genres:</strong> {movie.genre}
+                        </p>
+                      </div>
+
+                      <div className="flex-grow-1">
+                        <h5 className="mb-2">Description</h5>
+                        <p className="mb-0">{movie.description}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Ratings */}
+                  <div className="col-md-3 mt-4">
                   <RatingCard show_id={movie.show_id} />
-                  <div className="d-flex flex-row flex-wrap">
-                    <div className="me-5">
-                      <h3 className="mb-3">{movie.title}</h3>
-                      <p>
-                        <strong>Director:</strong> {movie.director}
-                      </p>
-                      <p>
-                        <strong>Type:</strong> {movie.type}
-                      </p>
-                      <p>
-                        <strong>Released:</strong> {movie.release_year}
-                      </p>
-                      <p>
-                        <strong>Rating:</strong> {movie.rating}
-                      </p>
-                      <p>
-                        <strong>Duration:</strong> {movie.duration}
-                      </p>
-                      <p>
-                        <strong>Cast:</strong> {movie.cast}
-                      </p>
-                      <p>
-                        <strong>Genres:</strong> {movie.genre}
-                      </p>
-                    </div>
-
-                    <div className="flex-grow-1">
-                      <h5 className="mb-2">Description</h5>
-                      <p className="mb-0">{movie.description}</p>
-                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="d-flex flex-column mt-5">
-              <MovieList 
-                recommender={`Similar media to ${movie.title}`}
-                movies={contentRecs}
+              <div className="d-flex flex-column mt-5">
+                <MovieList
+                  recommender={`Similar media to ${movie.title}`}
+                  movies={contentRecs}
                 />
-            </div>
+              </div>
             </>
           )
         )}
