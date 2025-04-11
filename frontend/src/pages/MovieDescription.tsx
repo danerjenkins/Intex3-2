@@ -45,7 +45,7 @@ export default function MovieDescription() {
       <div className="container my-5">
         {loading ? (
           <div className="text-center my-5">
-            <div className="spinner-border text-primary" role="status">
+            <div className="spinner-grow text-primary" role="status">
               <span className="visually-hidden">Loading...</span>
             </div>
             <p className="mt-3 text-dark">Loading movie...</p>

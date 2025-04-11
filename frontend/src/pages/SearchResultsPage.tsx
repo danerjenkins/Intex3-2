@@ -57,7 +57,12 @@ export default function SearchResultsPage() {
           {genreParam ? `(Genre: ${genreParam})` : ''}
         </h2>
         {loading ? (
-          <p>Loading...</p>
+          <div className="text-center">
+          <div className="spinner-grow text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p>Loading movies...</p>
+        </div>
         ) : results.length === 0 ? (
           <p>No results found.</p>
         ) : (
