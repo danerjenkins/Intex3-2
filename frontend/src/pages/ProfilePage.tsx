@@ -1,10 +1,10 @@
 // ProfilePage.tsx
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Header } from '../components/Header';
 import Logout from '../components/Logout';
 import ToggleThemeButton from '../components/ToggleThemeButton';
-import { getCookie } from '../hooks/useTheme';
-import { useState } from 'react';
+// import { getCookie } from '../hooks/useTheme';
+// import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 

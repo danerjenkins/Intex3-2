@@ -5,7 +5,7 @@ import { MovieList } from '../components/MovieList';
 import { fetchTopRatedMovies } from '../api/MoviesApi';
 import { useEffect, useState } from 'react';
 import { Recommendation } from '../api/ContentRecommender';
-import { FaUserAlt, FaSignInAlt, FaRegStar } from 'react-icons/fa'; // Removed FaFilm and replaced FaPopcorn with FaPizzaSlice
+import { FaUserAlt, FaSignInAlt } from 'react-icons/fa'; // Removed FaFilm and replaced FaPopcorn with FaPizzaSlice
 
 function HomePage() {
   const navigate = useNavigate();

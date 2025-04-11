@@ -1,7 +1,6 @@
 // MovieSearchCard.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Footer } from './Footer';
 
 interface MovieSearchCardProps {
   id: string;

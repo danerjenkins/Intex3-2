@@ -1,6 +1,6 @@
 // Footer.tsx
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { UserContext } from './AuthorizeView'; // or wherever you exported it
 
 export const Footer: React.FC = () => {

@@ -3,7 +3,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Movie } from '../types/Movie';
 import { getMovieWithId } from '../api/MoviesApi';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { RatingCard } from '../components/RatingCard';
 import { getContentRecommendations, Recommendation } from '../api/ContentRecommender';
 import { MovieList } from '../components/MovieList';
@@ -12,7 +12,7 @@ export default function MovieDescription() {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [contentRecs, setContentRecs] = useState<Recommendation[]>([]); // Adjust type as needed
   const { id } = useParams();
   const loadMovie = async () => {
