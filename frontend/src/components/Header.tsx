@@ -39,7 +39,7 @@ export const Header: React.FC = () => {
 
 
   return (
-    <header className="headerBg border-bottom border-secondary py-3 px-4">
+    <header className="headerBg border-bottom border-secondary py-1 px-4">
       <div className="container-fluid d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center" style={{ gap: '1rem' }}>
           <img
@@ -70,8 +70,8 @@ export const Header: React.FC = () => {
               src="/user-icon.webp"
               alt="User"
               style={{
-                width: '45px',
-                height: '45px',
+                width: '35px',
+                height: '35px',
                 borderRadius: '50%',
                 cursor: 'pointer',
               }}

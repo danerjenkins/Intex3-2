@@ -27,12 +27,13 @@
   --edit-btn: #243d62;
   --delete-btn: #441212;
   --add-btn: #1c3c1b;
+  --text-primary: #edd5f7;
 }
 
 /* Light Theme Override */
 [data-theme="light"] {
   --bg-gradient-start: #efe7f3;
-  --bg-gradient-end: #edd5f7;
+  --bg-gradient-end: 
   --bg-dark: #694468;
   --movie-card-bg: #d5cae0;
   --profile-card-bg: #d5cae0;
@@ -57,6 +58,7 @@
   --edit-btn: #cce2f4;
   --delete-btn: #f1acac;
   --add-btn: #bef8ec;
+  --text-primary: rgb(35, 8, 45);
 }
 
 
@@ -67,6 +69,10 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+}
+
+.text-primary{
+  color: var(--text-primary);
 }
 
 h1, h2, h3, h4, h5 {

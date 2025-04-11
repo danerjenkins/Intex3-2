@@ -28,13 +28,8 @@ function HomePage() {
     <>
     <Header />
     <div className="d-flex flex-column align-items-center justify-content-center">
+    <div className="homepage min-vh-100 d-flex flex-column align-items-center justify-content-center">
       <div className="d-flex flex-column align-items-center mt-5 gap-3">
-        <h1 className="display-4 fw-bold text-center">Welcome to CineNiche</h1>
-        <div className="d-flex gap-3">
-    <div className="homepage bg-dark text-white min-vh-100 d-flex flex-column align-items-center justify-content-center">
-      <Header />
-
-      <div className="welcome-section d-flex flex-column align-items-center mt-5 gap-3">
         <h1 className="display-4 fw-bold text-center">
           Welcome to <span className="brand-name">CineNiche 🎬🍿</span>
         </h1>
@@ -71,14 +66,10 @@ function HomePage() {
           Explore new genres, discover hidden gems, and enjoy a movie moment like never before.
         </p>
       </div>
-
-      <div className="top-rated-section d-flex gap-3">
-        <FaRegStar className="icon" />
-        <span className="text-center">Top Rated Movies</span>
+      <br />
+      <br />
+      <br />
       </div>
-      <br />
-      <br />
-      <br />
       <Footer />
     </div>
     </>
