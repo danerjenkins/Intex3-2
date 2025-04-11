@@ -10,8 +10,10 @@ interface MovieCardProps {
 export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => {
   const navigate = useNavigate();
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const formattedTitle = title.replace(/[:!%.'--()&#’]/g, '');
-  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
+  const normalized = title.normalize('NFD');
+  const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
+  const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
+  
   const handlePosterClick = () => {
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };

@@ -16,12 +16,13 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   info,
 }) => {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const formattedTitle = title.replace(/[:!%.'--()&#’]/g, '');
-  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
+  const normalized = title.normalize('NFD');
+  const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
+  const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
   const navigate = useNavigate();
 
   const handlePosterClick = () => {
-    navigate(`/movieDescription/${encodeURIComponent(id)}`);
+    navigate(`/movieDescription/${encodeURI(id)}`);
   };
   return (
     <>
@@ -41,6 +42,7 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
         />
 
         <div className="card-body d-flex flex-column cardColor">
+          <p>{posterUrl}</p>
           <h5 className="card-title">{title}</h5>
           <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
           <p className="card-text mb-3">{info}</p>
