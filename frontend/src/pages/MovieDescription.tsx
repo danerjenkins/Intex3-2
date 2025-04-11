@@ -37,7 +37,9 @@ export default function MovieDescription() {
       .catch((err) => console.error(err));
   }, [id]);
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const formattedTitle = movie ? movie.title.replace(/[:!%.'--()&#’]/g, '') : '';
+  const formattedTitle = movie
+    ? movie.title.replace(/[:!%.'--()&#’]/g, '')
+    : '';
   const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
   return (
     <div className="d-flex flex-column min-vh-100">
@@ -54,19 +56,22 @@ export default function MovieDescription() {
           movie && (
             <>
               <div className="backButtonSearch">
-                <button className="profileButton" onClick={() => navigate("/movies")}>
+                <button
+                  className="profileButton"
+                  onClick={() => navigate('/movies')}
+                >
                   Back to Movies
                 </button>
               </div>
-            <div className="descriptionBox shadow-lg p-3">
-              <div className="row g-4">
-                {/* Poster */}
-                <div className="col-md-4">
-                  <img
-                    src={posterUrl}
-                    alt={`${movie.title} poster`}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
+              <div className="descriptionBox shadow-lg p-3 mt-3">
+                <div className="row g-4">
+                  {/* Poster */}
+                  <div className="col-md-3">
+                    <img
+                      src={posterUrl}
+                      alt={`${movie.title} poster`}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
 
                         // Prevent infinite loop if the fallback image also fails
                         if (!target.src.includes('/defaultposter.png')) {
@@ -116,7 +121,7 @@ export default function MovieDescription() {
 
                   {/* Ratings */}
                   <div className="col-md-3 mt-4">
-                  <RatingCard show_id={movie.show_id} />
+                    <RatingCard show_id={movie.show_id} />
                   </div>
                 </div>
               </div>
