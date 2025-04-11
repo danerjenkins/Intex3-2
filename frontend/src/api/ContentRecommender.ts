@@ -85,7 +85,7 @@ export async function getCollaborativeRecommendations(
     };
     return recommendations;
   } catch (e) {
-    console.error(`problem w getCollaborativeRecommendations(), homes: ${e}`);
+    // console.error(`problem w getCollaborativeRecommendations(), homes: ${e}`);
     throw e;
   }
 }
