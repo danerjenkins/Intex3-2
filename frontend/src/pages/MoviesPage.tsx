@@ -26,7 +26,7 @@ export const MoviesPage: React.FC = () => {
   // const [azureCalled, setAzureCalled] = useState(false);
   // put back in to try and get azure working
   const user: User = React.useContext(UserContext);
-  const userId = user.appUserId || 1;
+  const [userId, setUserId] = useState<number>(user.appUserId || 1);
   const [allRecs, setAllRecs] = useState<Recommendations[]>([]);
   const [collabRecs, setCollabRecs] = useState<Recommendations[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -52,8 +52,7 @@ export const MoviesPage: React.FC = () => {
         if (showIds.length > 0) {
           setListOfIds(showIds);
         } else {
-          setListOfIds(['s42', 's1254', 's4218', 's4307', 's38', 's341']); // Ensure listOfIds is an array filled with dope movies if no rated movies exist
-          setNewUser(true);
+          setUserId(77)
         }
       })
       .catch((err) => console.error('Error fetching user rated movies:', err));
