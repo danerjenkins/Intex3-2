@@ -33,7 +33,7 @@
 /* Light Theme Override */
 [data-theme="light"] {
   --bg-gradient-start: #efe7f3;
-  --bg-gradient-end: 
+  --bg-gradient-end: #edd5f7;
   --bg-dark: #694468;
   --movie-card-bg: #d5cae0;
   --profile-card-bg: #d5cae0;
@@ -328,8 +328,6 @@ p, li {
   background: var(--bg-dark);
   color: var(--text-color);
   padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-bottom: 1rem;
 }
 
@@ -347,11 +345,10 @@ p, li {
   left: 0;
   width: 100%;
   z-index: 999;
-  background-color: var(--bg-dark);
+  background: var(--bg-dark);
   color: var(--text-color);
   text-align: center;
   padding: 0.25rem 0;
-  border-radius: 10px; /* Rounded corners */
   font-size: 0.75rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
 }

@@ -16,7 +16,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => {
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };
   return (
-    <div key={id} className="movie-card-body text-white bg-dark m-2">
+    <div key={id} className="movie-card-body m-2">
       <img
         className="movie-card-img"
         src={posterUrl}
