@@ -5,6 +5,7 @@ import { Movie } from '../types/Movie';
 import { Header } from '../components/Header';
 import { MovieSearchCard } from '../components/MovieSearchCard';
 import { GenreFilter } from '../components/GenreFilter';
+import { Footer } from '../components/Footer';
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
@@ -48,9 +49,10 @@ export default function SearchResultsPage() {
 
   return (
     <>
+    <div className="d-flex flex-column min-vh-100">
       <Header />
       {/* Render the GenreFilter on the search page so users can refine further */}
-      <div className="container mt-5">
+      <div className="container mt-5 mb-5 text-center">
         <GenreFilter />
         <h2>
           Search Results{query ? ` for: "${query}"` : ''}{' '}
@@ -79,6 +81,9 @@ export default function SearchResultsPage() {
             ))}
           </div>
         )}
+      </div>
+      <br /><br /><br />
+      <Footer />
       </div>
     </>
   );
