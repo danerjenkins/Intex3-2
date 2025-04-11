@@ -127,7 +127,6 @@ const MoviesPage = () => {
       <Header />
       <div className="container mt-4">
         <h2 className="text-center mb-4">Admin Movies</h2>
-        <h2>Total Pages: {totalPages}</h2>
         <div className="d-flex justify-content-end mb-3">
           <button
             className="addButton"
@@ -155,55 +154,58 @@ const MoviesPage = () => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="genre-select" className="form-label">
-            Select Genres:
-          </label>
           <div className="row">
             <div className="col-md-3">
-            <div
-  className="genre-filter-container cardColor mb-4"
-  style={{ position: 'sticky', top: '90px' }}
->
-  <h5 className="mb-3">Filter by Genre</h5>
-  <button
-    className="btn-genre mb-3"
-    onClick={() => setSelectedGenres([])}
-  >
-    Clear Filters
-  </button>
-  {allGenres.map((genre) => (
-    <div className="form-check" key={genre} style={{ marginBottom: '0.5rem' }}>
-      <input
-        className="form-check-input"
-        type="checkbox"
-        id={`genre-${genre}`}
-        value={genre}
-        checked={selectedGenres.includes(genre)}
-        onChange={(e) => {
-          const value = e.target.value;
-          setSelectedGenres((prev) =>
-            prev.includes(value)
-              ? prev.filter((g) => g !== value)
-              : [...prev, value]
-          );
-        }}
-        style={{
-          backgroundColor: 'var(--genre-bg)',
-          borderColor: 'var(--btn-genre-border)',
-          accentColor: 'var(--btn-genre-border)', // modern checkbox styling
-        }}
-      />
-      <label
-        className="form-check-label"
-        htmlFor={`genre-${genre}`}
-        style={{ color: 'var(--text-color)', marginLeft: '0.5rem' }}
-      >
-        {genre}
-      </label>
-    </div>
-  ))}
-</div>
-
+              <div
+                className="genre-filter-container cardColor mb-4"
+                style={{ position: 'sticky', top: '90px' }}
+              >
+                <h5 className="mb-3">Filter by Genre</h5>
+                <button
+                  className="btn-genre mb-3"
+                  onClick={() => setSelectedGenres([])}
+                >
+                  Clear Filters
+                </button>
+                {allGenres.map((genre) => (
+                  <div
+                    className="form-check"
+                    key={genre}
+                    style={{ marginBottom: '0.5rem' }}
+                  >
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id={`genre-${genre}`}
+                      value={genre}
+                      checked={selectedGenres.includes(genre)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedGenres((prev) =>
+                          prev.includes(value)
+                            ? prev.filter((g) => g !== value)
+                            : [...prev, value]
+                        );
+                      }}
+                      style={{
+                        backgroundColor: 'var(--genre-bg)',
+                        borderColor: 'var(--btn-genre-border)',
+                        accentColor: 'var(--btn-genre-border)', // modern checkbox styling
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor={`genre-${genre}`}
+                      style={{
+                        color: 'var(--text-color)',
+                        marginLeft: '0.5rem',
+                      }}
+                    >
+                      {genre}
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="col-md-9">
@@ -265,8 +267,10 @@ const MoviesPage = () => {
           </div>
         </div>
       </div>
-      <br /><br /><br />
-      <Footer /> 
+      <br />
+      <br />
+      <br />
+      <Footer />
     </>
   );
 };
