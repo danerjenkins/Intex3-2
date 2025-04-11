@@ -41,9 +41,6 @@ namespace IntexS3G2.API.Controllers
 
             if (genres != null && genres.Any())
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Genres: {string.Join(", ", genres)}");
-                Console.ResetColor();
 
                 // Move to memory before Split
                 query = query
@@ -124,10 +121,6 @@ namespace IntexS3G2.API.Controllers
                     return BadRequest(new { message = "Invalid movie data provided." });
                 }
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"*** Received genre: {updatedMovie.Genre} ***");
-                Console.ResetColor();
-
                 var existingMovie = _movieContext.Titles.Find(showId);
 
                 if (existingMovie == null)
@@ -152,16 +145,10 @@ namespace IntexS3G2.API.Controllers
             }
             catch (DbUpdateException dbEx)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Database update error: {dbEx.Message}");
-                Console.ResetColor();
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the movie in the database." });
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Unexpected error: {ex.Message}");
-                Console.ResetColor();
                 return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred." });
             }
         }

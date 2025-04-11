@@ -8,7 +8,7 @@ using Microsoft.Data.Sqlite;
 #if DEBUG
 DotNetEnv.Env.Load(); // loads from .env by default
 #endif
-Console.WriteLine("=== Starting Intex Backend ===");
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,10 +41,6 @@ builder.Services.AddDbContext<ContentDbContext>(options =>
 
 builder.Services.AddDbContext<CollaborativeDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("CollaborativeConnection")));
-
-    Console.WriteLine($"[Startup] IdentityConnection: {identityConnection}");
-Console.WriteLine($"[Startup] MovieConnection: {movieConnection}");
-
 
 
 AppContext.SetSwitch("Microsoft.AspNetCore.Mvc.SuppressApiExplorerErrors", false);
@@ -108,7 +104,6 @@ WebApplication app;
 try
 {
     app = builder.Build();
-    Console.WriteLine("✅ App built successfully.");
 }
 catch (Exception ex)
 {
@@ -131,52 +126,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 
-using (var scope = app.Services.CreateScope())
-{
-    var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-    var connectionString = config.GetConnectionString("CollaborativeConnection");
-    
-    using (var connection = new SqliteConnection(connectionString))
-    {
-        connection.Open();
-        // Query to list all tables in the database.
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT name FROM sqlite_master WHERE type='table';";
-        
-        using (var reader = command.ExecuteReader())
-        {
-            Console.WriteLine("Tables in the Collaborative DB:");
-            while (reader.Read())
-            {
-                string tableName = reader.GetString(0);
-                Console.WriteLine($"- {tableName}");
-                // For each table, log its columns.
-                    using (var columnCmd = connection.CreateCommand())
-                    {
-                        // Use PRAGMA table_info() to list the columns
-                        columnCmd.CommandText = $"PRAGMA table_info({tableName});";
-                        using (var columnReader = columnCmd.ExecuteReader())
-                        {
-                            Console.WriteLine("  Columns:");
-                            while (columnReader.Read())
-                            {
-                                // PRAGMA table_info returns:
-                                //  cid, name, type, notnull, dflt_value, pk
-                                int cid = columnReader.GetInt32(0);
-                                string colName = columnReader.GetString(1);
-                                string colType = columnReader.GetString(2);
-                                bool notNull = columnReader.GetBoolean(3);
-                                string defaultValue = columnReader.IsDBNull(4) ? "NULL" : columnReader.GetString(4);
-                                bool isPrimaryKey = columnReader.GetInt32(5) > 0;
-                                
-                                Console.WriteLine($"    - {colName} ({colType}), NotNull: {notNull}, Default: {defaultValue}, PrimaryKey: {isPrimaryKey}");
-                            }
-                        }
-                    }
-            }
-        }
-    }
-}
+
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
