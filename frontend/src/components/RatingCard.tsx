@@ -18,12 +18,12 @@ function submitRating(submission: UserRating) {
       rating: submission.rating,
     }),
   })
-    .then((data) => {
-      // handle success or error from the server
-      console.log(data);
-      if (data.ok) console.log('Rating Submitted!!');
-      else console.log('something wrong with the data format.');
-    })
+    // .then((data) => {
+    //   // handle success or error from the server
+    //   console.log(data);
+    //   if (data.ok) console.log('Rating Submitted!!');
+    //   else console.log('something wrong with the data format.');
+    // })
     .catch((error) => {
       // handle network error
       console.error(error);
@@ -135,7 +135,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
         show_id: show_id,
         rating: rating,
       });
-      console.log(`You entered a rating of: ${rating}`);
+      // console.log(`You entered a rating of: ${rating}`);
     };
 
     // Render interactive stars
@@ -180,9 +180,9 @@ export function RatingCard({ show_id }: { show_id: string }) {
               submitRating(newRating);
               setRefresh(!refresh);
               setOpenRatingSubmission(false);
-              console.log(
-                `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
-              );
+              // console.log(
+              //   `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
+              // );
             } catch (e) {
               console.log(`This rating did not get submitted!: ${e}`);
             }

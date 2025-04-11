@@ -105,7 +105,7 @@ const MoviesPage = () => {
     try {
       await deleteMovie(id);
       await loadMovies(); // refresh the list
-      console.log(`Movie ${id} deleted successfully.`);
+      // console.log(`Movie ${id} deleted successfully.`);
     } catch (error) {
       alert('Failed to delete movie. See console for details.');
     }
@@ -133,7 +133,7 @@ const MoviesPage = () => {
             className="addButton"
             onClick={async () => {
               const nextId = await getNextShowId();
-              alert(`The next Show ID will be: ${nextId}`);
+              //alert(`The next Show ID will be: ${nextId}`);
               setIsAddingMovie(true);
               setNewMovie({
                 show_id: nextId,

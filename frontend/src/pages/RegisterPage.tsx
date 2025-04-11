@@ -56,7 +56,7 @@ function Register() {
         //.then((response) => response.json())
         .then((data) => {
           // handle success or error from the server
-          console.log(data);
+          // console.log(data);
           if (data.ok) console.log('Successful registration. Please log in.');
           // get user in the database
           fetch(`${apiUrl}/Movies/RegisterUser`, {
@@ -87,7 +87,7 @@ function Register() {
             //.then((response) => response.json())
             .then((data) => {
               // handle success or error from the server
-              console.log(data);
+              // console.log(data);
               if (data.ok) console.log('important one works :)');
               else setError('Error registering in movies database.');
             })

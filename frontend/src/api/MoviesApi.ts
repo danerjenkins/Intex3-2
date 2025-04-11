@@ -127,9 +127,9 @@ export const deleteMovie = async (show_id: string): Promise<void> => {
       },
     });
 
-    console.log(
-      `Delete request sent for movie ${show_id}, status: ${response.status}`
-    );
+    // console.log(
+    //   `Delete request sent for movie ${show_id}, status: ${response.status}`
+    // );
 
     if (!response.ok) {
       throw new Error(`Failed to delete movie: ${response.statusText}`);

@@ -15,7 +15,8 @@ export default function SearchResultsPage() {
   const navigate = useNavigate();
 
   // Get parameters: q for text search and genre for filtering by genre.
-  const query = searchParams.get('q');
+  const unfilteredQuery = searchParams.get('q');
+  const query = decodeURIComponent(unfilteredQuery || '');
   const genreParam = searchParams.get('genre');
 
   useEffect(() => {

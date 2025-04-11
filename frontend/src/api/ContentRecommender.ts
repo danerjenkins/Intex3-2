@@ -39,7 +39,7 @@ export async function getContentRecommendations(
       );
     }
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     const recommendations: Recommendations = {
       basedOffOf: title,
       recommendations: data,
@@ -78,7 +78,7 @@ export async function getCollaborativeRecommendations(
       );
     }
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     const recommendations: Recommendations = {
       basedOffOf: title,
       recommendations: data,

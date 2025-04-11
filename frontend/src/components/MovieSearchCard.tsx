@@ -42,7 +42,6 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
         />
 
         <div className="card-body d-flex flex-column cardColor">
-          <p>{posterUrl}</p>
           <h5 className="card-title">{title}</h5>
           <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
           <p className="card-text mb-3">{info}</p>
