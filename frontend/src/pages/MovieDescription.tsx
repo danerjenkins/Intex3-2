@@ -40,6 +40,8 @@ export default function MovieDescription() {
   const normalized = movie ? movie.title.normalize('NFD') : '';
   const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
   const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
+  console.log('movie:', movie);
+  console.log('contentRecs:', contentRecs);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />

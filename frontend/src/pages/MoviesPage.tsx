@@ -85,10 +85,10 @@ export const MoviesPage: React.FC = () => {
                     result.status === 'fulfilled'
                 )
                 .map((result) => result.value);
-              console.log(
-                'Successfully fetched collaborative recommendations:',
-                successResults
-              );
+              // console.log(
+              //   'Successfully fetched collaborative recommendations:',
+              //   successResults
+              // );
               setCollabRecs(successResults);
             })
             .catch((error) =>
@@ -108,10 +108,10 @@ export const MoviesPage: React.FC = () => {
                   result.status === 'fulfilled'
               )
               .map((result) => result.value);
-            console.log(
-              'Successfully fetched content recommendations:',
-              successResults
-            );
+            // console.log(
+            //   'Successfully fetched content recommendations:',
+            //   successResults
+            // );
             setAllRecs(successResults);
           })
           .catch((error) =>
@@ -239,7 +239,7 @@ export const MoviesPage: React.FC = () => {
             return (
               <MovieList
                 key={`collab-${item.rec.basedOffOf}`}
-                recommender={`People who like ${item.rec.basedOffOf} also like`}
+                recommender={`People Who Like ${item.rec.basedOffOf} Also Like`}
                 movies={item.rec.recommendations}
               />
             );
@@ -247,7 +247,7 @@ export const MoviesPage: React.FC = () => {
             return (
               <MovieList
                 key={item.rec.genre}
-                recommender={`${item.rec.genre} movies and shows you might like`}
+                recommender={`${item.rec.genre} Movies and Shows You Might Like`}
                 movies={item.rec.movies}
               />
             );
