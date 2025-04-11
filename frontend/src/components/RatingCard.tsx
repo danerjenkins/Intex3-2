@@ -1,49 +1,55 @@
 import { useState, useEffect } from 'react';
 import { UserRating } from '../types/UserRating';
-// const apiUrl = import.meta.env.VITE_API_URL;
+import { User, UserContext } from './AuthorizeView';
+import React from 'react';
 
-// function submitRating(submission: UserRating) {
-//   fetch(`${apiUrl}/Movies/RegisterUser`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       user_id: submission.user_id,
-//       show_id: submission.show_id,
-//       rating: submission.rating,
-//     }),
-//   })
-//     //.then((response) => response.json())
-//     .then((data) => {
-//       // handle success or error from the server
-//       console.log(data);
-//       if (data.ok) console.log('Successful registration. Please log in.');
-//       else console.log('Error registering.');
-//     })
-//     .catch((error) => {
-//       // handle network error
-//       console.error(error);
-//       console.log('Error registering.');
-//     });
-// }
+const API_URL = import.meta.env.VITE_API_URL;
+
+function submitRating(submission: UserRating) {
+  fetch(`${API_URL}/Movies/AddRating`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id: submission.user_id,
+      show_id: submission.show_id,
+      rating: submission.rating,
+    }),
+  })
+    .then((data) => {
+      // handle success or error from the server
+      console.log(data);
+      if (data.ok) console.log('Rating Submitted!!');
+      else console.log('something wrong with the data format.');
+    })
+    .catch((error) => {
+      // handle network error
+      console.error(error);
+      console.log(`couldnt access ${API_URL}/Movies/AddRating`);
+    });
+}
 
 export function RatingCard({ show_id }: { show_id: string }) {
-  const API_URL = import.meta.env.VITE_API_URL;
-
+  const user: User = React.useContext(UserContext);
+  const [refresh, setRefresh] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
+  const [thisUserId, setThisUserId] = useState<number>(0);
   const [average, setAverage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [openRatingSubmission, setOpenRatingSubmission] =
     useState<boolean>(false);
-  // const [thankMessage, setThanksMessage] = useState<boolean>(false);
   const [newRating, setNewRating] = useState<UserRating>({
     user_id: 0,
     show_id: '',
     rating: 0,
   });
 
+  if (user && user.appUserId) setThisUserId(user.appUserId);
+
   useEffect(() => {
+    setRefresh(false);
     const fetchRatings = async () => {
       try {
         const response1 = await fetch(
@@ -75,18 +81,18 @@ export function RatingCard({ show_id }: { show_id: string }) {
           setCount(data2);
         } else {
           throw new Error(
-            `HTTP error! Status: ${response1.status}, ${response2.status}`
+            `Could not access ${API_URL}/Movies/GetAverageMovieRating/${show_id}`
           );
         }
       } catch (e) {
-        console.error('Failed to fetch ratings:', e);
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRatings();
-  }, [show_id]);
+  }, [show_id, refresh]);
 
   /////////// This is to show the stars for average movie rating
   const renderStars = (rating: number) => {
@@ -123,9 +129,12 @@ export function RatingCard({ show_id }: { show_id: string }) {
   const SubmitRatingStars = () => {
     // Handle star click
     const handleStarClick = (rating: number) => {
-      setNewRating({ user_id: 4, show_id: show_id, rating: rating });
+      setNewRating({
+        user_id: thisUserId,
+        show_id: show_id,
+        rating: rating,
+      });
       console.log(`You entered a rating of: ${rating}`);
-      console.log(`You have entered a rating of: ${newRating.rating}`);
     };
 
     // Render interactive stars
@@ -162,10 +171,15 @@ export function RatingCard({ show_id }: { show_id: string }) {
           className="rating-btn"
           onClick={() => {
             setOpenRatingSubmission(false);
-            // submitRating(newRating);
-            console.log(
-              `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
-            );
+            try {
+              submitRating(newRating);
+              setRefresh(true);
+              console.log(
+                `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
+              );
+            } catch (e) {
+              console.log(`This rating did not get submitted!: ${e}`);
+            }
           }}
         >
           Submit Rating
