@@ -8,14 +8,14 @@ export const Footer: React.FC = () => {
   const user = React.useContext(UserContext);
 
   return (
-    <footer className="fixed-footer">
+    <footer className="fixed-footer mt-5">
       <p className="mb-1">
         &copy; {new Date().getFullYear()} CineNiche. All the magic of movies, reserved 🎬🍿.
       </p>
       <div>
         <button
           onClick={() => navigate('/privacy')}
-          className="btn btn-link p-0 text-decoration-underline text-secondary"
+          className="btn btn-link p-0 text-decoration-underline"
           style={{ fontSize: '0.75rem' }}
         >
           Privacy Policy
@@ -24,13 +24,13 @@ export const Footer: React.FC = () => {
       {/* Conditionally render the Admin Dashboard link */}
       {user?.email === 'admin@admin.com' && (
         <div className="admin-link mt-2">
-          <Link
-            to="/admin"
-            className="text-secondary text-decoration-underline"
+          <button
+            onClick={() => navigate("/admin")}
+            className="btn btn-link p-0 text-decoration-underline"
             style={{ fontSize: '0.75rem' }}
           >
             Admin Dashboard 🎥
-          </Link>
+          </button>
         </div>
       )}
     </footer>

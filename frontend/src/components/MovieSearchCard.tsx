@@ -1,6 +1,7 @@
 // MovieSearchCard.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Footer } from './Footer';
 
 interface MovieSearchCardProps {
   id: string;
@@ -24,6 +25,7 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };
   return (
+    <>
     <div className="card h-100">
       <img
         src={posterUrl}
@@ -40,11 +42,12 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
         onClick={handlePosterClick}
       />
 
-      <div className="card-body d-flex flex-column">
+      <div className="card-body d-flex flex-column cardColor">
         <h5 className="card-title">{title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
         <p className="card-text mb-3">{info}</p>
       </div>
     </div>
+    </>
   );
 };

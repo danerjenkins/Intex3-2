@@ -48,7 +48,7 @@ const Pagination = ({
       pageButtons.push(
         <button
           key={i}
-          className={`btn ${currentPage === i ? 'btn-primary' : 'btn-outline-secondary'}`}
+          className={` ${currentPage === i ? 'paginationActive' : 'paginationNonActive'}`}
           onClick={() => onPageChange(i)}
         >
           {i}
@@ -75,32 +75,31 @@ const Pagination = ({
   };
 
   return (
-    <div className="d-flex flex-column align-items-center mt-4 gap-3">
-      <div className="btn-group flex-wrap" role="group" aria-label="Pagination Buttons">
+    <div className="pagination-container d-flex flex-column align-items-center mt-4 gap-3">
+      <div className="pagination-buttons btn-group flex-wrap" role="group" aria-label="Pagination Buttons">
         <button
-          className="btn btn-outline-secondary"
+          className="pagination-btn"
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
         >
           Previous
         </button>
-
+  
         {renderPageNumbers()}
-
+  
         <button
-          className="btn btn-outline-secondary"
+          className="pagination-btn"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
         >
           Next
         </button>
       </div>
-
+  
       <div className="d-flex align-items-center mt-2">
         <label className="me-2">Results per page:</label>
         <select
-          className="form-select"
-          style={{ width: 'auto' }}
+          className="pagination-select"
           value={pageSize}
           onChange={(e) => {
             onPageSizeChange(Number(e.target.value));
@@ -115,6 +114,7 @@ const Pagination = ({
       </div>
     </div>
   );
+  
 };
 
 export default Pagination;

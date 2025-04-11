@@ -3,11 +3,18 @@ import { Navigate } from 'react-router-dom';
 // import Cookies from 'js-cookie'; // Import js-cookie
 import { createContext } from 'react';
 
-interface User {
+export interface User {
+  appUserId: number | null;
   email: string;
   role: string;
+  identityId: string;
 }
-export const UserContext = createContext<User | null>(null);
+export const UserContext = createContext<User>({
+  appUserId: null,
+  email: 'x@x.x',
+  role: '',
+  identityId: '',
+});
 
 function AuthorizeView(props: { children: React.ReactNode }) {
   const [authorized, setAuthorized] = useState<boolean>(false);
@@ -15,7 +22,12 @@ function AuthorizeView(props: { children: React.ReactNode }) {
   //const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User>({
+    appUserId: null,
+    email: 'x@x.x',
+    role: '',
+    identityId: '',
+  });
 
   useEffect(() => {
     async function fetchWithRetry(url: string, options: any) {
@@ -33,7 +45,12 @@ function AuthorizeView(props: { children: React.ReactNode }) {
         const data = await response.json();
 
         if (data.email) {
-          setUser({ email: data.email, role: data.role || '' });
+          setUser({
+            email: data.email,
+            role: data.role || '',
+            appUserId: data.appUserId || null,
+            identityId: data.identityId,
+          });
           setAuthorized(true);
         } else {
           throw new Error('Invalid user session');
