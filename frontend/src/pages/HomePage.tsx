@@ -26,52 +26,52 @@ function HomePage() {
 
   return (
     <>
-    <Header />
-    <div className="d-flex flex-column align-items-center justify-content-center">
-    <div className="homepage min-vh-100 d-flex flex-column align-items-center justify-content-center">
-      <div className="d-flex flex-column align-items-center mt-5 gap-3">
-        <h1 className="display-4 fw-bold text-center">
-          Welcome to <span className="brand-name">CineNiche 🎬🍿</span>
-        </h1>
-        <p className="lead text-center tagline">
-          Discover your next favorite movie, dive into the world of cinema, and make every movie night special. 
-        </p>
-        <div className="auth-buttons d-flex gap-3">
-          <button
-            onClick={() => navigate('/login')}
-            className="btn btn-danger px-4"
-          >
-            <FaSignInAlt className="icon" /> Login
-          </button>
-          <button
-            onClick={() => navigate('/register')}
-            className="btn btn-secondary px-4"
-          >
-            <FaUserAlt className="icon" /> Register
-          </button>
+      <Header />
+      <div className="d-flex flex-column align-items-center justify-content-center">
+        <div className="homepage min-vh-100 d-flex flex-column align-items-center justify-content-center">
+          <div className="d-flex flex-column align-items-center mt-5 gap-3">
+            <h1 className="display-4 fw-bold text-center">
+              Welcome to <span className="brand-name">CineNiche 🎬🍿</span>
+            </h1>
+            <p className="lead text-center tagline">
+              Discover your next favorite movie, dive into the world of cinema,
+              and make every movie night special.
+            </p>
+            <div className="auth-buttons d-flex gap-3">
+              <button
+                onClick={() => navigate('/login')}
+                className="btn btn-success px-4"
+              >
+                <FaSignInAlt className="icon" /> Login
+              </button>
+              <button
+                onClick={() => navigate('/register')}
+                className="btn btn-secondary px-4"
+              >
+                <FaUserAlt className="icon" /> Register
+              </button>
+            </div>
+          </div>
+
+          <div className="movie-list-container">
+            <MovieList
+              recommender="Our Most Popular Movies"
+              movies={topRatedMovies}
+            />
+          </div>
+
+          <div className="cinema-section d-flex flex-column align-items-center gap-3 mt-5">
+            <p className="text-center cinema-subtext">
+              Explore new genres, discover hidden gems, and enjoy a movie moment
+              like never before.
+            </p>
+          </div>
+          <br />
+          <br />
+          <br />
         </div>
+        <Footer />
       </div>
-
-      <div className="movie-list-container">
-        <MovieList
-          recommender="Our Most Popular Movies"
-          movies={topRatedMovies}
-        />
-      </div>
-
-      <div className="cinema-section d-flex flex-column align-items-center gap-3 mt-5">
-
-
-        <p className="text-center cinema-subtext">
-          Explore new genres, discover hidden gems, and enjoy a movie moment like never before.
-        </p>
-      </div>
-      <br />
-      <br />
-      <br />
-      </div>
-      <Footer />
-    </div>
     </>
   );
 }
