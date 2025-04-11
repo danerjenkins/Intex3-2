@@ -14,9 +14,9 @@
   --chevron-bg-hover: #c0c0c0;
 
   --ratings-bg: #343a40;
-  --rating-btn-bg: #ffd700;
+  --rating-btn-bg: #9577a2;
   --genre-bg: transparent;
-  --brand-name: #ffcc00;
+  --brand-name: #c0c0c0;
 
   /* Profile */
   --profile-btn-bg: #343a40;
@@ -48,7 +48,7 @@
   --ratings-bg: #f8f9fa;
   --rating-btn-bg: #ffd700;
   --genre-bg: transparent;
-  --brand-name: #6c757d;
+  --brand-name: #212529;
 
   /* Profile */
   --profile-btn-bg: #f8f9fa;
@@ -73,6 +73,12 @@ body {
   font-family: sans-serif;
 }
 
+.btn-primary{
+  background-color: var(--bg-gradient-start)!important;
+  border: none !important;
+  color: var(--text-color)!important;
+}
+
 /* da spinnas */
 .text-primary{
   background-color: var(--text-primary)!important;
@@ -84,7 +90,7 @@ h1, h2, h3, h4, h5 {
 }
 
 p, li {
-  color: var(--text-color) !important;
+  color: var(--text-color);
 }
 
 /* Button Styles */
@@ -353,12 +359,10 @@ p, li {
   text-align: center;
   padding: 0.25rem 0;
   font-size: 0.75rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
 }
 
 /* Hover effect to enlarge the footer */
 .fixed-footer:hover {
-  transform: scale(1.1); /* Makes the footer slightly larger */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow on hover */
 }
 
