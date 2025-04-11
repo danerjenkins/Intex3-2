@@ -116,12 +116,15 @@ export const MoviesPage: React.FC = () => {
   const contentMovies: Recommendation[] = allRecs.flatMap(
     (rec) => rec.recommendations
   );
-
+// Filter out movies with empty or "Other" genre
+const filteredContentMovies = contentMovies.filter((movie) => {
+  const genre = movie.genre?.trim();
+  return genre && genre.toLowerCase() !== 'other';
+});
   const moviesByGenre: { [genre: string]: Recommendation[] } =
-    contentMovies.reduce(
+    filteredContentMovies.reduce(
       (acc, movie) => {
-        const rawGenre = movie.genre || 'Other';
-        const genreList = rawGenre.split(',').map((g) => g.trim());
+        const genreList = movie.genre!.split(',').map((g) => g.trim());
         genreList.forEach((genre) => {
           if (!acc[genre]) {
             acc[genre] = [];
