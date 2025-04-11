@@ -162,7 +162,7 @@ function Register() {
 
                 <div className="d-grid mb-2">
                   <button
-                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    className="btn btn-primary text-uppercase fw-bold"
                     type="submit"
                   >
                     Register
@@ -170,7 +170,7 @@ function Register() {
                 </div>
                 <div className="d-grid mb-2">
                   <button
-                    className="btn btn-primary btn-login text-uppercase fw-bold"
+                    className="btn btn-primary text-uppercase fw-bold"
                     onClick={handleLoginClick}
                   >
                     Go to Login
@@ -182,9 +182,6 @@ function Register() {
           </div>
         </div>
       </div>
-      <br />
-      <br />
-      <br />
       <Footer />
     </>
   );

@@ -14,9 +14,9 @@
   --chevron-bg-hover: #c0c0c0;
 
   --ratings-bg: #343a40;
-  --rating-btn-bg: #ffd700;
+  --rating-btn-bg: #9577a2;
   --genre-bg: transparent;
-  --brand-name: #ffcc00;
+  --brand-name: #c0c0c0;
 
   /* Profile */
   --profile-btn-bg: #343a40;
@@ -48,7 +48,7 @@
   --ratings-bg: #f8f9fa;
   --rating-btn-bg: #ffd700;
   --genre-bg: transparent;
-  --brand-name: #6c757d;
+  --brand-name: #212529;
 
   /* Profile */
   --profile-btn-bg: #f8f9fa;
@@ -73,6 +73,12 @@ body {
   font-family: sans-serif;
 }
 
+.btn-primary{
+  background-color: var(--bg-gradient-start)!important;
+  border: none !important;
+  color: var(--text-color)!important;
+}
+
 /* da spinnas */
 .text-primary{
   background-color: var(--text-primary)!important;
@@ -84,7 +90,7 @@ h1, h2, h3, h4, h5 {
 }
 
 p, li {
-  color: var(--text-color) !important;
+  color: var(--text-color);
 }
 
 /* Button Styles */
@@ -353,12 +359,10 @@ p, li {
   text-align: center;
   padding: 0.25rem 0;
   font-size: 0.75rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
 }
 
 /* Hover effect to enlarge the footer */
 .fixed-footer:hover {
-  transform: scale(1.1); /* Makes the footer slightly larger */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow on hover */
 }
 
@@ -532,6 +536,90 @@ p, li {
     padding: 0.5rem 1rem;
   }
 }
+
+.policy-page {
+  background-color: #210234;
+  color: #ecf0f1;
+  font-family: 'Arial', sans-serif;
+  padding: 30px;
+}
+
+.policy-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.policy-page h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #f39c12;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.policy-page h4 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #e67e22;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.policy-page p, .policy-page ul {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 10px 0;
+  text-align: justify;
+}
+
+.policy-page .policy-box {
+  background-color: #3a373ade;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.policy-page ul {
+  padding-left: 20px;
+}
+
+.policy-page ul li {
+  margin-bottom: 10px;
+  list-style: none;
+}
+
+.policy-page ul li::before {
+  content: "✔️ ";
+  margin-right: 5px;
+}
+
+.policy-page button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  display: block;
+  margin: 0 auto;
+  transition: background-color 0.3s ease;
+}
+
+.policy-page button:hover {
+  background-color: #3498db;
+  cursor: pointer;
+}
+
+.policy-page .lead {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
 .backButtonSearch{
   border: none;
   border-radius: 0.5rem;
