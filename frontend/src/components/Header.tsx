@@ -15,7 +15,14 @@ export const Header: React.FC = () => {
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && searchTerm.trim() !== '') {
-      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      const params = new URLSearchParams(window.location.search);
+      const genre = params.get('genre');
+      const newParams = new URLSearchParams();
+      if (genre) {
+        newParams.set('genre', genre);
+      }
+      newParams.set('q', encodeURIComponent(searchTerm.trim()));
+      navigate(`/search?${newParams.toString()}`);
       setSearchTerm('');
     }
   };

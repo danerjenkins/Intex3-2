@@ -58,15 +58,15 @@ export default function MovieDescription() {
                   Back to Movies
                 </button>
               </div>
-              <div className="descriptionBox shadow-lg p-3 mt-3">
-                <div className="row g-4">
-                  {/* Poster */}
-                  <div className="col-md-3">
-                    <img
-                      src={posterUrl}
-                      alt={`${movie.title} poster`}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
+            <div className="descriptionBox shadow-lg p-3">
+              <div className="row g-4">
+                {/* Poster */}
+                <div className="col-md-4">
+                  <img
+                    src={posterUrl}
+                    alt={`${movie.title} poster`}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
 
                         // Prevent infinite loop if the fallback image also fails
                         if (!target.src.includes('/defaultposter.png')) {
