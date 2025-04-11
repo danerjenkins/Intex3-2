@@ -58,8 +58,7 @@ const scrollGenreList = (direction: string, container: HTMLElement) => {
 
   // Calculate the scroll amount based on button width and a factor (e.g. 6 items)
   const buttonWidth =
-    genreButton.offsetWidth +
-    parseInt(getComputedStyle(list).gap || '0', 10);
+    genreButton.offsetWidth + parseInt(getComputedStyle(list).gap || '0', 10);
   const scrollAmount = buttonWidth * 6;
 
   if (direction === 'left') {
@@ -69,7 +68,10 @@ const scrollGenreList = (direction: string, container: HTMLElement) => {
   }
 };
 
-export const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onGenreChange }) => {
+export const GenreFilter: React.FC<GenreFilterProps> = ({
+  selectedGenres,
+  onGenreChange,
+}) => {
   const navigate = useNavigate();
 
   const handleGenreClick = (genre: string) => {
@@ -81,13 +83,15 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onGenr
         onGenreChange([genre]); // this example uses one genre at a time
       }
     }
+    const params = new URLSearchParams(window.location.search);
+    params.set('genre', genre); // Set or update genre
     // Navigate to /search with the genre as a query parameter.
-    navigate(`/search?genre=${encodeURIComponent(genre)}`);
+    navigate(`/search?${params.toString()}`);
   };
-
+  const params = new URLSearchParams(location.search);
+  const currentGenre = params.get('genre');
   return (
     <div className="genre-filter-container p-3 rounded mb-4 position-relative">
-
       {/* Left chevron */}
       <button
         className="chevron left"
@@ -108,7 +112,7 @@ export const GenreFilter: React.FC<GenreFilterProps> = ({ selectedGenres, onGenr
           <button
             key={genre}
             onClick={() => handleGenreClick(genre)}
-            className={`btn btn-genre ${selectedGenres?.includes(genre) ? 'active' : ''}`}
+            className={`btn btn-genre ${selectedGenres?.includes(currentGenre || genre) ? 'active' : ''}`}
           >
             {genre}
           </button>
