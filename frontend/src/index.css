@@ -34,7 +34,7 @@
 /* Light Theme Override */
 [data-theme="light"] {
   --bg-gradient-start: #efe7f3;
-  --bg-gradient-end: #edd5f7;#edd5f7;
+  --bg-gradient-end: #edd5f7;
   --bg-dark: #764f74;
   --movie-card-bg: #d5cae0;
   --profile-card-bg: #d5cae0;
