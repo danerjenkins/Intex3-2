@@ -109,7 +109,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
         // Half star
         stars.push(
           <span className="stars" key={i} style={{ color: '#FFD700' }}>
-            &#9734;
+            &#9733;
           </span>
         );
       } else {
