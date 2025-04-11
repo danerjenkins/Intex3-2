@@ -10,6 +10,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const [registering, setRegistering] = useState<boolean>(false);
 
   // state variable for error messages
   const [error, setError] = useState('');
@@ -29,6 +30,7 @@ function Register() {
   // handle submit event for the form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setRegistering(true);
     // validate email and passwords
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields.');
@@ -101,11 +103,20 @@ function Register() {
           setError('Error registering.');
         });
     }
+    setRegistering(false);
   };
 
   return (
     <>
       <Header />
+      {registering && (
+        <div className="text-center">
+          <div className="spinner-grow text-primary" role="status">
+            <span className="visually-hidden">Registering ...</span>
+          </div>
+          <p>Registering ...</p>
+        </div>
+      )}
       <div className="container">
         <div className="row">
           <div className="card border-0 shadow rounded-3 ">
@@ -113,6 +124,7 @@ function Register() {
               <h5 className="card-title text-center mb-5 fw-light fs-5">
                 Register
               </h5>
+
               <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
                   <input

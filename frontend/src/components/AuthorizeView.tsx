@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 // import Cookies from 'js-cookie'; // Import js-cookie
 import { createContext } from 'react';
 
-
 interface User {
   email: string;
   role: string;
@@ -53,7 +52,14 @@ function AuthorizeView(props: { children: React.ReactNode }) {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="text-center">
+        <div className="spinner-grow text-primary" role="status">
+          <span className="visually-hidden">Registering ...</span>
+        </div>
+        <p>Registering ...</p>
+      </div>
+    );
   }
 
   if (authorized) {
@@ -74,4 +80,3 @@ export function AuthorizedUser(props: { value: string }) {
 }
 
 export default AuthorizeView;
-
