@@ -207,17 +207,17 @@ namespace IntexS3G2.API.Controllers
         [HttpGet("GetAverageMovieRating/{show_id}")]
         public IActionResult GetAverageMovieRating(string show_id)
         {
-            int average = 0;
+            decimal average = 0; // Changed type to decimal
             var query = _movieContext.Ratings
                 .Where(m => m.show_id == show_id)
                 .Select(m => m.rating).ToList();
+
             if (query.Count > 0)
             {
-                average = (query.Sum() / query.Count);
+                average = Math.Round((decimal)query.Sum() / query.Count, 2); // Corrected rounding logic
             }
 
-
-            return Ok(average);
+            return Ok(average); // Returns the rounded decimal
         }
 
         [HttpGet("GetCountMovieRating/{show_id}")]
