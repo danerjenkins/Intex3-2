@@ -14,9 +14,9 @@
   --chevron-bg-hover: #c0c0c0;
 
   --ratings-bg: #343a40;
-  --rating-btn-bg: #ffd700;
+  --rating-btn-bg: #9577a2;
   --genre-bg: transparent;
-  --brand-name: #ffcc00;
+  --brand-name: #c0c0c0;
 
   /* Profile */
   --profile-btn-bg: #343a40;
@@ -29,7 +29,6 @@
   --delete-btn: #441212;
   --add-btn: #1c3c1b;
   --text-primary: #edd5f7;
-  --btn-primary: #572781;
 }
 
 /* Light Theme Override */
@@ -49,7 +48,7 @@
   --ratings-bg: #f8f9fa;
   --rating-btn-bg: #ffd700;
   --genre-bg: transparent;
-  --brand-name: #6c757d;
+  --brand-name: #212529;
 
   /* Profile */
   --profile-btn-bg: #f8f9fa;
@@ -62,7 +61,6 @@
   --delete-btn: #f1acac;
   --add-btn: #bef8ec;
   --text-primary: rgb(35, 8, 45);
-  --btn-primary: #572781;
 }
 
 
