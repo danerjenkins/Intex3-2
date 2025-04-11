@@ -70,11 +70,11 @@ export async function getCollaborativeRecommendations(
     // Check response before parsing JSON
     if (!response.ok) {
       // Optionally attempt to get any error message from the body.
-      const errorText = await response.text();
-      console.error('Collaborative Recommendations error response:', errorText);
-      console.error(`Status: ${response.status} - ${response.statusText}`);
+      // const errorText = await response.text();
+      // console.error('Collaborative Recommendations error response:', errorText);
+      // console.error(`Status: ${response.status} - ${response.statusText}`);
       throw new Error(
-        `Failed to fetch movie collab recommendations: ${response.statusText}`
+        // `Failed to fetch movie collab recommendations: ${response.statusText}`
       );
     }
     const data = await response.json();

@@ -388,13 +388,15 @@ namespace IntexS3G2.API.Controllers
 
                     if (query == null)
                     {
-                        return NotFound($"No collaborative recommendations found for Show ID '{showId}'.");
+                        return NotFound()
+                        // return NotFound($"No collaborative recommendations found for Show ID '{showId}'.");
                     }
 
                     // Validate that at least one recommendation exists
                     if (string.IsNullOrWhiteSpace(query.r1))
                     {
-                        return NotFound($"No recommended show IDs available for Show ID '{showId}'.");
+                        // return NotFound($"No recommended show IDs available for Show ID '{showId}'.");
+                        return NotFound()
                     }
 
                     // Collect all non-null recommendation fields (r1 through r15)
