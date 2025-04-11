@@ -25,28 +25,27 @@ export const MovieSearchCard: React.FC<MovieSearchCardProps> = ({
   };
   return (
     <>
-    <div className="card h-100">
-      <img
-        src={posterUrl}
-        alt={title}
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
+      <div className="card h-100" onClick={handlePosterClick}>
+        <img
+          src={posterUrl}
+          alt={title}
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
 
-          // Prevent infinite loop if the fallback image also fails
-          if (!target.src.includes('/defaultposter.png')) {
-            target.onerror = null;
-            target.src = '/defaultposter.png';
-          }
-        }}
-        onClick={handlePosterClick}
-      />
+            // Prevent infinite loop if the fallback image also fails
+            if (!target.src.includes('/defaultposter.png')) {
+              target.onerror = null;
+              target.src = '/defaultposter.png';
+            }
+          }}
+        />
 
-      <div className="card-body d-flex flex-column cardColor">
-        <h5 className="card-title">{title}</h5>
-        <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
-        <p className="card-text mb-3">{info}</p>
+        <div className="card-body d-flex flex-column cardColor">
+          <h5 className="card-title">{title}</h5>
+          <h6 className="card-subtitle mb-2 text-muted">{director}</h6>
+          <p className="card-text mb-3">{info}</p>
+        </div>
       </div>
-    </div>
     </>
   );
 };
