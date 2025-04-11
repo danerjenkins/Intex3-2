@@ -42,7 +42,7 @@ export const MoviesPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   //state for if the user has rated anything
-  const [newUser, setNewUser] = useState(false);
+  const [newUser] = useState(false);
 
   // 1. Fetch user-rated movies.
   useEffect(() => {
