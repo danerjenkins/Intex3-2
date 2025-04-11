@@ -31,6 +31,7 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
   return (
     <div className="card h-100">
       <img
+        onClick={handlePosterClick}
         src={posterUrl}
         alt={title}
         onError={(e) => {
