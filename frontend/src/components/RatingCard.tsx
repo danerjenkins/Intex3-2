@@ -40,6 +40,7 @@ export function RatingCard({ show_id }: { show_id: string }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [openRatingSubmission, setOpenRatingSubmission] =
     useState<boolean>(false);
+  const [waitingRating, awaitingWaitingRating] = useState<number>(0);
   const [newRating, setNewRating] = useState<UserRating>({
     user_id: 0,
     show_id: '',
@@ -49,7 +50,6 @@ export function RatingCard({ show_id }: { show_id: string }) {
   if (user && user.appUserId) setThisUserId(user.appUserId);
 
   useEffect(() => {
-    setRefresh(false);
     const fetchRatings = async () => {
       try {
         const response1 = await fetch(
@@ -90,7 +90,8 @@ export function RatingCard({ show_id }: { show_id: string }) {
         setLoading(false);
       }
     };
-
+    setRefresh(false);
+    awaitingWaitingRating(0);
     fetchRatings();
   }, [show_id, refresh]);
 
@@ -108,8 +109,8 @@ export function RatingCard({ show_id }: { show_id: string }) {
       } else if (i - rating < 1) {
         // Half star
         stars.push(
-          <span className="stars" key={i} style={{ color: '#FFD700' }}>
-            &#9733;
+          <span className="stars" style={{ color: '#FFD700' }}>
+            &#9734;
           </span>
         );
       } else {
@@ -148,7 +149,10 @@ export function RatingCard({ show_id }: { show_id: string }) {
             style={{
               color: i <= rating ? '#FFD700' : '#CCCCCC',
             }}
-            onClick={() => handleStarClick(i)} // Updates the selected rating
+            onClick={() => {
+              awaitingWaitingRating(i);
+              handleStarClick(i);
+            }} // Updates the selected rating
           >
             &#9733; {/* Star symbol */}
           </span>
@@ -161,19 +165,21 @@ export function RatingCard({ show_id }: { show_id: string }) {
       <>
         <div className="ratings-card">
           <p>
-            Click To Rate
+            Rate Movie
             <br />
-            {renderInteractiveStars(newRating.rating)}
+            {renderInteractiveStars(waitingRating)}
             <br />
           </p>
         </div>
         <button
           className="rating-btn"
           onClick={() => {
-            setOpenRatingSubmission(false);
+            setOpenRatingSubmission(!openRatingSubmission);
+            renderInteractiveStars(0);
             try {
               submitRating(newRating);
-              setRefresh(true);
+              setRefresh(!refresh);
+              setOpenRatingSubmission(false);
               console.log(
                 `I just submitted ${newRating.user_id}, ${newRating.show_id}, and ${newRating.rating}`
               );
@@ -199,7 +205,10 @@ export function RatingCard({ show_id }: { show_id: string }) {
         onClick={() => setOpenRatingSubmission(!openRatingSubmission)}
       >
         <p>
-          Total Ratings: <strong>{count}</strong>
+          Total Ratings:<strong> {count}</strong>
+          <br />
+          Average Rating:
+          <strong> {average}</strong>
           <br />
           {renderStars(average)}
           <br />
