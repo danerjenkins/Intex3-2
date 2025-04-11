@@ -43,7 +43,6 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
             target.src = '/defaultposter.png';
           }
         }}
-        onClick={handlePosterClick}
       />
 
       <div className="card-body d-flex flex-column cardColor">
