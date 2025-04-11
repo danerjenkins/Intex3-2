@@ -57,10 +57,7 @@ export default function MovieDescription() {
           movie && (
             <>
               <div className="backButtonSearch">
-                <button
-                  className="profileButton"
-                  onClick={() => navigate('/movies')}
-                >
+                <button className="profileButton" onClick={() => navigate(-1)}>
                   Back to Movies
                 </button>
               </div>

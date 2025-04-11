@@ -29,8 +29,9 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };
   return (
-    <div className="card h-100" onClick={handlePosterClick}>
+    <div className="card h-100">
       <img
+        onClick={handlePosterClick}
         src={posterUrl}
         alt={title}
         onError={(e) => {
