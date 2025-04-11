@@ -37,10 +37,9 @@ export default function MovieDescription() {
       .catch((err) => console.error(err));
   }, [id]);
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const formattedTitle = movie
-    ? movie.title.replace(/[:!%.'--()&#’]/g, '')
-    : '';
-  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
+  const normalized = movie ? movie.title.normalize('NFD') : "";
+  const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
+  const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
@@ -63,15 +62,15 @@ export default function MovieDescription() {
                   Back to Movies
                 </button>
               </div>
-              <div className="descriptionBox shadow-lg p-3 mt-3">
-                <div className="row g-4">
-                  {/* Poster */}
-                  <div className="col-md-3">
-                    <img
-                      src={posterUrl}
-                      alt={`${movie.title} poster`}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
+                <div className="descriptionBox shadow-lg p-3 mt-3">
+                  <div className="row g-4">
+                    {/* Poster */}
+                    <div className="col-md-3">
+                      <img
+                        src={posterUrl}
+                        alt={`${movie.title} poster`}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
 
                         // Prevent infinite loop if the fallback image also fails
                         if (!target.src.includes('/defaultposter.png')) {

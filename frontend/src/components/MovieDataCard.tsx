@@ -20,8 +20,9 @@ export const MovieDataCard: React.FC<MovieDataCardProps> = ({
   onDelete,
 }) => {
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const formattedTitle = title.replace(/[:!%.'--()&#’]/g, '');
-  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
+  const normalized = title.normalize('NFD');
+  const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
+  const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
   const navigate = useNavigate();
 
   const handlePosterClick = () => {
