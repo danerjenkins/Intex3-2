@@ -9,7 +9,6 @@ import { getContentRecommendations, Recommendation } from '../api/ContentRecomme
 import { MovieList } from '../components/MovieList';
 
 export default function MovieDescription() {
-  const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   // const navigate = useNavigate();
@@ -34,7 +33,9 @@ export default function MovieDescription() {
     .then(data => setContentRecs(data.recommendations))
     .catch(err => console.error(err));
   }, [id]);
-
+  const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
+  const formattedTitle = movie ? movie.title.replace(/[:!%.'--()&#’]/g, '') : '';
+  const posterUrl = `${imgUrl}${encodeURIComponent(formattedTitle)}.jpg`;
   return (
     <div className="d-flex flex-column min-vh-100">
       <Header />
@@ -54,7 +55,7 @@ export default function MovieDescription() {
                 {/* Poster */}
                 <div className="col-md-4">
                   <img
-                    src={imgUrl + encodeURIComponent(movie.title) + '.jpg'}
+                    src={posterUrl}
                     alt={`${movie.title} poster`}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
