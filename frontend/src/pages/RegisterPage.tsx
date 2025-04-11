@@ -86,7 +86,7 @@ function Register() {
             //.then((response) => response.json())
             .then((data) => {
               // handle success or error from the server
-              if (data.ok) console.log('important one works :)');
+              if (data.ok) setError('Successfully registered. Please log in using the login page.');
               else setError('Error registering in movies database.');
             })
             .catch((error) => {
@@ -176,6 +176,7 @@ function Register() {
                 </div>
               </form>
               <strong>{error && <p className="error">{error}</p>}</strong>
+
             </div>
           </div>
         </div>
