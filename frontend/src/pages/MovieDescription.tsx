@@ -37,7 +37,7 @@ export default function MovieDescription() {
       .catch((err) => console.error(err));
   }, [id]);
   const imgUrl = 'https://intexs3g2.blob.core.windows.net/movieposters/';
-  const normalized = movie ? movie.title.normalize('NFD') : "";
+  const normalized = movie ? movie.title.normalize('NFD') : '';
   const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
   const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
   return (

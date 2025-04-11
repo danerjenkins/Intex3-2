@@ -10,7 +10,7 @@ import {
   Recommendations,
 } from '../api/ContentRecommender';
 import { fetchUserRatedMovies, Rating } from '../api/MoviesApi';
-// import { idsInCollab, idsInContent } from './filters';
+import { User, UserContext } from '../components/AuthorizeView';
 
 // Define types for the merged items.
 type CollabRecMerged = { type: 'collab'; rec: Recommendations };
@@ -24,7 +24,9 @@ export const MoviesPage: React.FC = () => {
   const [listOfIds, setListOfIds] = useState<string[]>([]);
   // const [azureMovieRecommendations, setAzureMovieRecommendations] = useState<Recommendation[]>([]);
   // const [azureCalled, setAzureCalled] = useState(false);
-  const userId = 1;
+  // put back in to try and get azure working
+  const user: User = React.useContext(UserContext);
+  const [userId, setUserId] = useState<number>(user.appUserId || 1);
   const [allRecs, setAllRecs] = useState<Recommendations[]>([]);
   const [collabRecs, setCollabRecs] = useState<Recommendations[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
@@ -32,16 +34,26 @@ export const MoviesPage: React.FC = () => {
   // For infinite scroll on the merged items:
   const [visibleCount, setVisibleCount] = useState<number>(3);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   // Final randomized merged recommendations array.
   const [randomizedRecs, setRandomizedRecs] = useState<MergedRec[]>([]);
+
+  // state for when page is loading
   const [loading, setLoading] = useState(true);
+
+  //state for if the user has rated anything
+  const [newUser] = useState(false);
 
   // 1. Fetch user-rated movies.
   useEffect(() => {
     fetchUserRatedMovies(userId)
       .then((data) => {
         const showIds = data.map((r: Rating) => r.show_id);
-        setListOfIds(showIds);
+        if (showIds.length > 0) {
+          setListOfIds(showIds);
+        } else {
+          setUserId(77)
+        }
       })
       .catch((err) => console.error('Error fetching user rated movies:', err));
   }, [userId]);
@@ -51,17 +63,43 @@ export const MoviesPage: React.FC = () => {
     const load = async () => {
       setLoading(true);
       if (listOfIds.length > 0) {
-        // Get Azure recommendations.
-        // getAzureRecs(userId)
-        //   .then((data) => {
-        //     setAzureMovieRecommendations(data);
-        //     setAzureCalled(true);
-        //     console.log('Azure movie recommendations:', data);
-        //   })
-        //   .catch((err) => console.error(err));
+        if (!newUser) {
+          //dont get collaborative or azure reccomendations if is a new user
+          // Get Azure recommendations.
+          // getAzureRecs(userId)
+          //   .then((data) => {
+          //     setAzureMovieRecommendations(data);
+          //     setAzureCalled(true);
+          //     console.log('Azure movie recommendations:', data);
+          //   })
+          //   .catch((err) => console.error(err));
+
+          // Get Collaborative Recommendations.
+          Promise.allSettled(
+            listOfIds.map((id) => getCollaborativeRecommendations(id))
+          )
+            .then((results) => {
+              const successResults = results
+                .filter(
+                  (result): result is PromiseFulfilledResult<Recommendations> =>
+                    result.status === 'fulfilled'
+                )
+                .map((result) => result.value);
+              console.log(
+                'Successfully fetched collaborative recommendations:',
+                successResults
+              );
+              setCollabRecs(successResults);
+            })
+            .catch((error) =>
+              console.error(
+                'Error fetching collaborative recommendations:',
+                error
+              )
+            );
+        }
 
         // Get Content Recommendations.
-        // const filteredIdsContent = listOfIds.filter((id) => idsInContent.includes(id));
         Promise.allSettled(listOfIds.map((id) => getContentRecommendations(id)))
           .then((results) => {
             const successResults = results
@@ -78,31 +116,7 @@ export const MoviesPage: React.FC = () => {
           })
           .catch((error) =>
             console.error('Error fetching content recommendations:', error)
-          );
-        // const filteredIds = listOfIds.filter((id) => idsInCollab.includes(id));
-        // Get Collaborative Recommendations.
-        Promise.allSettled(
-          listOfIds.map((id) => getCollaborativeRecommendations(id))
-        )
-          .then((results) => {
-            const successResults = results
-              .filter(
-                (result): result is PromiseFulfilledResult<Recommendations> =>
-                  result.status === 'fulfilled'
-              )
-              .map((result) => result.value);
-            console.log(
-              'Successfully fetched collaborative recommendations:',
-              successResults
-            );
-            setCollabRecs(successResults);
-          })
-          .catch((error) =>
-            console.error(
-              'Error fetching collaborative recommendations:',
-              error
-            )
-          );
+          )
         setLoading(false);
       }
     };
@@ -110,18 +124,18 @@ export const MoviesPage: React.FC = () => {
   }, [listOfIds, userId]);
 
   // 3. Group the content recommendations by genre.
-  // We assume that each Recommendations object has a property "recommendations"
-  // which is an array of Recommendation objects. Each Recommendation has a 'genre'
-  // property that can be a comma-separated list.
   const contentMovies: Recommendation[] = allRecs.flatMap(
     (rec) => rec.recommendations
   );
-
+  // Filter out movies with empty or "Other" genre
+  const filteredContentMovies = contentMovies.filter((movie) => {
+    const genre = movie.genre?.trim();
+    return genre && genre.toLowerCase() !== 'other';
+  });
   const moviesByGenre: { [genre: string]: Recommendation[] } =
-    contentMovies.reduce(
+    filteredContentMovies.reduce(
       (acc, movie) => {
-        const rawGenre = movie.genre || 'Other';
-        const genreList = rawGenre.split(',').map((g) => g.trim());
+        const genreList = movie.genre!.split(',').map((g) => g.trim());
         genreList.forEach((genre) => {
           if (!acc[genre]) {
             acc[genre] = [];
@@ -165,7 +179,6 @@ export const MoviesPage: React.FC = () => {
         }
         return arr;
       }
-
       const shuffled = shuffleArray(merged);
       setRandomizedRecs(shuffled);
       setLoading(false);
