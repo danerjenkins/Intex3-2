@@ -1,8 +1,8 @@
 /* CSS Variables for unified theme */
 /* Dark Theme (Default) */
 :root {
-  --bg-gradient-start: #29172ffa;
-  --bg-gradient-end: rgb(35, 8, 45);
+  --bg-gradient-start: #42264cfa;
+  --bg-gradient-end: rgb(27, 6, 34);
   --bg-dark: #212529;
   --movie-card-bg: #222;
   --profile-card-bg: #222;
@@ -16,6 +16,7 @@
   --ratings-bg: #343a40;
   --rating-btn-bg: #ffd700;
   --genre-bg: transparent;
+  --brand-name: #ffcc00;
 
   /* Profile */
   --profile-btn-bg: #343a40;
@@ -33,8 +34,8 @@
 /* Light Theme Override */
 [data-theme="light"] {
   --bg-gradient-start: #efe7f3;
-  --bg-gradient-end: 
-  --bg-dark: #694468;
+  --bg-gradient-end: #edd5f7;
+  --bg-dark: #764f74;
   --movie-card-bg: #d5cae0;
   --profile-card-bg: #d5cae0;
 
@@ -47,6 +48,7 @@
   --ratings-bg: #f8f9fa;
   --rating-btn-bg: #ffd700;
   --genre-bg: transparent;
+  --brand-name: #6c757d;
 
   /* Profile */
   --profile-btn-bg: #f8f9fa;
@@ -220,7 +222,7 @@ p, li {
   margin-bottom: 0.5rem;
   position: relative;
   align-self: flex-end;
-  width: 20%;
+  width: 100%;
   background: var(--ratings-bg);
   border-radius: 8px;
   cursor: pointer;
@@ -237,7 +239,7 @@ p, li {
   z-index: 9999;
   position: relative;
   align-self: flex-end;
-  width: 20%;
+  width: 100%;
   background: #ffd700;
   border-radius: 8px;
   cursor: pointer;
@@ -329,8 +331,6 @@ p, li {
   background: var(--bg-dark);
   color: var(--text-color);
   padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-bottom: 1rem;
 }
 
@@ -348,11 +348,10 @@ p, li {
   left: 0;
   width: 100%;
   z-index: 999;
-  background-color: var(--bg-dark);
+  background: var(--bg-dark);
   color: var(--text-color);
   text-align: center;
   padding: 0.25rem 0;
-  border-radius: 10px; /* Rounded corners */
   font-size: 0.75rem;
   transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
 }
@@ -366,7 +365,7 @@ p, li {
 .fixed-footer a,
 .fixed-footer button {
   font-size: 0.75rem;
-  color: #6c757d;
+  color: var(--color-text);
   text-decoration: underline;
 }
 
@@ -377,7 +376,7 @@ p, li {
 
 .fixed-footer .admin-link {
   margin-top: 0.2rem;
-  color: var(--footer-text);
+  color: var(--footer-color);
 }
 
 
@@ -479,7 +478,7 @@ p, li {
 
 /* Brand name styling */
 .brand-name {
-  color: #ffcc00;
+  color: var(--brand-name);
   font-style: italic;
 }
 
@@ -532,4 +531,9 @@ p, li {
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
   }
+}
+.backButtonSearch{
+  border: none;
+  border-radius: 0.5rem;
+  margin: 0 1rem;
 }

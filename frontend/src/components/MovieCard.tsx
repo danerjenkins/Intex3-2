@@ -20,7 +20,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => {
   return (
     <div
       key={id}
-      className="movie-card-body text-white bg-dark m-2"
+      className="movie-card-body m-2"
       onClick={handlePosterClick}
     >
       <img
