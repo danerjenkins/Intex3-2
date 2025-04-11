@@ -29,6 +29,7 @@
   --delete-btn: #441212;
   --add-btn: #1c3c1b;
   --text-primary: #edd5f7;
+  --btn-primary: #572781;
 }
 
 /* Light Theme Override */
@@ -61,6 +62,7 @@
   --delete-btn: #f1acac;
   --add-btn: #bef8ec;
   --text-primary: rgb(35, 8, 45);
+  --btn-primary: #572781;
 }
 
 
@@ -71,6 +73,12 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+}
+
+.btn-primary{
+  background-color: var(--bg-gradient-start)!important;
+  border: none !important;
+  color: var(--text-color)!important;
 }
 
 /* da spinnas */
@@ -353,12 +361,10 @@ p, li {
   text-align: center;
   padding: 0.25rem 0;
   font-size: 0.75rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for scaling */
 }
 
 /* Hover effect to enlarge the footer */
 .fixed-footer:hover {
-  transform: scale(1.1); /* Makes the footer slightly larger */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: adds shadow on hover */
 }
 
