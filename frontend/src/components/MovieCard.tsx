@@ -13,31 +13,38 @@ export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => {
   const normalized = title.normalize('NFD');
   const cleaned = normalized.replace(/[:!%.'--()&#’]/g, '');
   const posterUrl = `${imgUrl}${encodeURIComponent(cleaned)}.jpg`;
-  
+
   const handlePosterClick = () => {
     navigate(`/movieDescription/${encodeURIComponent(id)}`);
   };
   return (
     <div
       key={id}
-      className="movie-card-body m-2"
+      className="movie-card-body m-2 d-flex align-items-center justify-content-center"
       onClick={handlePosterClick}
+      style={{ height: '100%' }}
     >
       <img
-        className="movie-card-img"
-        src={posterUrl}
-        alt={title}
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
+      className="movie-card-img"
+      src={posterUrl}
+      alt={title}
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
 
-          // Prevent infinite loop if the fallback image also fails
-          if (!target.src.includes('/defaultposter.png')) {
-            target.onerror = null;
-            target.src = '/defaultposter.png';
-          }
-        }}
+        // Prevent infinite loop if the fallback image also fails
+        if (!target.src.includes('/defaultposter.png')) {
+        target.onerror = null;
+        target.src = '/defaultposter.png';
+        }
+      }}
+      style={{ width: '200px', height: 'auto' }}
       />
-      <p
+    </div>
+  );
+};
+
+{
+  /* <p
         className="card-text text-center mb-0"
         style={{
           flexGrow: 0,
@@ -51,7 +58,5 @@ export const MovieCard: React.FC<MovieCardProps> = ({ id, title }) => {
         }}
       >
         {title}
-      </p>
-    </div>
-  );
-};
+      </p> */
+}

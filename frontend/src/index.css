@@ -112,10 +112,10 @@ p, li {
 
 /* Movie Card Styles */
 .movie-card-body {
-  width: 10rem;
-  height: 20rem;
-  margin: 0.5rem;
-  background: var(--movie-card-bg);
+  /* width: 10rem;
+  height: 20rem; */
+  /* margin: 0.5rem;
+  background: var(--movie-card-bg); */
   border-radius: 0.5rem;
   overflow: hidden;
   cursor: pointer;
